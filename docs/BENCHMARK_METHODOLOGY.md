@@ -45,24 +45,34 @@ Metrics: accuracy (exact-match containment) with 95% bootstrap CI (1000 resample
 
 Fixed seeds, injectable clock and id factory, no randomness at query time. The report states command, seeds, scale, dataset SHA-256 per seed, hardware, Python/NumPy/SQLite versions, embedder, and that no LLM is used. `tests/regression/test_regression.py` checks that the dataset hash and result digest are stable. Timings vary by machine and are excluded from the digest.
 
+## Real-document benchmark
+
+The scenarios above are synthetic. `python -m benchmarks.real_docs` complements them with real text: it ingests MemoraOS's own documentation, split into heading sections exactly as written, and asks hand-written questions about it. It uses the same systems and the same mechanical judge. Integrity is enforced in code: each gold answer must occur verbatim in the corpus and each unanswerable question's key term must be absent, otherwise the run aborts. The question set has a dev part (used to find defects) and a held-out part (written before the fixes and never used for tuning). Output: `benchmarks/reports/REAL_DOCS.md` and `real_docs_results.json` (including every answer MemoraOS gave and the section it cited). `real_docs_before_fixes.json` keeps the first run for comparison. Limits: small corpus, project-authored questions, README and `docs/EVIDENCE.md` excluded so an answer cannot come from the page that reports the result.
+
+## Real temporal benchmark
+
+`python -m benchmarks.real_temporal` tests what the prose benchmark cannot: change over time. The data is the dated CPython release history copied from three PEPs (`data/python_releases.json`, with source URLs). Every record becomes one templated sentence that all systems receive identically, and the questions (current value, previous value, value on a date in the middle of each validity interval, plus unanswerable ones) have gold answers computed from the real dates. Output: `benchmarks/reports/REAL_TEMPORAL.md` and `real_temporal_results.json`. Limits: one fact family, few questions, templated sentences, project-authored unanswerable questions.
+
 ## Results snapshot
 
 From `benchmarks/reports/REPORT.md` (3 seeds, ≈ 850 questions pooled; Windows 11, 8 logical CPUs, 7.7 GB RAM, Python 3.14.3). Re-run the command to reproduce; do not rely on this copy.
 
-| System | Macro accuracy | Pooled accuracy [95% CI] |
+| System | Macro accuracy | Pooled accuracy, 19 scenarios [95% CI] |
 |---|---|---|
-| bm25 | 65.5% | 65.2% [62.2, 68.4] |
-| vector | 67.4% | 69.9% [66.8, 72.9] |
-| hybrid_rag | 63.1% | 62.8% [59.7, 66.0] |
-| hybrid_rag_gated | 64.7% | 64.2% [60.9, 67.3] |
-| memoraos_hybrid_only | 62.9% | 58.0% [54.6, 61.4] |
-| **memoraos** | **98.6%** | **97.2% [96.0, 98.2]** |
+| bm25 | 58.6% | 60.3% [57.1, 63.4] |
+| vector | 60.7% | 64.7% [61.7, 67.7] |
+| hybrid_rag | 56.3% | 57.9% [54.8, 61.0] |
+| hybrid_rag_gated | 57.6% | 59.2% [56.0, 62.1] |
+| memoraos_hybrid_only | 63.5% | 62.8% [60.0, 65.7] |
+| **memoraos** | **100.0%** | **100.0% [100.0, 100.0]** |
+
+On the 16 v0.1 scenarios alone (unchanged definitions) MemoraOS is 100% (was 97.2% in v0.1); the 3 v0.2 scenarios are 100% for MemoraOS and 22–26% for the RAG baselines. Those 3 were written for v0.2's features, so treat them as feature checks. **A perfect score on datasets written by the same project means this synthetic suite no longer discriminates for MemoraOS**; it still guards against regressions, but the real-document benchmark below is the harder and more informative test.
 
 Where the gap comes from (all in the report): multi-document aggregation, multi-hop chains, temporal and historical questions, contradiction handling, update/correction and degradation — capabilities RAG baselines do not have — plus abstention (0% vs. 37.5–100% unsupported-answer rate). The ablation row shows these gains come from routing + the fact/truth engine, not from the retrieval primitives.
 
-Where MemoraOS **loses**: `paraphrase_robustness` — MemoraOS 77.1% vs. 100% for plain RAG (88.6% for the gated RAG baseline). Failures are phrasings the rule-based extractor does not cover ("You can reach P in C these days", "how much does P make?"), where the strict support check abstains. This is a real weakness, tracked in the roadmap.
+Where MemoraOS lost earlier: `paraphrase_robustness` was 77.1% in v0.1 against 100% for plain RAG. It is 100% now, from three changes (predicate hints, multi-sentence answers, a relaxed attribute guard). The synthetic phrasings are templated by the same authors, so this shows the mechanisms work on those templates, not that paraphrase robustness is solved; real prose is measured in the real-document benchmark, where MemoraOS is **not** ahead of a gated RAG baseline.
 
-Other costs: ~351× storage vs. raw text on very short texts (indexes, vectors, facts, version history, audit log; 59× for baselines), ~13.7 ms update cost per event vs. ~2.7 ms, query latency p50 ≈ 6.5 ms vs. ≈ 1.5–2.2 ms, while returning ≈ 29 context tokens per question vs. ≈ 70–79 (answers are shorter because they are facts, not three sentences).
+Other costs, from the committed report (timings are machine- and run-dependent; two runs on this machine differed by about 2.5×, so trust only the ratios): ~351× storage vs. raw text on very short texts (indexes, vectors, facts, version history, audit log; 59× for baselines); update cost ≈ 5× the baseline's per event; query latency p50 ≈ 2.5–3× the baseline's; while returning ≈ 29 context tokens per question vs. ≈ 70–79 (answers are shorter because they are facts, not three sentences).
 
 ## Limitations — read before quoting
 

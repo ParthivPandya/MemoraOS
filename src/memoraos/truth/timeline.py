@@ -181,7 +181,11 @@ def build_timeline(facts: list[Fact]) -> Timeline:
     if not facts:
         raise ValueError("no facts")
     subject, slot = facts[0].subject, facts[0].slot or facts[0].predicate
-    ordered = sorted(facts, key=lambda f: (_effective(f)[0], f.recorded_at, f.id))
+    # Input arrives in insertion (rowid) order and Python's sort is stable, so ties on (effective time,
+    # recorded_at) keep the order in which facts were stored. Never tie-break on the random fact id: on
+    # coarse clocks (Windows ~15 ms) back-to-back facts share a timestamp and the id would pick the
+    # "latest" value at random.
+    ordered = sorted(facts, key=lambda f: (_effective(f)[0], f.recorded_at))
     runs: list[Run] = []
     for f in ordered:
         eff, explicit = _effective(f)

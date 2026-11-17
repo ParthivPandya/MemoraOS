@@ -1,4 +1,4 @@
-export type Strategy = "exact" | "bm25" | "vector" | "hybrid" | "graph" | "temporal" | "episodic" | "procedural" | "latent" | "multistage";
+export type Strategy = "exact" | "bm25" | "vector" | "hybrid" | "graph" | "fusion" | "temporal" | "episodic" | "procedural" | "latent" | "multistage";
 
 export interface Evidence {
   memory_id: string;

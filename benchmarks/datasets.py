@@ -434,6 +434,115 @@ def paraphrase(rng: random.Random, scale: float) -> Scenario:
     return Scenario("paraphrase_robustness", "Same facts in extractor-friendly, paraphrased, inverted and informal forms. Expected to expose weaknesses.", ev, qs, "robustness to phrasing")
 
 
+_SAL_FORMS = ["{N} LPA", "{N} lakhs annually", "₹{N} lakh per annum", "{N} lakh rupees per year"]
+_SAL_SENTENCES = ["{P}'s salary is {F}.", "{P} earns {F}.", "{P}'s CTC is {F}."]
+
+
+def value_normalization(rng: random.Random, scale: float) -> Scenario:
+    """The same amount written in different units/phrasings must not be a conflict; different amounts must be."""
+    n = max(6, int(14 * scale))
+    names = _Pool(rng, FIRST)
+    ev: list[Event] = []
+    qs: list[Question] = []
+
+    def add(text: str) -> int:
+        ev.append(Event(len(ev), "add", text, "u1", _ts(len(ev)), source_type="document"))
+        return ev[-1].idx
+
+    for i in range(n):
+        p = names.take()
+        kind = i % 3
+        if kind == 0:  # agreement in two phrasings
+            amount = rng.randrange(12, 60)
+            f1, f2 = rng.sample(_SAL_FORMS, 2)
+            a = add(rng.choice(_SAL_SENTENCES).format(P=p, F=f1.format(N=amount)))
+            b = add(rng.choice(_SAL_SENTENCES).format(P=p, F=f2.format(N=amount)))
+            qs.append(Question(f"vn{i}", "value_normalization", f"What is {p}'s salary?", "u1", [str(amount)], [], [a, b], kind="update_no_conflict", tag="same_value_two_phrasings"))
+        elif kind == 1:  # genuine disagreement
+            x, y = rng.sample(range(12, 60), 2)
+            f1, f2 = rng.sample(_SAL_FORMS, 2)
+            add(f"{p}'s salary is {f1.format(N=x)}.")
+            add(f"{p} earns {f2.format(N=y)}.")
+            qs.append(Question(f"vn{i}", "value_normalization", f"What is {p}'s salary?", "u1", [], [], [], kind="conflict", tag="real_disagreement"))
+        else:  # monthly vs annual statement of the same pay
+            monthly = rng.randrange(1, 6)
+            a = add(f"{p} earns ₹{monthly} lakh per month.")
+            b = add(f"{p}'s salary is {monthly * 12} LPA.")
+            qs.append(Question(f"vn{i}", "value_normalization", f"What is {p}'s salary?", "u1", [], [], [a, b], kind="update_no_conflict", tag="monthly_equals_annual"))
+    return Scenario("value_normalization", "Equal amounts in different phrasings and periods (not a conflict) vs different amounts (a conflict).", ev, qs, "value normalization")
+
+
+def negation_correction(rng: random.Random, scale: float) -> Scenario:
+    """Negated statements must not be read as positive facts; corrections and retractions must win."""
+    n = max(6, int(12 * scale))
+    names, cities, langs = _Pool(rng, FIRST), _Pool(rng, CITIES), _Pool(rng, LANGS + EDITORS)
+    ev: list[Event] = []
+    qs: list[Question] = []
+
+    def add(text: str, source: str = "user_statement") -> int:
+        ev.append(Event(len(ev), "add", text, "u1", _ts(len(ev)), source_type=source))
+        return ev[-1].idx
+
+    for i in range(n):
+        p = names.take()
+        kind = i % 3
+        if kind == 0:  # "Correction:" restates a value
+            c1, c2 = cities.take(), cities.take()
+            add(f"{p} lives in {c1}.")
+            b = add(f"Correction: {p} actually lives in {c2}.")
+            qs.append(Question(f"nc{i}", "negation_and_correction", f"Where does {p} live?", "u1", [c2], [c1], [b], tag="correction_prefix"))
+        elif kind == 1:  # only a negation is stored: nothing positive is known
+            t = langs.take()
+            add(f"{p} does not use {t}.")
+            qs.append(Question(f"nc{i}", "negation_and_correction", f"What does {p} use?", "u1", answerable=False, tag="negation_only"))
+        else:  # a retracted tool and a remaining one
+            t1, t2 = langs.take(), langs.take()
+            add(f"{p} uses {t1}.")
+            b = add(f"{p} uses {t2}.")
+            add(f"{p} no longer uses {t1}.")
+            qs.append(Question(f"nc{i}", "negation_and_correction", f"What does {p} use?", "u1", [t2], [t1], [b], tag="no_longer"))
+    return Scenario("negation_and_correction", "Negation ('does not use', 'no longer uses') and 'Correction:' phrasing.", ev, qs, "negation and correction")
+
+
+def evidence_fusion_scenario(rng: random.Random, scale: float) -> Scenario:
+    """Three-hop chains (person -> project -> service -> region) that no single memory answers."""
+    n = max(6, int(12 * scale))
+    people, words, cities = _Pool(rng, FIRST), _Pool(rng, WORDS), _Pool(rng, CITIES)
+    chains = []
+    for _ in range(n):
+        chains.append({
+            "p": people.take(), "proj": f"Project {words.take()}", "svc": f"{words.take()} Queue", "region": f"Region {words.take()}",
+            "city": cities.take(),
+        })
+    texts: list[tuple[str, int, str]] = []  # (text, chain index, role)
+    for ci, c in enumerate(chains):
+        role = ci % 4
+        texts.append((f"{c['p']} manages {c['proj']}.", ci, "lead"))
+        texts.append((f"{c['p']} lives in {c['city']}.", ci, "noise"))
+        if role != 2:  # chain 2 mod 4 lacks the middle link on purpose
+            texts.append((f"{c['proj']} uses {c['svc']}.", ci, "uses"))
+        texts.append((f"{c['svc']} is deployed in {c['region']}.", ci, "host"))
+        if role == 3:  # a second, disagreeing hosting statement
+            texts.append((f"{c['svc']} is deployed in Region Duplicate{ci}.", ci, "host2"))
+    rng.shuffle(texts)
+    ev = [Event(i, "add", t, "u1", _ts(i), source_type="document") for i, (t, _c, _r) in enumerate(texts)]
+    idx = {(ci, role): ev[i].idx for i, (_t, ci, role) in enumerate(texts)}
+    qs: list[Question] = []
+    for ci, c in enumerate(chains):
+        role = ci % 4
+        rel = [idx[(ci, r)] for r in ("lead", "uses", "host") if (ci, r) in idx]
+        q = f"Which region is used by the project {c['p']} manages?"
+        if role == 0:
+            qs.append(Question(f"ef{ci}", "evidence_fusion", q, "u1", [c["region"]], [], rel, tag="three_hop_forward"))
+        elif role == 1:
+            qs.append(Question(f"ef{ci}", "evidence_fusion", f"Who manages the project that uses {c['svc']}?", "u1", [c["p"]], [], rel, tag="three_hop_reverse"))
+        elif role == 2:
+            qs.append(Question(f"ef{ci}", "evidence_fusion", q, "u1", answerable=False, tag="broken_chain"))
+        else:
+            qs.append(Question(f"ef{ci}", "evidence_fusion", q, "u1", [], [], [], kind="conflict", tag="conflicting_link"))
+    return Scenario("evidence_fusion", "Multi-hop questions answerable only by chaining stored facts; broken and contradictory chains must not be answered.", ev, qs, "evidence fusion")
+
+
 def persistence(rng: random.Random, scale: float) -> Scenario:
     base = single_fact(rng, scale * 0.5)
     for q in base.questions:
@@ -459,6 +568,16 @@ BUILDERS = {
     "paraphrase_robustness": paraphrase,
     "unsupported_answers": unsupported,
 }
+
+# Scenarios added in v0.2. The 16 above are the v0.1 suite and keep their original definitions, so their
+# results stay comparable across releases; headline numbers are reported both with and without the new ones.
+V02_BUILDERS = {
+    "value_normalization": value_normalization,
+    "negation_and_correction": negation_correction,
+    "evidence_fusion": evidence_fusion_scenario,
+}
+V02_SCENARIOS = set(V02_BUILDERS)
+BUILDERS.update(V02_BUILDERS)
 
 
 def build_dataset(seed: int, scale: float = 1.0) -> dict[str, Scenario]:

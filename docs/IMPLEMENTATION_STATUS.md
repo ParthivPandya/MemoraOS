@@ -1,10 +1,26 @@
 # Implementation Status
 
-_Last updated 2026-11-17. This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
+_Last updated for v0.2.0 (unreleased). This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
 
-## Test results
+## v0.2 status
 
-`python -m pytest` → **133 passed** (unit, integration scenarios A–L, API, MCP, SDK, examples, security, regression). `ruff check` clean; `bandit -ll` clean (B608 skipped with justification in `pyproject.toml`). TypeScript SDK: 3 tests pass. Dashboard: `tsc --noEmit` and `next build` pass; a live smoke test (API with API key + seeded data + dashboard pages) returned HTTP 200 on all 10 pages with live data and no key in browser HTML. Benchmark: full run reproduced digest `e6d3630a275a` across runs.
+| Area | Status | Notes |
+|---|---|---|
+| Phase Zero audit, plan, ADRs | ✅ | `V02_REPOSITORY_AUDIT.md`, `V02_IMPLEMENTATION_PLAN.md`, `ADR/0001–0007` |
+| Schema migration 2 | ✅ | Additive; tested on a real v0.1 database fixture; automatic `.bak-v1` backup |
+| Part 6 semantic extraction | ✅ rules / 🧪 LLM | Negation, corrections, conjunctions, value normalization, spans, `rebuild_facts()`. LLM path (grounded, validated) tested with scripted fakes **only** |
+| Part 7 embeddings and retrieval | ✅ interfaces / 🧪 neural | Provider v2, mismatch guard, `reembed`/`rebuild_index`, fusion strategies, entity/exact retrievers, expansion, reranker adapters. Neural embedder/cross-encoder tested with fakes; **not benchmarked**. Optional pieces stay off by default because the ablation showed no gain |
+| Part 8.1 evidence fusion | ✅ | Typed path search, validation, bounds, conflicts, trace; benchmarked (50% → 100% on the evidence-fusion scenario when enabled) |
+| Spec after Part 8.1 step 7 | ❌ not implemented | The supplied specification was truncated there |
+| `audit_probe.py` | 22 / 23 | The remaining probe ("You can reach Priya in Pune these days") requires the LLM extractor; it is not claimed as solved |
+
+## Test results (v0.2)
+
+`python -m pytest` → **284 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
+
+## Test results (v0.1)
+
+`python -m pytest` → **135 passed** (unit, integration scenarios A–L, API, MCP, SDK, examples, security, regression). `ruff check` clean; `bandit -ll` clean (B608 skipped with justification in `pyproject.toml`). TypeScript SDK: 3 tests pass. Dashboard: `tsc --noEmit` and `next build` pass; a live smoke test (API with API key + seeded data + dashboard pages) returned HTTP 200 on all 10 pages with live data and no key in browser HTML. Benchmark: full runs reproduce every accuracy figure; the result digest is `89405a04f9a0` for the committed report (it changed from `e6d3630a275a` when a fix to entity noise altered consolidation counts and storage ratios, not accuracy).
 
 ## Phases
 

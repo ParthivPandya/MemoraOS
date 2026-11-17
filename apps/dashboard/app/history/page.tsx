@@ -13,8 +13,8 @@ export default async function History({ searchParams }: { searchParams: Promise<
     <>
       <Header title="Temporal history" sub="Every value a fact has had, with valid time (when true) and recorded time (when learned)." />
       <form className="row" method="get">
-        <input name="subject" defaultValue={subject} placeholder="subject, e.g. Parth" aria-label="Subject" />
-        <input name="predicate" defaultValue={predicate} placeholder="predicate, e.g. salary" aria-label="Predicate" />
+        <input name="subject" defaultValue={subject}         placeholder="subject, e.g. Python 3.14" aria-label="Subject" />
+                <input name="predicate" defaultValue={predicate} placeholder="predicate, e.g. latest version" aria-label="Predicate" />
         <button>Show</button>
       </form>
       {!r ? <Empty>Enter a subject and predicate.</Empty> : !r.ok ? <ErrorBox message={r.error} /> : r.data.timeline.length === 0 ? <Empty>No facts recorded for that subject and predicate.</Empty> : (

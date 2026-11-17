@@ -34,6 +34,10 @@ class MemoraClient:
     def remember(self, text: str, **kw: Any) -> dict:
         return self._req("POST", "/v1/memories", json={"text": text, "user_id": self.user_id, **kw})
 
+    def remember_json(self, record: dict | list, **kw: Any) -> list[dict]:
+        """Store structured records ``{subject, predicate, object, valid_from?, valid_until?}`` as dated facts."""
+        return self._req("POST", "/v1/memories/json", json={"record": record, "user_id": self.user_id, **kw})
+
     def recall(self, query: str, **kw: Any) -> dict:
         return self._req("POST", "/v1/recall", json={"query": query, "user_id": self.user_id, **kw})
 

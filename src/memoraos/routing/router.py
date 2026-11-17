@@ -14,7 +14,7 @@ from ..providers.base import ChatProvider
 from ..util import STOPWORDS, content_terms, stem, tokenize
 
 STRATEGY_COST: dict[str, float] = {
-    "exact": 1, "bm25": 2, "vector": 3, "temporal": 3, "episodic": 4, "procedural": 4, "hybrid": 5, "graph": 6, "latent": 7,
+    "exact": 1, "bm25": 2, "vector": 3, "temporal": 3, "episodic": 4, "procedural": 4, "hybrid": 5, "fusion": 5, "graph": 6, "latent": 7,
     "multistage": 10,
 }
 CATEGORIES = ["exact_fact", "temporal", "multi_hop", "procedural", "episodic", "summarization", "semantic"]
@@ -22,9 +22,12 @@ CATEGORIES = ["exact_fact", "temporal", "multi_hop", "procedural", "episodic", "
 _R = lambda p: re.compile(p, re.I)  # noqa: E731
 _EXACT = _R(r"\b(exact|exactly|precise|precisely|current|currently|right now|what(?:'s| is| are)|who(?:'s| is)|which|how much|how many|what version)\b")
 _TEMPORAL = _R(
-    r"\b(when|before|after|history|historical|previous|previously|formerly|used to|earlier|over the (?:last|past)|"
-    r"(?:last|past) \w+ years?|since|until|timeline|changed?|as of|at the time|back in|ago|(?:19|20)\d{2})\b"
+    r"\b(when|history|historical|previous|previously|formerly|used to|over the (?:last|past)|"
+    r"(?:last|past) \w+ years?|timeline|changed?|as of|at the time|back in|ago|(?:19|20)\d{2})\b"
 )
+# "before/after/since/until/earlier" are ordinary words in prose questions ("...before it is stored"); on their own they
+# only weakly suggest a time question. They count fully when a time reference is parsed or a stored fact slot matches.
+_WEAK_TEMPORAL = _R(r"\b(before|after|since|until|earlier)\b")
 _HISTORY = _R(r"\b(history|historical|timeline|over time|changed|all (?:the )?(?:values|versions|salaries)|every)\b")
 _PREVIOUS = _R(r"\b(previous|previously|formerly|used to|before (?:it|that|this) changed|prior|earlier value|old)\b")
 _MULTI_HOP = _R(r"\b(related|relationship|relate|connect(?:ed|ion)?|linked|link between|between|path|depends? on|dependency|through|via|indirectly|who .+ (?:that|which))\b")
@@ -80,7 +83,7 @@ def analyze_query(query: str, now=None) -> QueryFeatures:
         text=query,
         terms=terms,
         exact_cue=bool(_EXACT.search(query)),
-        temporal_cue=bool(_TEMPORAL.search(query)) or tref is not None,
+        temporal_cue=bool(_TEMPORAL.search(query)) or tref is not None or bool(_EPISODIC.search(query) and _WEAK_TEMPORAL.search(query)),
         history_ref=bool(_HISTORY.search(query)),
         previous_ref=bool(_PREVIOUS.search(query)),
         multi_hop_cue=bool(_MULTI_HOP.search(query)),
@@ -119,6 +122,7 @@ class RouterHints:
     graph_entities: int = 0
     procedural_memories: bool = False
     latent_available: bool = False
+    fusion_applicable: bool = False  # the question names a chain: anchor -> relation -> typed answer
 
 
 def category_scores(f: QueryFeatures, h: RouterHints) -> dict[str, float]:
@@ -126,7 +130,7 @@ def category_scores(f: QueryFeatures, h: RouterHints) -> dict[str, float]:
     s = {
         "exact_fact": 0.15 * f.exact_cue + 0.6 * h.slot_match + 0.1 * (f.personal and h.slot_match) + 0.1 * f.code_like + 0.05 * short - 0.3 * f.multi_hop_cue,
         "temporal": 0.5 * f.temporal_cue + 0.2 * (f.time_ref is not None) + 0.2 * (f.history_ref or f.previous_ref) + 0.1 * h.slot_match + 0.15 * (h.slot_match and (f.history_ref or f.previous_ref or f.time_ref is not None)),
-        "multi_hop": 0.55 * f.multi_hop_cue + 0.3 * (f.capitalized_entities >= 2 and (f.multi_hop_cue or h.graph_entities >= 2)) + 0.1 * (h.graph_entities >= 2),
+        "multi_hop": 0.55 * f.multi_hop_cue + 0.3 * (f.capitalized_entities >= 2 and f.multi_hop_cue) + 0.1 * (h.graph_entities >= 2),
         "procedural": 0.7 * f.procedural_cue + 0.15 * h.procedural_memories * f.procedural_cue,
         "episodic": 0.55 * f.episodic_cue + 0.15 * f.personal * f.episodic_cue + 0.15 * f.temporal_cue * f.episodic_cue,
         "summarization": 0.8 * f.summary_cue + 0.1 * (f.word_count > 8) * f.summary_cue,
@@ -183,6 +187,7 @@ class AdaptiveRouter:
             "hybrid": 0.4,
             "bm25": 0.3 + (0.35 if f.code_like else 0.0),
             "vector": 0.2,
+            "fusion": 0.95 if hints.fusion_applicable else 0.0,
         }
         if allow_strategies is not None:
             strat = {k: v for k, v in strat.items() if k in allow_strategies}
@@ -197,6 +202,11 @@ class AdaptiveRouter:
         if f.code_like and top_cat == "semantic":
             primary = "bm25" if "bm25" in strat else primary
             reasons.append("identifier/quoted-literal detected: lexical retrieval first")
+        fused_first = False
+        if hints.fusion_applicable and "fusion" in strat:
+            primary = "fusion"
+            fused_first = True
+            reasons.append("question names a chain (anchor -> relation -> typed answer): evidence fusion first")
 
         learned = False
         if self.learned_policy:
@@ -206,6 +216,8 @@ class AdaptiveRouter:
                 primary, learned = alt, True
 
         fallbacks = [s for s in default_fallbacks if s != primary]
+        if fused_first and default_primary != primary and default_primary not in fallbacks:
+            fallbacks.insert(0, default_primary)  # if the chain cannot be proven, the ordinary strategy still gets its turn
         for s in ("hybrid", "vector"):
             if s not in fallbacks and s != primary:
                 fallbacks.append(s)

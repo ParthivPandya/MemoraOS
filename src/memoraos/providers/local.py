@@ -14,10 +14,13 @@ import re
 import numpy as np
 
 from ..util import STOPWORDS, stem, tokenize
+from .embeddings import BaseEmbeddingProvider
 
 
-class HashingEmbedder:
+class HashingEmbedder(BaseEmbeddingProvider):
     name = "hashing-v1"
+    provider = "local-hashing"
+    model_version = "1"
 
     def __init__(self, dim: int = 512):
         self.dim = dim
@@ -40,7 +43,7 @@ class HashingEmbedder:
                 feats[key] = feats.get(key, 0.0) + 0.25
         return feats
 
-    def embed(self, texts: list[str]) -> np.ndarray:
+    def embed_batch(self, texts: list[str]) -> np.ndarray:
         out = np.zeros((len(texts), self.dim), dtype=np.float32)
         for i, text in enumerate(texts):
             for feat, weight in self._features(text).items():

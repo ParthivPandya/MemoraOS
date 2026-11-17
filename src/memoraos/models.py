@@ -61,6 +61,10 @@ class Fact(BaseModel):
     source_type: str | None = None
     verification: str = "unverified"
     excerpt: str = ""
+    polarity: str = "affirmed"
+    extraction_method: str = "rules-v1"
+    span_start: int | None = None
+    span_end: int | None = None
 
 
 class Evidence(BaseModel):

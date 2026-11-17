@@ -23,6 +23,7 @@ class VectorIndex:
     def ensure_embeddings(self, scope: Scope) -> int:
         """Backfill vectors for memories embedded with a different model (incremental re-indexing)."""
         vis, params = visibility_clause(scope, "m")
+        self.store.sync_model_version()
         model = self.store.embedder.name
         rows = self.db.query(
             f"SELECT m.id, m.normalized_content FROM memories m WHERE m.status='active' AND {vis}"

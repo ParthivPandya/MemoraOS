@@ -1,0 +1,20 @@
+{
+  "memories": 22,
+  "sources": 22,
+  "facts": 13,
+  "derived": 3,
+  "events": 37,
+  "retrieval_log": 10,
+  "embeddings": 27,
+  "schema_version": 1,
+  "audit_chain_valid": true,
+  "answers": {
+    "What is Parth's current salary?": "₹30 LPA",
+    "What was Parth's salary in 2025?": "₹30 LPA",
+    "Which Angular version does Atlas use?": "Project Atlas's uses: Azure Functions; Project Atlas's uses: Angular 19",
+    "What is the project deadline?": "The project deadline is 2026-04-15."
+  },
+  "graph_strategy": "graph",
+  "database_status": "conflict",
+  "bob_status_for_parth_salary": "insufficient_evidence"
+}

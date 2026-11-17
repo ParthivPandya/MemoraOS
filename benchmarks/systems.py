@@ -182,10 +182,12 @@ class RagBaseline(System):
 # MemoraOS
 # --------------------------------------------------------------------------------------------
 class MemoraSystem(System):
-    def __init__(self, force_strategy: str | None = None, label: str | None = None):
+    def __init__(self, force_strategy: str | None = None, label: str | None = None, settings=None, reranker=None, description: str | None = None):
         self.force = force_strategy
+        self.settings = settings
+        self.reranker = reranker
         self.name = label or "memoraos"
-        self.description = "MemoraOS " + (f"with strategy forced to '{force_strategy}' (router and fact engine disabled)" if force_strategy else "full pipeline: router + truth engine + fallbacks")
+        self.description = description or "MemoraOS " + (f"with strategy forced to '{force_strategy}' (router and fact engine disabled)" if force_strategy else "full pipeline: router + truth engine + fallbacks")
         self.dir = tempfile.mkdtemp(prefix="memoraos-bench-")
         self.clock = FakeClock()
         self._counter = itertools.count(1)
@@ -194,7 +196,8 @@ class MemoraSystem(System):
         self.event_to_mem: dict[int, str] = {}
 
     def _open(self) -> MemoryOS:
-        return MemoryOS.local(self.dir, clock=self.clock, id_factory=lambda p: f"{p}_{next(self._counter):07d}")
+        kw = {"reranker": self.reranker} if self.reranker is not None else {}
+        return MemoryOS.local(self.dir, settings=self.settings, clock=self.clock, id_factory=lambda p: f"{p}_{next(self._counter):07d}", **kw)
 
     def add(self, e: Event) -> None:
         self.clock.set(e.recorded_at)

@@ -10,11 +10,12 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from ..extraction.values import parse_value
 from ..providers.local import split_sentences
 from ..security import detect_prompt_injection
 from ..util import STOPWORDS
 from .dates import extract_dates
-from .lexicon import RELATIONAL_PREDICATES
+from .lexicon import ATTRIBUTE_HEADS, RELATIONAL_PREDICATES
 
 FIRST_PERSON = {"i", "my", "me", "we", "our", "us", "myself", "i'm", "i've", "user", "the user"}
 _PRONOUNS = {"it", "this", "that", "they", "he", "she", "there", "these", "those", "which", "who", "what", "here", "its", "their", "his", "her"}
@@ -67,6 +68,10 @@ class ExtractedFact:
     precision: str | None
     confidence: float
     excerpt: str
+    polarity: str = "affirmed"  # "negated" facts are stored as evidence but never answer a positive question
+    method: str = "rules-v2"
+    extractor_version: str = ""
+    source_span: tuple[int, int] | None = None  # offsets of ``excerpt`` inside the memory's original content
 
 
 # (regex for the verb phrase, canonical predicate, subject/object swapped?)
@@ -91,8 +96,10 @@ _VERB_RULES: list[tuple[str, str, bool]] = [
     (r"(?:is|are|was|were) (?:part of|a part of|a component of)", "part_of", False),
     (r"(?:belongs to)", "part_of", False),
     (r"(?:integrates|connects) (?:with|to)", "connected_to", False),
-    (r"(?:earns?|earned)", "salary", False),
+    (r"(?:earns?|earned|makes?|made)", "salary", False),
 ]
+# "salary" is a loose target for verbs like "make"; it is only accepted when the object really is a sum of money.
+_MONEY_VERBS = re.compile(r"^(?:makes?|made)$", re.I)
 _VERB_RE = [(re.compile(rf"\b{p}\b", re.I), pred, rev) for p, pred, rev in _VERB_RULES]
 
 _POSSESSIVE = re.compile(
@@ -103,12 +110,26 @@ _OF_FORM = re.compile(
 )
 _MY_FORM = re.compile(r"^(?:my|our) (?P<p>[A-Za-z][\w\- ]{1,40}?) (?:is|was|are|were) (?P<o>.+)$", re.I)
 _COPULA = re.compile(r"^(?P<s>.+?) (?:is|was|are|were) (?:a|an|the) (?P<o>.+)$", re.I)
+_WHERE_FORM = re.compile(r"^(?P<o>.+?) is where (?P<s>.+?) (?P<v>lives?|resides?|works?)$", re.I)
+_BARE_FORM = re.compile(r"^(?:the|our) (?P<p>[A-Za-z][\w\-]*(?: [A-Za-z][\w\-]*){0,2}?) (?:is|was|are|were|will be) (?P<o>.+)$", re.I)
 
 _MULTI_VALUED_SPLIT = {"uses", "depends_on", "prefers", "building"}
 
 
 def _words(s: str) -> int:
     return len(s.split())
+
+
+_PERSON_PREDICATES = {"works_at", "lives_in", "leads", "reports_to"}
+_NAME = re.compile(r"[A-Z][\w.#+\-]*(?: [A-Z][\w.#+\-]*){0,2}")
+
+
+def _split_subject(subject: str) -> list[str]:
+    """"Alice and Bob" -> ["Alice", "Bob"]; anything not made only of capitalised names stays whole."""
+    parts = [p.strip() for p in re.split(r",\s*(?:and\s+)?|\s+and\s+", subject.strip()) if p.strip()]
+    if 1 < len(parts) <= 4 and all(_NAME.fullmatch(p) for p in parts):
+        return parts
+    return [subject]
 
 
 def _clean_object(obj: str, predicate: str) -> str:
@@ -136,41 +157,89 @@ def _subject_ok(subject: str) -> bool:
     return not re.match(r"^(?:if|when|while|because|although|since|after|before|but|and|so)\b", s)
 
 
+_CORRECTION_PREFIX = re.compile(r"^(?:correction|corrections|correcting|update|updated|actually|oops|sorry|edit|to correct that|scratch that)\s*[:,\-–]\s*", re.I)
+_NEGATIONS: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"\b(?:do|does|did)\s+not\b\s*|\b(?:do|does|did)n['’]t\b\s*", re.I), ""),
+    (re.compile(r"\b(?:never|no longer)\b\s*|\s*\bnot anymore\b", re.I), ""),
+    (re.compile(r"\b(is|are|was|were)\s+not\b", re.I), r"\1"),
+    (re.compile(r"\b(is|are|was|were)n['’]t\b", re.I), r"\1"),
+]
+_CLAUSE_JOIN = re.compile(r",?\s+(?:and|but|while|whereas)\s+|;\s+", re.I)
+_CLAUSE_START = re.compile(r"^(?:[A-Z][\w.#+\-]*|I|we)\b")
+
+
+def _strip_negation(clause: str) -> tuple[str, bool]:
+    negated = False
+    for rx, repl in _NEGATIONS:
+        clause, n = rx.subn(repl, clause)
+        negated = negated or n > 0
+    return re.sub(r"\s{2,}", " ", clause).strip(), negated
+
+
+def _split_clauses(sentence: str, default_subject: str) -> list[tuple[str, int]]:
+    """Split "A works at X and B works at Y" into clauses, but only where BOTH sides are complete facts.
+
+    A conjunction inside one object ("uses React and Node") or a compound subject ("Alice and Bob work at X")
+    never splits, because one side would not yield a fact on its own.
+    """
+    for m in _CLAUSE_JOIN.finditer(sentence):
+        left, right = sentence[: m.start()], sentence[m.end() :]
+        if m.group(0).startswith(";") or _CLAUSE_START.match(right):
+            if _extract_sentence(left, default_subject) and _extract_sentence(right, default_subject):
+                return [(left.rstrip(), 0)] + [(c, o + m.end()) for c, o in _split_clauses(right, default_subject)]
+    return [(sentence, 0)]
+
+
 def extract_facts(text: str, *, default_subject: str = "user") -> list[ExtractedFact]:
     facts: list[ExtractedFact] = []
+    cursor = 0
     for sentence in split_sentences(text):
+        start = text.find(sentence, cursor)
+        if start >= 0:
+            cursor = start + len(sentence)
         if sentence.endswith("?") or detect_prompt_injection(sentence):
             continue
-        facts.extend(_extract_sentence(sentence, default_subject))
+        for clause, offset in _split_clauses(sentence, default_subject):
+            for f in _extract_sentence(clause, default_subject):
+                if start >= 0:
+                    f.source_span = (start + offset, start + offset + len(clause))
+                facts.append(f)
     return facts
 
 
 def _extract_sentence(sentence: str, default_subject: str) -> list[ExtractedFact]:
     dates = extract_dates(sentence)
     clause = _ADVERBS.sub("", dates.cleaned).strip().rstrip(".!")
+    clause = _CORRECTION_PREFIX.sub("", clause)
+    clause, negated = _strip_negation(clause)
     if not clause or _words(clause) < 3:
         return []
     clause = re.sub(r"^(?:and|but|so|also)\s+", "", clause, flags=re.I)
 
-    def make(s: str, p: str, o: str, conf: float) -> list[ExtractedFact]:
+    def make(s: str, p: str, o: str, conf: float, *, money_only: bool = False) -> list[ExtractedFact]:
         p = norm_predicate(p)
         out = []
         o = _clean_object(o, p)
         if not o or _words(o) > 14 or not _subject_ok(s):
             return []
-        for part in _split_objects(o, p):
-            out.append(
-                ExtractedFact(
-                    subject=s.strip().strip("\"'`"),
-                    predicate=p,
-                    object=part,
-                    valid_from=dates.valid_from,
-                    valid_until=dates.valid_until,
-                    precision=dates.precision,
-                    confidence=round(conf - (0.1 if _words(part) > 8 else 0.0), 2),
-                    excerpt=sentence,
+        if money_only and parse_value(o, p, sentence) is None:
+            return []
+        subjects = _split_subject(s) if p in _PERSON_PREDICATES else [s]
+        for subj in subjects:
+            for part in _split_objects(o, p):
+                out.append(
+                    ExtractedFact(
+                        subject=subj.strip().strip("\"'`"),
+                        predicate=p,
+                        object=part,
+                        valid_from=dates.valid_from,
+                        valid_until=dates.valid_until,
+                        precision=dates.precision,
+                        confidence=round(conf - (0.1 if _words(part) > 8 else 0.0), 2),
+                        excerpt=sentence,
+                        polarity="negated" if negated else "affirmed",
+                    )
                 )
-            )
         return out
 
     m = _MY_FORM.match(clause)
@@ -182,7 +251,14 @@ def _extract_sentence(sentence: str, default_subject: str) -> list[ExtractedFact
     m = _OF_FORM.match(clause)
     if m:
         return make(m.group("s"), m.group("p"), m.group("o"), 0.9)
-
+    m = _WHERE_FORM.match(clause)
+    if m:
+        pred = "works_at" if m.group("v").lower().startswith("work") else "lives_in"
+        return make(m.group("s"), pred, m.group("o"), 0.8)
+    m = _BARE_FORM.match(clause)
+    if m and m.group("p").split()[-1].lower() in ATTRIBUTE_HEADS:
+        # "The budget is 5 lakh." names no owner; keep it as an explicitly unattributed, lower-confidence fact.
+        return make("unspecified", m.group("p"), m.group("o"), 0.5)
     best: tuple[int, int, re.Match[str], str, bool] | None = None
     for rx, pred, rev in _VERB_RE:
         vm = rx.search(clause)
@@ -195,7 +271,7 @@ def _extract_sentence(sentence: str, default_subject: str) -> list[ExtractedFact
             subj = default_subject
         if rev:
             subj, obj = obj, subj
-        return make(subj, pred, obj, 0.8)
+        return make(subj, pred, obj, 0.8, money_only=bool(_MONEY_VERBS.match(vm.group(0))))
 
     m = _COPULA.match(clause)
     if m:
@@ -204,7 +280,13 @@ def _extract_sentence(sentence: str, default_subject: str) -> list[ExtractedFact
 
 
 _CAP_SEQ = re.compile(r"\b[A-Z][A-Za-z0-9.#+\-]*(?:\s+[A-Z][A-Za-z0-9.#+\-]*)*")
-_NOISE_ENTITIES = {"lpa", "usd", "inr", "eur", "gbp", "ok", "yes", "no", "mr", "mrs", "ms", "dr"}
+_NOISE_ENTITIES = {"lpa", "usd", "inr", "eur", "gbp", "ok", "yes", "no", "mr", "mrs", "ms", "dr"} | set(
+    """monday tuesday wednesday thursday friday saturday sunday january february march april may june july august
+    september october november december yesterday today tomorrow tonight earlier later recently previously meanwhile
+    afterwards then next last first second third finally however also additionally verify run install deploy open
+    check restart configure execute create remove add use push build start stop note remember please thanks thank
+    hello hi hey section step meeting reading""".split()
+)
 
 
 def extract_entities(text: str, facts: list[ExtractedFact] | None = None) -> dict[str, str]:

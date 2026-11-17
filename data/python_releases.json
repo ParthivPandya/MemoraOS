@@ -1,0 +1,27 @@
+{
+  "description": "Real, dated release history of CPython, copied from the Python Enhancement Proposals that define each release schedule. Nothing here is generated or illustrative.",
+  "retrieved_on": "2026-11-17",
+  "sources": {
+    "3.12": "https://peps.python.org/pep-0693/",
+    "3.13": "https://peps.python.org/pep-0719/",
+    "3.14": "https://peps.python.org/pep-0745/"
+  },
+  "license_note": "The PEPs are placed in the public domain or under CC0-1.0-Universal.",
+  "records": [
+    {"subject": "Python", "predicate": "latest stable version", "object": "3.12", "valid_from": "2023-10-02", "source": "PEP 693: 3.12.0 final"},
+    {"subject": "Python", "predicate": "latest stable version", "object": "3.13", "valid_from": "2024-10-07", "source": "PEP 719: 3.13.0 final"},
+    {"subject": "Python", "predicate": "latest stable version", "object": "3.14", "valid_from": "2025-10-07", "source": "PEP 745: 3.14.0 final"},
+
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.0", "valid_from": "2025-10-07", "source": "PEP 745: 3.14.0 final"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.1", "valid_from": "2025-12-02", "source": "PEP 745: 3.14.1"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.2", "valid_from": "2025-12-05", "source": "PEP 745: 3.14.2"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.3", "valid_from": "2026-02-03", "source": "PEP 745: 3.14.3"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.4", "valid_from": "2026-04-07", "source": "PEP 745: 3.14.4"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.5", "valid_from": "2026-05-10", "source": "PEP 745: 3.14.5"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.6", "valid_from": "2026-06-10", "source": "PEP 745: 3.14.6"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.7", "valid_from": "2026-08-05", "source": "PEP 745: 3.14.7"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.8", "valid_from": "2026-10-01", "source": "PEP 745: 3.14.8"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.9", "valid_from": "2026-10-21", "source": "PEP 745: 3.14.9"},
+    {"subject": "Python 3.14", "predicate": "latest version", "object": "3.14.10", "valid_from": "2026-10-26", "source": "PEP 745: 3.14.10"}
+  ]
+}

@@ -59,6 +59,11 @@ def test_entities_strip_generic_prefixes():
     assert set(ents) >= {"atlas", "azure functions", "alice"}
 
 
+def test_sentence_initial_time_words_and_imperatives_are_not_entities():
+    ents = extract_entities("Yesterday we deployed Atlas. Earlier we met on Monday. To deploy: 1. Run make. 2. Verify health.")
+    assert "atlas" in ents and not {"yesterday", "earlier", "monday", "run", "verify"} & set(ents)
+
+
 def test_slots_and_versions():
     assert slot_for("salary", "₹5 LPA") == "salary" and slot_for("frontend framework", "Angular") == "frontend framework"
     assert slot_for("uses", "Angular 16") == "uses:angular" and slot_for("uses", "Azure") is None

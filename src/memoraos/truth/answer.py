@@ -201,10 +201,16 @@ class PassageAnswer:
     coverage: float
     flags: list[str]
     covered: set[str] = field(default_factory=set)
+    anchor_coverage: float = 0.0  # coverage of the best single sentence on its own
 
 
-def compose_passage_answer(terms: list[str], passages: list[tuple[str, str]], *, max_sentences: int = 1, whole_passage: bool = False) -> PassageAnswer:
-    """passages: ordered (memory_id, text). Pick the sentence(s) covering the most query terms."""
+def compose_passage_answer(
+    terms: list[str], passages: list[tuple[str, str]], *, max_sentences: int = 1, whole_passage: bool = False, same_memory_after: int | None = None
+) -> PassageAnswer:
+    """passages: ordered (memory_id, text). Pick the sentence(s) covering the most query terms.
+
+    ``same_memory_after=n``: sentences beyond the first ``n`` must come from the memory of the first chosen sentence, so
+    an answer is never stitched together from unrelated memories ("A manages X." + "Y is hosted in Z.")."""
     if not passages or not terms:
         return PassageAnswer("", [], 0.0, [])
     flags: list[str] = []
@@ -226,12 +232,14 @@ def compose_passage_answer(terms: list[str], passages: list[tuple[str, str]], *,
         mid = scored[0][3]
         text = next(t for m, t in passages if m == mid)
         cov_set = covered_terms(terms, text)
-        return PassageAnswer(text, [(mid, text)], len(cov_set) / len(terms), flags, cov_set)
+        return PassageAnswer(text, [(mid, text)], len(cov_set) / len(terms), flags, cov_set, len(cov_set) / len(terms))
     chosen: list[tuple[str, str]] = []
     seen_text: set[str] = set()
     covered: set[str] = set()
     for _c, _r, _s, mid, sent in scored:
         if sent in seen_text:
+            continue
+        if same_memory_after is not None and len(chosen) >= same_memory_after and mid != chosen[0][0]:
             continue
         new = covered_terms(terms, sent) - covered
         if chosen and not new:
@@ -241,4 +249,4 @@ def compose_passage_answer(terms: list[str], passages: list[tuple[str, str]], *,
         covered |= covered_terms(terms, sent)
         if len(chosen) >= max_sentences:
             break
-    return PassageAnswer(" ".join(s for _, s in chosen), chosen, len(covered) / len(terms), flags, covered)
+    return PassageAnswer(" ".join(s for _, s in chosen), chosen, len(covered) / len(terms), flags, covered, scored[0][0])

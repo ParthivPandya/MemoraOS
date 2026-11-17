@@ -144,6 +144,44 @@ CREATE TABLE provider_usage(
 );
 """,
     ),
+    (
+        2,
+        # Additive only: v0.1 rows keep working and get explicit, honest defaults.
+        """
+ALTER TABLE facts ADD COLUMN polarity TEXT NOT NULL DEFAULT 'affirmed';
+ALTER TABLE facts ADD COLUMN extraction_method TEXT NOT NULL DEFAULT 'rules-v1';
+ALTER TABLE facts ADD COLUMN extractor_version TEXT NOT NULL DEFAULT '';
+ALTER TABLE facts ADD COLUMN source_span_start INTEGER;
+ALTER TABLE facts ADD COLUMN source_span_end INTEGER;
+ALTER TABLE facts ADD COLUMN value_num REAL;
+ALTER TABLE facts ADD COLUMN value_unit TEXT;
+ALTER TABLE facts ADD COLUMN value_currency TEXT;
+CREATE INDEX idx_facts_value ON facts(tenant_id, predicate, object_key);
+
+ALTER TABLE embeddings ADD COLUMN provider TEXT NOT NULL DEFAULT '';
+ALTER TABLE embeddings ADD COLUMN model_version TEXT NOT NULL DEFAULT '';
+ALTER TABLE embeddings ADD COLUMN normalization TEXT NOT NULL DEFAULT 'l2';
+ALTER TABLE embeddings ADD COLUMN created_at TEXT NOT NULL DEFAULT '';
+ALTER TABLE embeddings ADD COLUMN status TEXT NOT NULL DEFAULT 'ready';
+CREATE INDEX idx_embeddings_model ON embeddings(model, status);
+
+CREATE TABLE embedding_models(
+    model TEXT PRIMARY KEY, provider TEXT NOT NULL, model_version TEXT NOT NULL DEFAULT '',
+    dim INTEGER NOT NULL, normalization TEXT NOT NULL DEFAULT 'l2',
+    first_seen_at TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE extraction_attempts(
+    id TEXT PRIMARY KEY, memory_id TEXT, tenant_id TEXT NOT NULL, ts TEXT NOT NULL,
+    method TEXT NOT NULL, extractor_version TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL, error TEXT, n_proposed INTEGER NOT NULL DEFAULT 0,
+    n_accepted INTEGER NOT NULL DEFAULT 0, n_rejected INTEGER NOT NULL DEFAULT 0,
+    latency_ms REAL NOT NULL DEFAULT 0, detail TEXT NOT NULL DEFAULT '{}'
+);
+CREATE INDEX idx_extract_attempts_mem ON extraction_attempts(memory_id);
+CREATE INDEX idx_extract_attempts_status ON extraction_attempts(tenant_id, status);
+""",
+    ),
 ]
 
 
@@ -171,6 +209,9 @@ class Database:
                 "CREATE TABLE IF NOT EXISTS schema_migrations(version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)"
             )
             done = {r[0] for r in self._conn.execute("SELECT version FROM schema_migrations")}
+            pending = [v for v, _ in MIGRATIONS if v not in done]
+            if done and pending and self.path != ":memory:":
+                self._pre_migration_backup(max(done))
             applied = []
             for version, sql in MIGRATIONS:
                 if version in done:
@@ -188,6 +229,18 @@ class Database:
                     raise
                 applied.append(version)
             return applied
+
+    def _pre_migration_backup(self, from_version: int) -> None:
+        """Keep a restorable copy of an existing database before upgrading its schema."""
+        target = Path(f"{self.path}.bak-v{from_version}")
+        if target.exists():
+            return
+        self._conn.execute("PRAGMA wal_checkpoint(FULL)")
+        dst = sqlite3.connect(str(target))
+        try:
+            self._conn.backup(dst)
+        finally:
+            dst.close()
 
     @property
     def schema_version(self) -> int:

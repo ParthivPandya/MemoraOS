@@ -11,7 +11,7 @@ type Result = {
   latency_ms: number; context_tokens: number; flags: string[]; cached: boolean;
 };
 
-const STRATEGIES = ["", "exact", "bm25", "vector", "hybrid", "graph", "temporal", "episodic", "procedural", "multistage"];
+const STRATEGIES = ["", "exact", "bm25", "vector", "hybrid", "graph", "fusion", "temporal", "episodic", "procedural", "multistage"];
 
 export default function Playground() {
   const [query, setQuery] = useState("");
@@ -35,7 +35,7 @@ export default function Playground() {
       <h2>Search playground</h2>
       <p className="sub">Ask a question; see the chosen strategy, fallbacks, evidence and the separate confidence signals.</p>
       <form onSubmit={run} className="row" aria-label="Recall form">
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="What is my current salary?" aria-label="Question" required maxLength={2000} />
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Ask a question about your memories" aria-label="Question" required maxLength={2000} />
         <input value={asOf} onChange={(e) => setAsOf(e.target.value)} placeholder="as of (ISO date, optional)" aria-label="As of" style={{ maxWidth: 200, flex: "none" }} />
         <select value={strategy} onChange={(e) => setStrategy(e.target.value)} aria-label="Force strategy">
           {STRATEGIES.map((s) => <option key={s} value={s}>{s || "auto (router)"}</option>)}

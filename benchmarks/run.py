@@ -21,7 +21,7 @@ import numpy as np
 
 from memoraos.evaluation.metrics import mrr, ndcg_at_k, precision_at_k, recall_at_k
 
-from .datasets import Scenario, build_dataset, dataset_hash
+from .datasets import V02_SCENARIOS, Scenario, build_dataset, dataset_hash
 from .report import render_markdown
 from .systems import EXTERNAL, TOP_K, MemoraSystem, System, available_systems
 
@@ -200,6 +200,13 @@ def aggregate(raw: dict[str, dict[str, list[dict]]], extras: dict[str, dict[str,
         lo, hi = bootstrap_ci(pooled)
         out[system]["pooled_accuracy"] = statistics.fmean(pooled) if pooled else 0.0
         out[system]["pooled_accuracy_ci95"] = [round(lo, 4), round(hi, 4)]
+        # the v0.1 suite keeps its original definition, so its headline stays comparable across releases
+        for key, keep in (("v01_suite", lambda n: n not in V02_SCENARIOS), ("v02_scenarios", lambda n: n in V02_SCENARIOS)):
+            part = [float(r["correct"]) for n, rows in scen.items() if keep(n) for r in rows if r["phase"] == "final"]
+            if part:
+                plo, phi = bootstrap_ci(part)
+                out[system][f"pooled_accuracy_{key}"] = statistics.fmean(part)
+                out[system][f"pooled_accuracy_{key}_ci95"] = [round(plo, 4), round(phi, 4)]
     return out
 
 

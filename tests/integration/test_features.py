@@ -122,7 +122,7 @@ def test_reflect_and_stats_and_health(mem):
     assert rep["open_conflicts"] and any(e["entity"] == "Azure" for e in rep["recurring_entities"])
     assert mem.reflect(user_id=U, topic="azure")["memories_considered"] == 3
     st = mem.stats()
-    assert st["memories"] == 5 and st["facts"] == 2 and st["schema_version"] == 1 and st["embedder"] == "hashing-v1"
+    assert st["memories"] == 5 and st["facts"] == 2 and st["schema_version"] == 2 and st["embedder"] == "hashing-v1"
     assert mem.health()["audit_chain_valid"]
 
 

@@ -4,13 +4,14 @@ Rule for this repository: **no performance claim without a measurement** that ca
 
 ## Measured (small synthetic workloads; indicative only)
 
-| Metric | MemoraOS | Plain hybrid RAG baseline |
+| Metric (committed report) | MemoraOS | Plain hybrid RAG baseline |
 |---|---|---|
-| Query latency p50 (median over scenarios) | ≈ 6.5 ms | ≈ 2.2 ms |
-| Update (ingest) cost | ≈ 13.7 ms / event | ≈ 2.3 ms / event |
+| Query latency p50 (median over scenarios) | ≈ 2.6 ms | ≈ 1.0 ms |
+| Update (ingest) cost | ≈ 5.4 ms / event | ≈ 0.9 ms / event |
 | Evidence tokens returned per question | ≈ 29 | ≈ 78 |
 | Storage ÷ raw text (tiny texts) | ≈ 351× | ≈ 59× |
-| Restart (reopen) | ≈ 0.07 s | ≈ 0.03 s (rebuild index from raw docs) |
+
+**Timings are not stable.** An earlier run on the same machine measured ≈ 6.5 ms p50 and ≈ 13.7 ms / event for MemoraOS, about 2.5× higher, because background load differs between runs. Only the ratios (roughly 2.5–3× per query, 5× per write) and the deterministic columns (tokens, storage) are meaningful. Accuracy results do not depend on timing and were identical across runs.
 
 MemoraOS pays more per query and per write (routing, fact timelines, FTS, version and audit rows) in exchange for the accuracy results in the benchmark. It returns fewer evidence tokens because answers are resolved facts, not extra passages. These token figures describe *evidence returned*, not LLM cost; no LLM is used in the benchmark.
 

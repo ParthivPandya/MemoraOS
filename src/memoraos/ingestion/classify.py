@@ -53,20 +53,23 @@ def chunk_text(text: str, max_chars: int = 800, overlap: int = 100) -> list[str]
             units.extend(split_sentences(para))
     chunks: list[str] = []
     cur = ""
+    last_unit = ""
     for u in units:
         if len(u) > max_chars:  # one enormous sentence: hard split
             if cur:
                 chunks.append(cur)
                 cur = ""
             chunks.extend(u[i : i + max_chars] for i in range(0, len(u), max_chars - overlap))
+            last_unit = ""
             continue
         if cur and len(cur) + len(u) + 1 > max_chars:
             chunks.append(cur)
-            tail = cur[-overlap:] if overlap else ""
-            tail = tail[tail.find(" ") + 1 :] if tail and " " in tail else tail
-            cur = f"{tail} {u}".strip() if tail else u
+            # overlap is carried as a WHOLE preceding unit (never a character-sliced fragment), and only if it fits
+            tail = last_unit if overlap and len(last_unit) <= overlap and len(last_unit) + len(u) + 1 <= max_chars else ""
+            cur = f"{tail}\n{u}".strip() if tail else u
         else:
             cur = f"{cur}\n{u}".strip() if cur else u
+        last_unit = u
     if cur:
         chunks.append(cur)
     return chunks

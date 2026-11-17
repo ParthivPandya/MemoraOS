@@ -1,33 +1,41 @@
-"""Multi-agent / multi-tenant memory: private, agent-shared, project and org scopes with isolation.
+"""Multi-agent / multi-tenant memory with REAL documents: private, project, agent and org scopes with isolation.
 
 Run:  python examples/multi_agent/main.py
 """
 
 import sys
+from pathlib import Path
 
 from memoraos import MemoryOS
 
 sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
 
+DOCS = Path(__file__).resolve().parents[2] / "docs"
+
+
+def text(name: str) -> str:
+    return (DOCS / name).read_text(encoding="utf-8")
+
+
 memory = MemoryOS.in_memory()
-memory.remember("Alice's salary is ₹50 LPA.", user_id="alice")                                  # private to alice
-memory.remember("The release process uses trunk based development.", user_id="alice", level="org")   # whole tenant
-memory.remember("The planner agent prefers concise answers.", user_id="alice", level="agent", agent_id="planner")
-memory.remember("Project Zeta uses Rust.", user_id="alice", level="project", project_id="zeta")
-memory.remember("Other tenant secret quokka.", user_id="mallory", tenant_id="other-corp")
+memory.remember(text("SECURITY.md"), user_id="maintainer", source_type="document")                            # private to the maintainer
+memory.remember(text("ROADMAP.md"), user_id="maintainer", level="org", source_type="document")               # whole tenant
+memory.remember(text("ADR/0005-configurable-rank-fusion.md"), user_id="maintainer", level="agent", agent_id="planner", source_type="document")
+memory.remember(text("PERFORMANCE.md"), user_id="maintainer", level="project", project_id="benchmarks", source_type="document")
+memory.remember(text("LATENT_MEMORY.md"), user_id="visitor", tenant_id="other-org", source_type="document")  # another tenant
 
 
 def ask(label: str, q: str, **who) -> None:
     r = memory.recall(q, **who)
-    print(f"{label:<34} {q:<42} -> {r.answer[:60] if r.supported else '(insufficient evidence)'}")
+    print(f"{label:<34} {q:<48} -> {r.answer[:58].replace(chr(10), ' ') if r.supported else '(insufficient evidence)'}")
 
 
-ask("alice (self)", "What is Alice's salary?", user_id="alice")
-ask("bob (same tenant)", "What is Alice's salary?", user_id="bob")
-ask("bob sees org memory", "What release process is used?", user_id="bob")
-ask("bob with agent_id=planner", "What does the planner agent prefer?", user_id="bob", agent_id="planner")
-ask("bob without agent_id", "What does the planner agent prefer?", user_id="bob")
-ask("carol in project zeta", "What does Zeta use?", user_id="carol", project_id="zeta")
-ask("carol outside the project", "What does Zeta use?", user_id="carol")
-ask("alice from another tenant", "What release process is used?", user_id="alice", tenant_id="other-corp")
+ask("maintainer (owner)", "Which address does the REST API bind to by default?", user_id="maintainer")
+ask("colleague (same tenant)", "Which address does the REST API bind to by default?", user_id="colleague")
+ask("colleague sees org memory", "Which standard benchmarks are planned as adapters?", user_id="colleague")
+ask("colleague with agent_id=planner", "What weight do expanded query lists get by default?", user_id="colleague", agent_id="planner")
+ask("colleague without agent_id", "What weight do expanded query lists get by default?", user_id="colleague")
+ask("colleague in project benchmarks", "How much RAM did the benchmark machine have?", user_id="colleague", project_id="benchmarks")
+ask("colleague outside the project", "How much RAM did the benchmark machine have?", user_id="colleague")
+ask("visitor from another tenant", "Which standard benchmarks are planned as adapters?", user_id="visitor", tenant_id="other-org")
 memory.close()

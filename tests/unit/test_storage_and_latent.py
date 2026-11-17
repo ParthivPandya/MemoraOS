@@ -13,9 +13,9 @@ from memoraos.storage import Database, visibility_clause, write_scope_id
 
 def test_migrations_are_idempotent_and_versioned(tmp_path):
     db = Database(tmp_path / "x.db")
-    assert db.schema_version == 1 and db.migrate() == []
+    assert db.schema_version == 2 and db.migrate() == []
     db.close()
-    assert Database(tmp_path / "x.db").schema_version == 1
+    assert Database(tmp_path / "x.db").schema_version == 2
 
 
 def test_transactions_roll_back_and_nest():
@@ -50,6 +50,22 @@ def test_visibility_clause_levels():
         write_scope_id(s, "session")
     with pytest.raises(ValueError):
         Scope(user_id=" ")
+
+
+def test_system_time_is_strictly_increasing_even_on_a_frozen_clock():
+    """A coarse or frozen clock must never produce two identical recorded_at values."""
+    from datetime import datetime, timezone
+
+    from memoraos import MemoryOS
+
+    frozen = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    m = MemoryOS.in_memory(clock=lambda: frozen)
+    m.remember("Project Atlas uses Angular 16.", user_id="u", source_type="document")
+    m.remember("Project Atlas uses Angular 19.", user_id="u", source_type="document")
+    stamps = [f.recorded_at for f in m.facts(user_id="u")]
+    assert len(set(stamps)) == len(stamps)
+    assert m.recall("Which Angular version does Atlas use?", user_id="u").answer == "Angular 19"
+    m.close()
 
 
 def test_settings_validation():

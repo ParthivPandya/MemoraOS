@@ -83,6 +83,14 @@ def test_d_version_change_is_not_a_contradiction(mem):
     assert kinds == ["possible_version_change"]
 
 
+def test_named_attribute_wins_over_a_generic_verb_predicate(mem):
+    for t in ("Project Atlas uses Azure Functions.", "Project Atlas uses Angular 19.", "The database of Project Atlas is PostgreSQL."):
+        mem.remember(t, user_id=U, source_type="document")
+    res = mem.recall("Which database does Atlas use?", user_id=U)
+    assert res.status == "answered" and res.answer == "PostgreSQL"
+    assert "Azure" in mem.recall("What does Atlas use?", user_id=U).answer  # the verb question still works
+
+
 def test_d_reliability_breaks_ties_and_is_reported(mem):
     mem.remember("The database of Atlas is PostgreSQL.", user_id=U, source_type="document", verification="verified")
     mem.remember("The database of Atlas is MySQL.", user_id=U, source_type="inferred")

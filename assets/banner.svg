@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f0c29"/>
+      <stop offset="50%" stop-color="#302b63"/>
+      <stop offset="100%" stop-color="#24243e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00d2ff"/>
+      <stop offset="100%" stop-color="#7b2ff7"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00d2ff" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#7b2ff7" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#00d2ff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="blur1">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#bg)"/>
+
+  <!-- Ambient glow circles -->
+  <circle cx="200" cy="150" r="180" fill="#7b2ff7" opacity="0.08" filter="url(#blur1)"/>
+  <circle cx="1000" cy="100" r="200" fill="#00d2ff" opacity="0.06" filter="url(#blur1)"/>
+  <circle cx="600" cy="250" r="150" fill="#3a1c71" opacity="0.1" filter="url(#blur1)"/>
+
+  <!-- Grid pattern (subtle) -->
+  <g stroke="#ffffff" stroke-opacity="0.03" stroke-width="0.5">
+    <line x1="0" y1="60" x2="1200" y2="60"/>
+    <line x1="0" y1="120" x2="1200" y2="120"/>
+    <line x1="0" y1="180" x2="1200" y2="180"/>
+    <line x1="0" y1="240" x2="1200" y2="240"/>
+    <line x1="200" y1="0" x2="200" y2="300"/>
+    <line x1="400" y1="0" x2="400" y2="300"/>
+    <line x1="600" y1="0" x2="600" y2="300"/>
+    <line x1="800" y1="0" x2="800" y2="300"/>
+    <line x1="1000" y1="0" x2="1000" y2="300"/>
+  </g>
+
+  <!-- Brain/Memory icon -->
+  <g transform="translate(130, 90)">
+    <!-- Outer ring -->
+    <circle cx="60" cy="60" r="55" stroke="url(#accent)" stroke-width="2.5" fill="none" opacity="0.6"/>
+    <circle cx="60" cy="60" r="45" stroke="#00d2ff" stroke-width="1" fill="none" opacity="0.3"/>
+    <!-- Brain nodes -->
+    <circle cx="40" cy="35" r="8" fill="#00d2ff" opacity="0.9"/>
+    <circle cx="80" cy="35" r="8" fill="#7b2ff7" opacity="0.9"/>
+    <circle cx="35" cy="70" r="6" fill="#00d2ff" opacity="0.7"/>
+    <circle cx="85" cy="70" r="6" fill="#7b2ff7" opacity="0.7"/>
+    <circle cx="60" cy="55" r="10" fill="url(#accent)" opacity="0.95"/>
+    <circle cx="50" cy="90" r="5" fill="#00d2ff" opacity="0.5"/>
+    <circle cx="70" cy="90" r="5" fill="#7b2ff7" opacity="0.5"/>
+    <!-- Connections -->
+    <line x1="40" y1="35" x2="60" y2="55" stroke="#00d2ff" stroke-width="1.5" opacity="0.5"/>
+    <line x1="80" y1="35" x2="60" y2="55" stroke="#7b2ff7" stroke-width="1.5" opacity="0.5"/>
+    <line x1="35" y1="70" x2="60" y2="55" stroke="#00d2ff" stroke-width="1" opacity="0.4"/>
+    <line x1="85" y1="70" x2="60" y2="55" stroke="#7b2ff7" stroke-width="1" opacity="0.4"/>
+    <line x1="40" y1="35" x2="80" y2="35" stroke="#ffffff" stroke-width="0.8" opacity="0.2"/>
+    <line x1="35" y1="70" x2="85" y2="70" stroke="#ffffff" stroke-width="0.8" opacity="0.2"/>
+    <line x1="50" y1="90" x2="60" y2="55" stroke="#00d2ff" stroke-width="0.8" opacity="0.3"/>
+    <line x1="70" y1="90" x2="60" y2="55" stroke="#7b2ff7" stroke-width="0.8" opacity="0.3"/>
+  </g>
+
+  <!-- Title -->
+  <text x="310" y="120" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="64" font-weight="800" fill="white" letter-spacing="-1">
+    Memora<tspan fill="url(#accent)">OS</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text x="310" y="160" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="20" fill="#b0b0cc" font-weight="400" letter-spacing="0.5">
+    Don't just give AI a bigger context window. Give it a better memory.
+  </text>
+
+  <!-- Feature pills -->
+  <g transform="translate(310, 185)">
+    <rect x="0" y="0" width="120" height="28" rx="14" fill="#00d2ff" fill-opacity="0.12" stroke="#00d2ff" stroke-opacity="0.3" stroke-width="1"/>
+    <text x="60" y="18" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" fill="#00d2ff" text-anchor="middle" font-weight="600">Local-First</text>
+
+    <rect x="135" y="0" width="140" height="28" rx="14" fill="#7b2ff7" fill-opacity="0.12" stroke="#7b2ff7" stroke-opacity="0.3" stroke-width="1"/>
+    <text x="205" y="18" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" fill="#a78bfa" text-anchor="middle" font-weight="600">Bitemporal Facts</text>
+
+    <rect x="290" y="0" width="155" height="28" rx="14" fill="#00d2ff" fill-opacity="0.12" stroke="#00d2ff" stroke-opacity="0.3" stroke-width="1"/>
+    <text x="367" y="18" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" fill="#00d2ff" text-anchor="middle" font-weight="600">97.2% Accuracy</text>
+
+    <rect x="460" y="0" width="140" height="28" rx="14" fill="#7b2ff7" fill-opacity="0.12" stroke="#7b2ff7" stroke-opacity="0.3" stroke-width="1"/>
+    <text x="530" y="18" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" fill="#a78bfa" text-anchor="middle" font-weight="600">No API Keys</text>
+
+    <rect x="615" y="0" width="155" height="28" rx="14" fill="#00d2ff" fill-opacity="0.12" stroke="#00d2ff" stroke-opacity="0.3" stroke-width="1"/>
+    <text x="692" y="18" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" fill="#00d2ff" text-anchor="middle" font-weight="600">Evidence-Grounded</text>
+  </g>
+
+  <!-- Version badge -->
+  <g transform="translate(310, 232)">
+    <rect x="0" y="0" width="66" height="22" rx="4" fill="#ffffff" fill-opacity="0.08"/>
+    <text x="33" y="15" font-family="'SF Mono', 'Fira Code', monospace" font-size="11" fill="#8888aa" text-anchor="middle">v0.1.0</text>
+  </g>
+  <g transform="translate(80, 232)">
+    <text x="33" y="15" font-family="'SF Mono', 'Fira Code', monospace" font-size="11" fill="#8888aa" text-anchor="middle" opacity="0.6">Apache-2.0</text>
+  </g>
+
+  <!-- Decorative floating dots -->
+  <circle cx="950" cy="60" r="3" fill="#00d2ff" opacity="0.4"/>
+  <circle cx="1020" cy="90" r="2" fill="#7b2ff7" opacity="0.5"/>
+  <circle cx="1100" cy="45" r="2.5" fill="#00d2ff" opacity="0.3"/>
+  <circle cx="980" cy="200" r="2" fill="#7b2ff7" opacity="0.4"/>
+  <circle cx="1050" cy="170" r="3" fill="#00d2ff" opacity="0.25"/>
+  <circle cx="1130" cy="230" r="2" fill="#7b2ff7" opacity="0.35"/>
+
+  <!-- Bottom accent line -->
+  <rect x="0" y="296" width="1200" height="4" fill="url(#accent)" opacity="0.6"/>
+</svg>

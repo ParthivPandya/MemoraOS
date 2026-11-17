@@ -1,0 +1,1400 @@
+{
+  "benchmark": "MemoraOS real-document benchmark",
+  "command": "python -m benchmarks.real_docs",
+  "generated_at": "2026-11-17T15:56:56+00:00",
+  "environment": {
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+    "machine": "AMD64",
+    "cpu_count": 8,
+    "python": "3.14.3",
+    "numpy": "2.4.4",
+    "sqlite": "3.50.4",
+    "ram_gb": 7.7
+  },
+  "corpus": {
+    "files": 26,
+    "sections": 119,
+    "characters": 108284,
+    "sha256": "efbb57a8acfef9fd1d8a90478d65dee3806f4a145e9ddf0513ecaed7bc3a9358"
+  },
+  "questions": {
+    "answerable": 46,
+    "unanswerable": 18,
+    "dev": 42,
+    "heldout": 22
+  },
+  "top_k": 5,
+  "metrics": {
+    "bm25": {
+      "n": 64,
+      "accuracy": 0.625,
+      "accuracy_ci95": [
+        0.5156,
+        0.7344
+      ],
+      "recall_at_5": 0.8379764949458044,
+      "precision_at_5": 0.3213768115942029,
+      "mrr": 0.8804347826086957,
+      "ndcg_at_5": 0.8068663876899267,
+      "evidence_coverage": 1.0,
+      "unsupported_answer_rate": 1.0,
+      "false_abstain_rate": 0.0,
+      "mean_context_tokens": 742.125,
+      "latency_ms_p50": 6.911000004038215,
+      "latency_ms_p95": 10.065599999506958,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.0,
+        "dev/changelog": 1.0,
+        "dev/decisions": 0.8333333333333334,
+        "dev/latent": 0.75,
+        "dev/performance": 1.0,
+        "dev/roadmap": 1.0,
+        "dev/routing": 1.0,
+        "dev/security": 0.6666666666666666,
+        "heldout/absent_topic": 0.0,
+        "heldout/decisions": 1.0,
+        "heldout/latent": 1.0,
+        "heldout/performance": 1.0,
+        "heldout/routing": 0.6666666666666666,
+        "heldout/security": 1.0,
+        "heldout/temporal": 1.0
+      },
+      "ingest_ms_per_event": 5.101563865521888,
+      "storage_overhead_ratio": 5.025399362489781,
+      "pooled_accuracy_ci95": [
+        0.5156,
+        0.7344
+      ]
+    },
+    "vector": {
+      "n": 64,
+      "accuracy": 0.546875,
+      "accuracy_ci95": [
+        0.4375,
+        0.6562
+      ],
+      "recall_at_5": 0.7676846100759144,
+      "precision_at_5": 0.25471014492753624,
+      "mrr": 0.7717391304347826,
+      "ndcg_at_5": 0.7180139094681034,
+      "evidence_coverage": 0.9347826086956522,
+      "unsupported_answer_rate": 1.0,
+      "false_abstain_rate": 0.0,
+      "mean_context_tokens": 705.078125,
+      "latency_ms_p50": 7.387099998595659,
+      "latency_ms_p95": 9.92709999991348,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.0,
+        "dev/changelog": 1.0,
+        "dev/decisions": 0.6666666666666666,
+        "dev/latent": 0.5,
+        "dev/performance": 1.0,
+        "dev/roadmap": 0.0,
+        "dev/routing": 1.0,
+        "dev/security": 0.6666666666666666,
+        "heldout/absent_topic": 0.0,
+        "heldout/decisions": 1.0,
+        "heldout/latent": 1.0,
+        "heldout/performance": 1.0,
+        "heldout/routing": 0.6666666666666666,
+        "heldout/security": 1.0,
+        "heldout/temporal": 0.75
+      },
+      "ingest_ms_per_event": 4.353136974783074,
+      "storage_overhead_ratio": 5.025399362489781,
+      "pooled_accuracy_ci95": [
+        0.4375,
+        0.6562
+      ]
+    },
+    "hybrid_rag": {
+      "n": 64,
+      "accuracy": 0.625,
+      "accuracy_ci95": [
+        0.5156,
+        0.7344
+      ],
+      "recall_at_5": 0.8250365363536719,
+      "precision_at_5": 0.28659420289855075,
+      "mrr": 0.8695652173913043,
+      "ndcg_at_5": 0.7874835109766728,
+      "evidence_coverage": 1.0,
+      "unsupported_answer_rate": 1.0,
+      "false_abstain_rate": 0.0,
+      "mean_context_tokens": 716.0,
+      "latency_ms_p50": 5.891400003747549,
+      "latency_ms_p95": 7.605300001159776,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.0,
+        "dev/changelog": 1.0,
+        "dev/decisions": 0.8333333333333334,
+        "dev/latent": 0.75,
+        "dev/performance": 1.0,
+        "dev/roadmap": 1.0,
+        "dev/routing": 1.0,
+        "dev/security": 0.6666666666666666,
+        "heldout/absent_topic": 0.0,
+        "heldout/decisions": 1.0,
+        "heldout/latent": 1.0,
+        "heldout/performance": 1.0,
+        "heldout/routing": 1.0,
+        "heldout/security": 1.0,
+        "heldout/temporal": 0.75
+      },
+      "ingest_ms_per_event": 5.060076470581713,
+      "storage_overhead_ratio": 5.025399362489781,
+      "pooled_accuracy_ci95": [
+        0.5156,
+        0.7344
+      ]
+    },
+    "hybrid_rag_top1": {
+      "n": 64,
+      "accuracy": 0.421875,
+      "accuracy_ci95": [
+        0.3125,
+        0.5469
+      ],
+      "recall_at_5": 0.8250365363536719,
+      "precision_at_5": 0.28659420289855075,
+      "mrr": 0.8695652173913043,
+      "ndcg_at_5": 0.7874835109766728,
+      "evidence_coverage": 1.0,
+      "unsupported_answer_rate": 1.0,
+      "false_abstain_rate": 0.0,
+      "mean_context_tokens": 716.0,
+      "latency_ms_p50": 3.9270999986911193,
+      "latency_ms_p95": 5.364799995732028,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.0,
+        "dev/changelog": 0.5,
+        "dev/decisions": 0.4166666666666667,
+        "dev/latent": 0.75,
+        "dev/performance": 1.0,
+        "dev/roadmap": 0.0,
+        "dev/routing": 0.6666666666666666,
+        "dev/security": 0.5,
+        "heldout/absent_topic": 0.0,
+        "heldout/decisions": 0.0,
+        "heldout/latent": 1.0,
+        "heldout/performance": 0.6666666666666666,
+        "heldout/routing": 0.3333333333333333,
+        "heldout/security": 1.0,
+        "heldout/temporal": 0.75
+      },
+      "ingest_ms_per_event": 3.9320899159676874,
+      "storage_overhead_ratio": 5.025399362489781,
+      "pooled_accuracy_ci95": [
+        0.3125,
+        0.5469
+      ]
+    },
+    "hybrid_rag_gated": {
+      "n": 64,
+      "accuracy": 0.71875,
+      "accuracy_ci95": [
+        0.6094,
+        0.8125
+      ],
+      "recall_at_5": 0.8177901595420777,
+      "precision_at_5": 0.2822463768115942,
+      "mrr": 0.8623188405797101,
+      "ndcg_at_5": 0.782382655259034,
+      "evidence_coverage": 0.9782608695652174,
+      "unsupported_answer_rate": 0.6666666666666666,
+      "false_abstain_rate": 0.021739130434782608,
+      "mean_context_tokens": 650.578125,
+      "latency_ms_p50": 3.508900001179427,
+      "latency_ms_p95": 4.919400002108887,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.25,
+        "dev/changelog": 1.0,
+        "dev/decisions": 0.8333333333333334,
+        "dev/latent": 0.75,
+        "dev/performance": 1.0,
+        "dev/roadmap": 1.0,
+        "dev/routing": 1.0,
+        "dev/security": 0.6666666666666666,
+        "heldout/absent_topic": 0.5,
+        "heldout/decisions": 1.0,
+        "heldout/latent": 1.0,
+        "heldout/performance": 1.0,
+        "heldout/routing": 1.0,
+        "heldout/security": 1.0,
+        "heldout/temporal": 0.75
+      },
+      "ingest_ms_per_event": 2.356305042002448,
+      "storage_overhead_ratio": 5.025399362489781,
+      "pooled_accuracy_ci95": [
+        0.6094,
+        0.8125
+      ]
+    },
+    "memoraos": {
+      "n": 64,
+      "accuracy": 0.40625,
+      "accuracy_ci95": [
+        0.2812,
+        0.5312
+      ],
+      "recall_at_5": 0.3466183574879227,
+      "precision_at_5": 0.12246376811594203,
+      "mrr": 0.33333333333333337,
+      "ndcg_at_5": 0.3222497176405083,
+      "evidence_coverage": 0.391304347826087,
+      "unsupported_answer_rate": 0.16666666666666666,
+      "false_abstain_rate": 0.5,
+      "mean_context_tokens": 131.046875,
+      "latency_ms_p50": 22.08,
+      "latency_ms_p95": 48.741,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.75,
+        "dev/changelog": 0.5,
+        "dev/decisions": 0.25,
+        "dev/latent": 0.0,
+        "dev/performance": 0.5,
+        "dev/roadmap": 0.0,
+        "dev/routing": 0.3333333333333333,
+        "dev/security": 0.0,
+        "heldout/absent_topic": 1.0,
+        "heldout/decisions": 0.0,
+        "heldout/latent": 0.0,
+        "heldout/performance": 0.0,
+        "heldout/routing": 0.0,
+        "heldout/security": 0.75,
+        "heldout/temporal": 0.5
+      },
+      "ingest_ms_per_event": 7.899511764716247,
+      "storage_overhead_ratio": 25.322273357768164,
+      "pooled_accuracy_ci95": [
+        0.2812,
+        0.5312
+      ]
+    },
+    "memoraos_hybrid_only": {
+      "n": 64,
+      "accuracy": 0.40625,
+      "accuracy_ci95": [
+        0.2812,
+        0.5312
+      ],
+      "recall_at_5": 0.34420289855072467,
+      "precision_at_5": 0.11159420289855074,
+      "mrr": 0.31521739130434784,
+      "ndcg_at_5": 0.31053992744343545,
+      "evidence_coverage": 0.3695652173913043,
+      "unsupported_answer_rate": 0.16666666666666666,
+      "false_abstain_rate": 0.6304347826086957,
+      "mean_context_tokens": 107.015625,
+      "latency_ms_p50": 25.217,
+      "latency_ms_p95": 84.708,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.75,
+        "dev/changelog": 0.5,
+        "dev/decisions": 0.25,
+        "dev/latent": 0.0,
+        "dev/performance": 0.5,
+        "dev/roadmap": 0.0,
+        "dev/routing": 0.3333333333333333,
+        "dev/security": 0.0,
+        "heldout/absent_topic": 1.0,
+        "heldout/decisions": 0.0,
+        "heldout/latent": 0.0,
+        "heldout/performance": 0.0,
+        "heldout/routing": 0.0,
+        "heldout/security": 0.75,
+        "heldout/temporal": 0.5
+      },
+      "ingest_ms_per_event": 11.364717647054686,
+      "storage_overhead_ratio": 24.419250236540176,
+      "pooled_accuracy_ci95": [
+        0.2812,
+        0.5312
+      ]
+    }
+  },
+  "by_kind": {
+    "bm25": {
+      "dev:answerable": 0.8333333333333334,
+      "dev:unanswerable": 0.0,
+      "heldout:answerable": 0.9375,
+      "heldout:unanswerable": 0.0,
+      "split:dev": 0.5952380952380952,
+      "split:heldout": 0.6818181818181818,
+      "topic:absent_topic": 0.0,
+      "topic:changelog": 1.0,
+      "topic:decisions": 0.8461538461538461,
+      "topic:latent": 0.8,
+      "topic:performance": 1.0,
+      "topic:roadmap": 1.0,
+      "topic:routing": 0.8333333333333334,
+      "topic:security": 0.8,
+      "topic:temporal": 1.0
+    },
+    "vector": {
+      "dev:answerable": 0.7,
+      "dev:unanswerable": 0.0,
+      "heldout:answerable": 0.875,
+      "heldout:unanswerable": 0.0,
+      "split:dev": 0.5,
+      "split:heldout": 0.6363636363636364,
+      "topic:absent_topic": 0.0,
+      "topic:changelog": 1.0,
+      "topic:decisions": 0.6923076923076923,
+      "topic:latent": 0.6,
+      "topic:performance": 1.0,
+      "topic:roadmap": 0.0,
+      "topic:routing": 0.8333333333333334,
+      "topic:security": 0.8,
+      "topic:temporal": 0.75
+    },
+    "hybrid_rag": {
+      "dev:answerable": 0.8333333333333334,
+      "dev:unanswerable": 0.0,
+      "heldout:answerable": 0.9375,
+      "heldout:unanswerable": 0.0,
+      "split:dev": 0.5952380952380952,
+      "split:heldout": 0.6818181818181818,
+      "topic:absent_topic": 0.0,
+      "topic:changelog": 1.0,
+      "topic:decisions": 0.8461538461538461,
+      "topic:latent": 0.8,
+      "topic:performance": 1.0,
+      "topic:roadmap": 1.0,
+      "topic:routing": 1.0,
+      "topic:security": 0.8,
+      "topic:temporal": 0.75
+    },
+    "hybrid_rag_top1": {
+      "dev:answerable": 0.5333333333333333,
+      "dev:unanswerable": 0.0,
+      "heldout:answerable": 0.6875,
+      "heldout:unanswerable": 0.0,
+      "split:dev": 0.38095238095238093,
+      "split:heldout": 0.5,
+      "topic:absent_topic": 0.0,
+      "topic:changelog": 0.5,
+      "topic:decisions": 0.38461538461538464,
+      "topic:latent": 0.8,
+      "topic:performance": 0.8,
+      "topic:roadmap": 0.0,
+      "topic:routing": 0.5,
+      "topic:security": 0.7,
+      "topic:temporal": 0.75
+    },
+    "hybrid_rag_gated": {
+      "dev:answerable": 0.8333333333333334,
+      "dev:unanswerable": 0.25,
+      "heldout:answerable": 0.9375,
+      "heldout:unanswerable": 0.5,
+      "split:dev": 0.6666666666666666,
+      "split:heldout": 0.8181818181818182,
+      "topic:absent_topic": 0.3333333333333333,
+      "topic:changelog": 1.0,
+      "topic:decisions": 0.8461538461538461,
+      "topic:latent": 0.8,
+      "topic:performance": 1.0,
+      "topic:roadmap": 1.0,
+      "topic:routing": 1.0,
+      "topic:security": 0.8,
+      "topic:temporal": 0.75
+    },
+    "memoraos": {
+      "dev:answerable": 0.2,
+      "dev:unanswerable": 0.75,
+      "heldout:answerable": 0.3125,
+      "heldout:unanswerable": 1.0,
+      "split:dev": 0.35714285714285715,
+      "split:heldout": 0.5,
+      "topic:absent_topic": 0.8333333333333334,
+      "topic:changelog": 0.5,
+      "topic:decisions": 0.23076923076923078,
+      "topic:latent": 0.0,
+      "topic:performance": 0.2,
+      "topic:roadmap": 0.0,
+      "topic:routing": 0.16666666666666666,
+      "topic:security": 0.3,
+      "topic:temporal": 0.5
+    },
+    "memoraos_hybrid_only": {
+      "dev:answerable": 0.2,
+      "dev:unanswerable": 0.75,
+      "heldout:answerable": 0.3125,
+      "heldout:unanswerable": 1.0,
+      "split:dev": 0.35714285714285715,
+      "split:heldout": 0.5,
+      "topic:absent_topic": 0.8333333333333334,
+      "topic:changelog": 0.5,
+      "topic:decisions": 0.23076923076923078,
+      "topic:latent": 0.0,
+      "topic:performance": 0.2,
+      "topic:roadmap": 0.0,
+      "topic:routing": 0.16666666666666666,
+      "topic:security": 0.3,
+      "topic:temporal": 0.5
+    }
+  },
+  "transcripts": [
+    {
+      "qid": "rd0",
+      "question": "Which hash function chains the audit events?",
+      "tag": "dev/security",
+      "answerable": true,
+      "gold": [
+        "SHA256"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "| `events` | Append-only change log with `prev_hash`/`hash` chain (tamper evident) |",
+      "cited": [
+        "docs/ARCHITECTURE.md > Database schema (migration 1)",
+        "docs/TEMPORAL_MEMORY.md > Audit trail",
+        "docs/ARCHITECTURE.md > Architecture"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd1",
+      "question": "How are API keys stored on disk?",
+      "tag": "dev/security",
+      "answerable": true,
+      "gold": [
+        "SHA-256 hashes"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd2",
+      "question": "Which address does the REST API bind to by default?",
+      "tag": "dev/security",
+      "answerable": true,
+      "gold": [
+        "127.0.0.1"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd3",
+      "question": "What placeholder replaces a detected secret before it is stored?",
+      "tag": "dev/security",
+      "answerable": true,
+      "gold": [
+        "[REDACTED:type]"
+      ],
+      "status": "answered",
+      "strategy": "temporal",
+      "answer": "Events before \"# ADR-0007: System time is strictly monotonic\n**Status:** Accepted · 2026-11-17 (implemented during the audit)\n**Context.** CI failed intermittently on Windows (`test_temporal_memory`). Facts stored back-to-back received identical `recorded_at` values on a ~15 ms clock, and the timeline tie-break...\": [2022-01-01] ## Facts and extraction\n`extract_facts` is deterministic and rule-based: possessives (`X's salary is …`), first person (`my … is …`), `the P of X is …`, ~25 verb patterns (works at, lives in, uses, leads, depends on, is hosted in, …, including passive \"led by\"), list splitting (`uses A and B`), and... [2022-01-01] ## Two time axes\n\n| Axis | Columns | Meaning |\n|---|---|---|\n| Valid time | `valid_from`, `valid_until` | When the fact was true in the world (from the text: \"in 2024\", \"as of March 2026\", \"from 2022 to 2024\", or `effective_at`) |\n| System time | `recorded_at`, `retracted_at` | When MemoraOS...",
+      "cited": [
+        "docs/ADR/0007-monotonic-system-time.md > ADR-0007: System time is strictly monotonic",
+        "docs/MEMORY_DESIGN.md > Facts and extraction",
+        "docs/TEMPORAL_MEMORY.md > Two time axes"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd4",
+      "question": "What is the maximum number of characters accepted as input text?",
+      "tag": "dev/security",
+      "answerable": true,
+      "gold": [
+        "2 M character"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "with `[REDACTED:type]` **before** storage, indexing or embedding | `test_secrets_are_redacted_*` | | Prompt-injection defences | Retrieved memory is *data*: `render_untrusted_context` wraps excerpts in `<memory untrusted=\"true\">` after a policy line, neutralises `<`/`>` so text cannot forge or close tags; injection-like sentences are flagged (`possible_prompt_injection`) and never chosen as answers; nothing in memory is ever executed; LLM phrasing (optional) is accepted only if every number/proper noun appears in the evidence | `test_k_*`, `tests/security/` |",
+      "cited": [
+        "docs/SECURITY.md > Implemented controls",
+        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit",
+        "docs/V02_ARCHITECTURE.md > Invariants"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd5",
+      "question": "How does the memory rendering protect against injected instructions in retrieved text?",
+      "tag": "dev/security",
+      "answerable": true,
+      "gold": [
+        "untrusted"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd6",
+      "question": "Which setting is the score gap within which cheaper strategies win?",
+      "tag": "dev/routing",
+      "answerable": true,
+      "gold": [
+        "cost_tolerance"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "**Strategy selection**: every strategy gets a score from the category evidence; among strategies within `cost_tolerance` (default 0.1) of the best, the **cheapest** wins (`STRATEGY_COST`: exact 1 … multistage 10).",
+      "cited": [
+        "docs/ADAPTIVE_ROUTING.md > Pipeline",
+        "docs/ADR/0006-evidence-fusion-typed-path-search.md > ADR-0006: Evidence fusion by typed path search with validated steps",
+        "docs/API.md > Python (`memoraos.MemoryOS`)"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd7",
+      "question": "Which setting sets the minimum labelled outcomes before a learned routing override applies?",
+      "tag": "dev/routing",
+      "answerable": true,
+      "gold": [
+        "learning_min_samples"
+      ],
+      "status": "answered",
+      "strategy": "temporal",
+      "answer": "Events before \"## Adaptive strategy learning\nEvery recall is logged (strategy, category, latency, tokens, status). `POST /v1/feedback` / `MemoryOS.feedback(recall_id, correct=…)` attaches ground truth. `strategy_report()` aggregates accuracy per (category, strategy).\n**Learning is off by default**...\": [2026-11-17] # v0.2 Repository Audit\n\n_Audited 2026-11-17 against commit `b64f173` plus the uncommitted working tree. Every row is backed by source inspection, a test, or a runtime probe (`scripts/audit_probe.py`). README claims were not accepted as evidence._",
+      "cited": [
+        "docs/ADAPTIVE_ROUTING.md > Adaptive strategy learning",
+        "docs/V02_REPOSITORY_AUDIT.md > v0.2 Repository Audit"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd8",
+      "question": "Which confidence interval bound must a challenger strategy meet to replace the default?",
+      "tag": "dev/routing",
+      "answerable": true,
+      "gold": [
+        "Wilson"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd9",
+      "question": "Why did the Windows CI test fail intermittently?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "15 ms"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd10",
+      "question": "What caused the wrong latest value to be chosen in that CI failure?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "random fact id"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd11",
+      "question": "How much is a repeated system timestamp bumped?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "1 µs"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd12",
+      "question": "Which exception is raised when a model name is reused with a different vector dimension?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "EmbeddingModelMismatch"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "Vectors from different models are never compared; the registry enforces one dimension per model name.",
+      "cited": [
+        "docs/V02_ARCHITECTURE.md > Invariants",
+        "docs/ADR/0004-embedding-provider-v2.md > ADR-0004: Embedding provider v2 and a model registry",
+        "docs/API.md > Providers"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd13",
+      "question": "Which function wraps embedding providers that implement only the v0.1 protocol?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "adapt_embedder"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "Objects implementing only the v0.1 protocol are wrapped by `adapt_embedder()`.",
+      "cited": [
+        "docs/ADR/0004-embedding-provider-v2.md > ADR-0004: Embedding provider v2 and a model registry",
+        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit",
+        "docs/LATENT_MEMORY.md > Reproducible plan for a real learned implementation"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd14",
+      "question": "What weight do expanded query lists get by default?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "0.5 by default"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "- Query expansion produces additional ranked lists (expanded terms) weighted below the original (0.5 by default).",
+      "cited": [
+        "docs/ADR/0005-configurable-rank-fusion.md > ADR-0005: Configurable weighted RRF with entity and exact-value retrievers",
+        "CHANGELOG.md > Added",
+        "docs/RETRIEVAL.md > Configuration"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd15",
+      "question": "What is the canonical value key for a salary of 32 LPA?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "money:INR:annual:3200000"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "- **Value normalization**: `32 LPA`, `32 lakhs annually` and `₹32 lakh per annum` share one canonical key, and monthly pay is annualised (`₹2.5 lakh per month` = `30 LPA`); a different amount, currency or period never merges.",
+      "cited": [
+        "CHANGELOG.md > Added",
+        "docs/ADR/0002-structured-facts-and-value-keys.md > ADR-0002: Structured facts, canonical value keys, and source spans",
+        "docs/V02_REPOSITORY_AUDIT.md > 2. Findings that change the plan"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd16",
+      "question": "For which kind of predicate are monthly amounts annualized?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "compensation"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd17",
+      "question": "What happens to prompt-injection sentences before the LLM extraction call?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "removed before the call"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd18",
+      "question": "Which table records every extraction attempt?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "extraction_attempts"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "no provider seam | Route through a `MemoryExtractor` with spans, method and attempts | I | Medium | | Semantic extraction | `ingestion/extract.py`: ~25 verb rules, possessive/`my`/`of` forms, dates | F3, F4, F5, F7; paraphrase and synonym coverage is lexical; `EntityExtractor` only adds entity names, never facts | Typed schema, provider abstraction, normalizer, validation, safety (Part 6) | I / R | **High** (touches every fact) |",
+      "cited": [
+        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit",
+        "docs/V02_ARCHITECTURE.md > Storage changes (migration 2, additive)",
+        "docs/V02_IMPLEMENTATION_PLAN.md > Work packages (ordered by dependency)"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd19",
+      "question": "How is confidence computed over the steps of a fused evidence path?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "minimum"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "Confidence is the minimum over the steps, and the path is in the evidence and the plan notes.",
+      "cited": [
+        "docs/RETRIEVAL.md > Evidence fusion (`strategy=\"fusion\"`)",
+        "docs/ADR/0006-evidence-fusion-typed-path-search.md > ADR-0006: Evidence fusion by typed path search with validated steps",
+        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd20",
+      "question": "What kind of storage changes does ADR-0001 allow?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "gold": [
+        "additive"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "hybrid",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd21",
+      "question": "What is the arXiv number of the Memorilla paper?",
+      "tag": "dev/latent",
+      "answerable": true,
+      "gold": [
+        "2610.21375"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd22",
+      "question": "How much GPU memory does the Memorilla README call for?",
+      "tag": "dev/latent",
+      "answerable": true,
+      "gold": [
+        "80 GB"
+      ],
+      "status": "answered",
+      "strategy": "graph",
+      "answer": "LLM ~ Memorilla (co-mentioned) ; ChatProvider ~ LLM (co-mentioned) ; ChatProvider ~ MEMORY (co-mentioned) | Memorilla ~ Router (co-mentioned) ; README ~ Router (co-mentioned) | GPU ~ Memorilla (co-mentioned)",
+      "cited": [
+        "docs/BENCHMARK_METHODOLOGY.md > Systems",
+        "docs/ADAPTIVE_ROUTING.md > Pipeline",
+        "docs/RESEARCH_AND_COMPETITIVE_ANALYSIS.md > Feature matrix (what each project *documents*)"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd23",
+      "question": "How many training stages does Memorilla need?",
+      "tag": "dev/latent",
+      "answerable": true,
+      "gold": [
+        "three training stages"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd24",
+      "question": "Which class is the CPU slot-attention baseline for latent memory?",
+      "tag": "dev/latent",
+      "answerable": true,
+      "gold": [
+        "SlotAttentionMemory"
+      ],
+      "status": "answered",
+      "strategy": "exact",
+      "answer": "interface plus a CPU baseline; no learned module was trained",
+      "cited": [
+        "docs/RESEARCH_AND_COMPETITIVE_ANALYSIS.md > 5. What already exists vs. where a contribution is possible"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd25",
+      "question": "What per-query latency budget do the regression tests enforce?",
+      "tag": "dev/performance",
+      "answerable": true,
+      "gold": [
+        "250 ms"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd26",
+      "question": "What is the maximum number of memories per consolidation run?",
+      "tag": "dev/performance",
+      "answerable": true,
+      "gold": [
+        "5000"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "- `build_graph` and consolidation are O(n) / O(n²) in memories of a scope (`MAX_MEMORIES = 5000` per consolidation run).",
+      "cited": [
+        "docs/PERFORMANCE.md > Known scaling limits",
+        "docs/RESEARCH_AND_COMPETITIVE_ANALYSIS.md > 7. Explicitly unverified assumptions",
+        "docs/API.md > REST (`memoraos serve`)"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd27",
+      "question": "Which standard memory benchmarks are planned as adapters in the roadmap?",
+      "tag": "dev/roadmap",
+      "answerable": true,
+      "gold": [
+        "LongMemEval"
+      ],
+      "status": "answered",
+      "strategy": "vector",
+      "answer": "- Vector search is exact brute force over an in-memory matrix: fine to roughly 10⁵ memories per scope; beyond that use an ANN adapter (roadmap).",
+      "cited": [
+        "docs/PERFORMANCE.md > Known scaling limits",
+        "docs/ROADMAP.md > Roadmap",
+        "docs/BENCHMARK_METHODOLOGY.md > Adding a scenario or system"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd28",
+      "question": "What is the name of the automatic backup taken before a schema upgrade?",
+      "tag": "dev/changelog",
+      "answerable": true,
+      "gold": [
+        ".bak-v1"
+      ],
+      "status": "answered",
+      "strategy": "temporal",
+      "answer": "Events before \"## New and changed modules\n| Module | Responsibility | Depends on |\n|---|---|---|\n| `extraction/schema.py` | Pydantic `StructuredFact`, `SourceSpan`, `ExtractionResult`, `ExtractionAttempt` | none |\n| `extraction/values.py` | Parse numbers, lakh/crore/k/m, `LPA`, currency, period → canonical...\": [2026-11-17] # v0.2 Architecture\nA modular monolith. v0.2 adds four packages and extends storage additively; nothing is split into services.\n```mermaid\nflowchart TB\nAPP[Agents / apps] --> IF[Python · REST · MCP · TS SDK]\nIF --> AUTH[Auth + tenant isolation]\nAUTH --> SVC[MemoryOS application service]\nsubgraph... [2026-11-17] < admin) and optionally to user ids; `memoraos keys create` shows a key once | `test_api.py` | | Secure by default | `create_app` refuses to start with no keys unless `insecure_no_auth=True` (CLI `--insecure-no-auth`, development only); API binds to `127.0.0.1` by default; CORS is off unless... [2026-11-17] ## 6. Licensing and patent considerations\n- No code from the surveyed projects is copied or vendored.\nDesigns are independent; ideas (RRF, bitemporal validity, memory tokens) are published research.\n- Runtime dependencies are permissively licensed: NumPy (BSD-3), NetworkX (BSD-3), Pydantic (MIT),... [2026-11-17] (Qwen3-8B) input embedding space.\nNew documents can be added without retraining the LLM.\n| | Training | Three stages; GRPO for the TextWorld agent setting; README cites ~19 h on 4×H100.\n|\n| Reported results (self-reported) | With 16 tokens: best on 5 of 8 benchmarks vs.\nbaselines incl.\nMem0 and... [2026-11-17] ## 1. Memorilla (Stanford) – the latent-memory reference\n**Verified to exist.** Paper: \"Memorilla: Latent Semantic Memory for LLMs\", arXiv 2610.21375 (Fallahpour, Idehpour, Kothapalli, Mounier, Wu, Pardis, Leskovec). Code: <https://github.com/snap-stanford/memorilla> (Apache-2.0). Site:... [2026-11-17] search is exact brute force; scale beyond ~10⁵ memories per scope is unmeasured.\n8. Benchmark datasets are synthetic and project-authored; no LoCoMo/LongMemEval run; no external system run.\n9.\nQuery cache and graph cache are process-local; multi-process deployments share only SQLite state (caches... [2026-11-17] ## Modes (`Settings.extraction_mode`)\n\n| Mode | Behaviour |\n|---|---|\n| `rules` (default) | Deterministic English rules. Offline, no key, same output every time. |\n| `llm` | A chat model proposes facts; validated proposals are stored. If the model fails or returns invalid JSON, rules run instead.... [2026-11-17] # Benchmark Methodology\n\nThe Memory Benchmark Lab is part of the product. It is deterministic, executable with one command, and reports only what it measured.\n\n```bash\npython -m benchmarks.run                       # 3 seeds, full size (~2 min on a laptop) -> benchmarks/reports/\npython -m...",
+      "cited": [
+        "docs/V02_ARCHITECTURE.md > New and changed modules",
+        "docs/V02_ARCHITECTURE.md > v0.2 Architecture",
+        "docs/SECURITY.md > Implemented controls"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "rd29",
+      "question": "Which schema migration added fact polarity and extraction method columns?",
+      "tag": "dev/changelog",
+      "answerable": true,
+      "gold": [
+        "Schema migration 2"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "- **Schema migration 2** (additive; tested against a real v0.1 database in `tests/fixtures/v01.db`): fact polarity, extraction method/version, source span and normalized value columns; embedding provider/version/status metadata; `embedding_models` and `extraction_attempts` tables.",
+      "cited": [
+        "CHANGELOG.md > Added",
+        "docs/EXTRACTION.md > Storage",
+        "docs/V02_IMPLEMENTATION_PLAN.md > Work packages (ordered by dependency)"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd30",
+      "question": "When several strategies score within the tolerance, which one does the router choose?",
+      "tag": "heldout/routing",
+      "answerable": true,
+      "gold": [
+        "cheapest"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd31",
+      "question": "Which retrieval strategy does a question like 'Find error E4021' use?",
+      "tag": "heldout/routing",
+      "answerable": true,
+      "gold": [
+        "bm25"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd32",
+      "question": "How many logical CPUs did the performance measurements run on?",
+      "tag": "heldout/performance",
+      "answerable": true,
+      "gold": [
+        "8 logical CPUs"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd33",
+      "question": "Which Python version were the performance numbers measured with?",
+      "tag": "heldout/performance",
+      "answerable": true,
+      "gold": [
+        "3.14.3"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd34",
+      "question": "How much RAM did the benchmark machine have?",
+      "tag": "heldout/performance",
+      "answerable": true,
+      "gold": [
+        "7.7 GB"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd35",
+      "question": "Which security control prevents SQL injection?",
+      "tag": "heldout/security",
+      "answerable": true,
+      "gold": [
+        "parameterised"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "2 M character cap; strategy and source types are enums | `test_input_validation_and_errors` | | SQL injection | 100% parameterised queries; user text reaches FTS5 only as quoted terms; hostile identifiers are data | `tests/security/test_security.py` |",
+      "cited": [
+        "docs/SECURITY.md > Implemented controls",
+        "SECURITY.md > Reporting a vulnerability",
+        "docs/ARCHITECTURE.md > Technology decisions"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd36",
+      "question": "What does forget() do to the stored memory rows?",
+      "tag": "heldout/security",
+      "answerable": true,
+      "gold": [
+        "hard-delete"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "| Export & deletion | `export()` (everything a user owns, with version history); `forget(id)` / `forget(user, everything=True)` hard-delete memory rows, FTS entries, facts, mentions, graph links, versions, orphaned embeddings, orphaned sources and files, derived summaries, and retrieval logs that cite the memory; caches are cleared | `test_l_*` |",
+      "cited": [
+        "docs/SECURITY.md > Implemented controls",
+        "docs/MEMORY_DESIGN.md > Memory record",
+        "docs/MEMORY_DESIGN.md > Duplicates and corrections"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd37",
+      "question": "Is encryption at rest implemented in code?",
+      "tag": "heldout/security",
+      "answerable": true,
+      "gold": [
+        "not implemented in code"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "- **Encryption at rest** is not implemented in code.",
+      "cited": [
+        "docs/SECURITY.md > Not implemented / limitations",
+        "SECURITY.md > Reporting a vulnerability",
+        "docs/IMPLEMENTATION_STATUS.md > Phases"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd38",
+      "question": "Which tool is suggested for disk encryption of the data directory on Windows?",
+      "tag": "heldout/security",
+      "answerable": true,
+      "gold": [
+        "BitLocker"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd39",
+      "question": "Which Python version does the Memorilla reproduction plan require?",
+      "tag": "heldout/latent",
+      "answerable": true,
+      "gold": [
+        "Python 3.11"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd40",
+      "question": "What is the default value of adaptive_learning?",
+      "tag": "heldout/routing",
+      "answerable": true,
+      "gold": [
+        "adaptive_learning=False"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd41",
+      "question": "What happens when two values share the same explicit effective date?",
+      "tag": "heldout/temporal",
+      "answerable": true,
+      "gold": [
+        "same date"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "Both explicitly dated: later date → **update**; same date → **conflict**.",
+      "cited": [
+        "docs/TEMPORAL_MEMORY.md > Timeline construction (`truth/timeline.py`)",
+        "docs/V02_REPOSITORY_AUDIT.md > 2. Findings that change the plan",
+        "docs/ADR/0001-evolve-modular-monolith.md > ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd42",
+      "question": "Which version pair is the example of a possible version change?",
+      "tag": "heldout/temporal",
+      "answerable": true,
+      "gold": [
+        "Angular 16"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd43",
+      "question": "Which kind of relative date in stored text is not handled?",
+      "tag": "heldout/temporal",
+      "answerable": true,
+      "gold": [
+        "last month"
+      ],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
+    },
+    {
+      "qid": "rd44",
+      "question": "Which database table is append-only and hash-chained?",
+      "tag": "heldout/temporal",
+      "answerable": true,
+      "gold": [
+        "append-only"
+      ],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "SQLite + FTS5; brute-force cosine; NetworkX graph on demand; deterministic routing; extractive answers; bitemporal facts as rows (retract, never overwrite); append-only hash-chained events; API keys hashed with tenant/role binding; hard deletion with a content-free audit stub.",
+      "cited": [
+        "docs/IMPLEMENTATION_STATUS.md > Architectural decisions (see ARCHITECTURE.md for rationale)",
+        "docs/TEMPORAL_MEMORY.md > Audit trail",
+        "docs/ADR/0001-evolve-modular-monolith.md > ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only"
+      ],
+      "correct": true
+    },
+    {
+      "qid": "rd45",
+      "question": "What is the name of the typed model for an extracted fact in ADR-0002?",
+      "tag": "heldout/decisions",
+      "answerable": true,
+      "gold": [
+        "StructuredFact"
+      ],
+      "status": "answered",
+      "strategy": "exact",
+      "answer": "derived, rebuildable index over it (`MemoryOS.rebuild_facts()`)",
+      "cited": [
+        "docs/EXTRACTION.md > Extraction (v0.2)"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "ru0",
+      "question": "What is the monthly price of the hosted MemoraOS plan?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru1",
+      "question": "Which Kubernetes version does MemoraOS require?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru2",
+      "question": "Who founded the company behind MemoraOS?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru3",
+      "question": "Which GraphQL endpoint exposes recall?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "Statistics are exposed by `MemoryOS.stats()` / `GET /v1/stats`: counts, recall latency p50/p95, mean evidence tokens, unsupported rate, cache hits/misses, provider token/cost usage, storage bytes.",
+      "cited": [
+        "docs/PERFORMANCE.md > Optimisations implemented",
+        "docs/ARCHITECTURE.md > Request flow for `recall(query)`",
+        "docs/API.md > Python (`memoraos.MemoryOS`)"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "ru4",
+      "question": "What is the Windows installer filename?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru5",
+      "question": "Which default port does the Redis cache use?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru6",
+      "question": "Which SQLAlchemy version does the storage layer use?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru7",
+      "question": "Which Android versions are supported by the mobile app?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru8",
+      "question": "What is the SOC 2 certification status?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru9",
+      "question": "Which cloud region hosts the MemoraOS SaaS?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru10",
+      "question": "How many GitHub stars does the repository have?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "| CI pipeline | ✅ defined in `.github/workflows` — **not yet run on GitHub** (no remote repository in this workspace; locally the same commands pass) |",
+      "cited": [
+        "docs/IMPLEMENTATION_STATUS.md > Spec checklist (first-release definition of done)",
+        "docs/ADAPTIVE_ROUTING.md > Pipeline",
+        "SECURITY.md > Reporting a vulnerability"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "ru11",
+      "question": "Which Prometheus metric tracks recall latency?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "Metrics: accuracy (exact-match containment) with 95% bootstrap CI (1000 resamples, fixed seed), Recall@5, Precision@5, MRR, nDCG@5 over *source-event ids* of returned evidence, evidence coverage (a relevant source is among returned evidence), unsupported-answer rate, false-abstain rate, contradiction-detection accuracy, citation exactness (top evidence is the right note and its excerpt contains the answer), temporal accuracy by case, context tokens (≈ 4 chars/token estimate of returned evidence), retrieval latency (p50/p95), update cost (ms/event), storage ÷ raw text, restart time.",
+      "cited": [
+        "docs/BENCHMARK_METHODOLOGY.md > Scoring (all mechanical, no LLM judge)",
+        "docs/RESEARCH_AND_COMPETITIVE_ANALYSIS.md > 3. Self-reported benchmark numbers (context only)",
+        "docs/ARCHITECTURE.md > Risk register"
+      ],
+      "correct": false
+    },
+    {
+      "qid": "ru12",
+      "question": "What OAuth scopes does the API require?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru13",
+      "question": "Which Terraform module deploys MemoraOS?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru14",
+      "question": "Which Helm chart version is current?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru15",
+      "question": "Which PagerDuty service receives incident alerts?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru16",
+      "question": "What uptime does the service level agreement guarantee?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    },
+    {
+      "qid": "ru17",
+      "question": "Which Snowflake warehouse stores the benchmark results?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "gold": [],
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": true
+    }
+  ],
+  "wall_clock_seconds": 15.8
+}

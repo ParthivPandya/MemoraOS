@@ -31,6 +31,11 @@ SINGLE_VALUED = {
 SINGLE_HEADS = {"framework", "database", "version", "salary", "language", "title", "role", "status", "owner", "lead", "manager", "location", "city", "budget", "deadline", "email", "phone", "region", "provider", "editor", "stack", "os"}
 
 RELATIONAL_PREDICATES = {"works_at", "uses", "depends_on", "leads", "part_of", "hosted_in", "reports_to", "connected_to", "building", "lives_in"}
+# Nouns that name an attribute of something ("the budget is ...") as opposed to a verb relation.
+ATTRIBUTE_HEADS = SINGLE_HEADS | {"price", "cost", "revenue", "fee", "bonus"}
+
+# Predicates produced by the verb patterns in ingestion.extract (as opposed to named attributes like "database").
+VERB_PREDICATES = RELATIONAL_PREDICATES | {"prefers"}
 
 _VERSIONED = re.compile(r"^(?P<base>[A-Za-z][A-Za-z.#+\-]*?)[\s\-]*v?(?P<ver>\d+(?:\.\d+)*)$")
 

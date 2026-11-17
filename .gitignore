@@ -10,6 +10,8 @@ dist/
 *.db
 *.db-wal
 *.db-shm
+*.bak-*
+!tests/fixtures/*.db
 node_modules/
 .next/
 next-env.d.ts

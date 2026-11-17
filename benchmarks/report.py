@@ -42,7 +42,24 @@ def render_markdown(rep: dict) -> str:
     L.append("")
 
     L.append("## Overall accuracy\n")
-    L.append(_table(["System", "Macro accuracy (mean over scenarios)", "Pooled accuracy [95% CI]"], [[f"**{s}**" if s == "memoraos" else s, _pct(m[s]["macro_accuracy"]), f"{_pct(m[s]['pooled_accuracy'])} [{_pct(m[s]['pooled_accuracy_ci95'][0])}, {_pct(m[s]['pooled_accuracy_ci95'][1])}]"] for s in systems]))
+    has_split = all("pooled_accuracy_v02_scenarios" in m[s] and "pooled_accuracy_v01_suite" in m[s] for s in systems)
+
+    def ci(s: str, key: str) -> str:
+        lo, hi = m[s][f"{key}_ci95"]
+        return f"{_pct(m[s][key])} [{_pct(lo)}, {_pct(hi)}]"
+
+    headers = ["System", "Macro accuracy (mean over scenarios)", "Pooled accuracy [95% CI]"]
+    if has_split:
+        headers += ["v0.1 suite (16 scenarios) [95% CI]", "v0.2 scenarios (3) [95% CI]"]
+    rows = []
+    for s in systems:
+        row = [f"**{s}**" if s == "memoraos" else s, _pct(m[s]["macro_accuracy"]), ci(s, "pooled_accuracy")]
+        if has_split:
+            row += [ci(s, "pooled_accuracy_v01_suite"), ci(s, "pooled_accuracy_v02_scenarios")]
+        rows.append(row)
+    L.append(_table(headers, rows))
+    if has_split:
+        L.append("\nThe 16 v0.1 scenarios keep their original definitions so their headline stays comparable across releases; the 3 scenarios added in v0.2 (`value_normalization`, `negation_and_correction`, `evidence_fusion`) are reported separately and are also included in the pooled figure.")
     L.append("")
     L.append("## Accuracy by scenario\n")
     L.append(_table(["Scenario (n per seed set)"] + systems, [[f"{sc} ({m[systems[0]]['scenarios'][sc]['n']})"] + [_pct(m[s]["scenarios"][sc]["accuracy"]) for s in systems] for sc in scen]))
@@ -69,9 +86,9 @@ def render_markdown(rep: dict) -> str:
     metric_table("nDCG@5", "ndcg_at_5")
     metric_table("Citation exactness (top evidence is the right note AND its excerpt contains the answer)", "citation_exact_top1")
 
-    L.append("## Temporal accuracy breakdown\n")
+    L.append("## Accuracy breakdown by case (temporal, phrasing, normalization, negation, chains)\n")
     rows = []
-    for sc in ("temporal_reasoning", "historical_reconstruction", "memory_update_correction", "paraphrase_robustness"):
+    for sc in ("temporal_reasoning", "historical_reconstruction", "memory_update_correction", "paraphrase_robustness", "value_normalization", "negation_and_correction", "evidence_fusion"):
         if sc not in scen:
             continue
         tags = sorted({t for s in systems for t in m[s]["scenarios"][sc].get("accuracy_by_tag", {})})

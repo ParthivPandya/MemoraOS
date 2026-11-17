@@ -7,7 +7,7 @@
 | Valid time | `valid_from`, `valid_until` | When the fact was true in the world (from the text: "in 2024", "as of March 2026", "from 2022 to 2024", or `effective_at`) |
 | System time | `recorded_at`, `retracted_at` | When MemoraOS learned / withdrew it |
 
-Nothing is overwritten. A new salary adds a fact; a correction sets `retracted_at` on the old facts of that memory. "What did we know on D" filters `recorded_at ≤ D AND (retracted_at IS NULL OR retracted_at > D)` and reads memory text from `memory_versions` as of D, so later knowledge cannot leak (tested in scenario J).
+Nothing is overwritten. A new value adds a fact; a correction sets `retracted_at` on the old facts of that memory. "What did we know on D" filters `recorded_at ≤ D AND (retracted_at IS NULL OR retracted_at > D)` and reads memory text from `memory_versions` as of D, so later knowledge cannot leak (tested in scenario J).
 
 ## Timeline construction (`truth/timeline.py`)
 

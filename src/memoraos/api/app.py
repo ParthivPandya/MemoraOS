@@ -51,7 +51,7 @@ class RecallBody(ScopeBody):
     query: str = Field(min_length=1, max_length=2000)
     top_k: int | None = Field(default=None, ge=1, le=100)
     as_of: str | None = None
-    strategy: Literal["exact", "bm25", "vector", "hybrid", "graph", "temporal", "episodic", "procedural", "latent", "multistage"] | None = None
+    strategy: Literal["exact", "bm25", "vector", "hybrid", "graph", "fusion", "temporal", "episodic", "procedural", "latent", "multistage"] | None = None
     synthesize: bool = False
 
 

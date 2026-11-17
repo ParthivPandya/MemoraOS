@@ -9,9 +9,12 @@ from pathlib import Path
 from typing import Any
 
 from .config import Settings
+from .extraction.base import MemoryExtractor
+from .extraction.pipeline import build_extractor
+from .extraction.schema import ExtractionResult
 from .ingestion.classify import chunk_text, classify_category
 from .ingestion.dates import extract_dates
-from .ingestion.extract import ExtractedFact, extract_entities, extract_facts
+from .ingestion.extract import ExtractedFact
 from .models import (
     SOURCE_RELIABILITY,
     Contradiction,
@@ -22,7 +25,15 @@ from .models import (
     ScopeLevel,
 )
 from .models import RecallResult as RecallResultModel
-from .providers.base import ChatProvider, EmbeddingProvider, EntityExtractor, RerankProvider, Usage
+from .providers.base import (
+    ChatProvider,
+    EmbeddingProvider,
+    EntityExtractor,
+    ProviderError,
+    RerankProvider,
+    Usage,
+)
+from .providers.embeddings import BaseEmbeddingProvider, adapt_embedder
 from .providers.local import HashingEmbedder, LexicalReranker
 from .recall import LatentBackend, Recaller
 from .retrieval.facts import load_facts
@@ -34,7 +45,7 @@ from .storage.db import Database
 from .storage.visibility import visibility_clause, write_scope_id
 from .store import Store, adjust_reliability, content_hash, normalize_content
 from .truth.timeline import build_timeline
-from .util import Clock, IdFactory, new_id, to_ts, ts, utcnow
+from .util import Clock, IdFactory, new_id, to_ts, utcnow
 
 MAX_TEXT_CHARS = 2_000_000
 
@@ -60,20 +71,26 @@ class MemoryOS:
         clock: Clock | None = None,
         id_factory: IdFactory | None = None,
         latent: LatentBackend | None = None,
+        extractor: MemoryExtractor | None = None,
     ):
         self.settings = settings or Settings()
         self.clock: Clock = clock or utcnow
         self.new_id: IdFactory = id_factory or new_id
         self.db = Database(self.settings.db_path if str(self.settings.db_path) != ":memory:" else ":memory:")
-        self.embedder: EmbeddingProvider = embedder or HashingEmbedder(self.settings.embedding_dim)
+        self.embedder: BaseEmbeddingProvider = adapt_embedder(embedder or HashingEmbedder(self.settings.embedding_dim))
         self.chat = chat
         self.reranker: RerankProvider = reranker or LexicalReranker()
         self.entity_extractor = entity_extractor
+        self._extract_cache: dict[tuple[str, str], ExtractionResult] = {}
+        self.extractor: MemoryExtractor = extractor or build_extractor(
+            self.settings.extraction_mode, chat, usage_sink=self.record_usage, strict=self.settings.extraction_strict
+        )
         self.store = Store(self.db, self.embedder, self.settings, self.clock, self.new_id)
         self.vectors = VectorIndex(self.db, self.store)
         self.router = AdaptiveRouter(self.settings, classifier=router_classifier)
-        self.recaller = Recaller(self.db, self.store, self.settings, self.router, self.vectors, self.clock, chat=chat, latent=latent)
+        self.recaller = Recaller(self.db, self.store, self.settings, self.router, self.vectors, self.clock, chat=chat, latent=latent, reranker=self.reranker)
         self._scheduler = None
+        self.recaller.usage_sink = self.record_usage
 
     # ------------------------------------------------------------------ construction
     @classmethod
@@ -165,6 +182,8 @@ class MemoryOS:
         chunks = chunk_text(text, self.settings.chunk_chars, self.settings.chunk_overlap) or [text.strip()]
         vectors = self.store.embed_texts(chunks)
         explicit = [_to_extracted(f) for f in facts] if facts else None
+        # extraction runs before the write transaction so a slow model call never holds the database lock
+        extractions = self._extract_chunks(scope, level, chunks, explicit, extract)
 
         memory_ids: list[str] = []
         dup_of: str | None = None
@@ -178,7 +197,8 @@ class MemoryOS:
             for i, chunk in enumerate(chunks):
                 norm = normalize_content(chunk)
                 chash = content_hash(norm)
-                chunk_facts = explicit if (explicit is not None and i == 0) else (extract_facts(chunk) if extract and explicit is None else [])
+                extraction = extractions[i] or ExtractionResult()
+                chunk_facts = extraction.facts
                 mem_eff = eff or _text_date(chunk)
                 existing = conn.execute(
                     "SELECT id FROM memories WHERE tenant_id=? AND scope_level=? AND scope_id=? AND content_hash=? AND status='active' AND derived=0",
@@ -199,13 +219,14 @@ class MemoryOS:
                         conn, scope, level, source_id=sid, chunk_index=i, original=chunk, category=cat,
                         confidence=1.0, effective_at=mem_eff, metadata=md, vector=vectors[i],
                     )
-                    entities = extract_entities(chunk, chunk_facts)
+                    entities = self.extractor.extract_entities(chunk, chunk_facts)
                     if self.entity_extractor:
                         try:
                             entities.update({e.lower(): e for e in self.entity_extractor.extract(chunk).entities})
                         except Exception:  # noqa: BLE001 - optional enrichment must not block ingestion
                             pass
                     self.store.insert_mentions(conn, scope, level, mid, entities)
+                    self.store.insert_extraction_attempts(conn, scope.tenant_id, mid, extraction.attempts)
                     self.store.append_event(conn, scope.tenant_id, user_id, "memory.created", mid, {"source_id": sid, "category": cat, "version": 1})
                 memory_ids.append(mid)
                 if chunk_facts:
@@ -214,6 +235,31 @@ class MemoryOS:
             touched = self._facts_for_slots(scope, memory_ids)
         conflicts = self._open_conflicts(touched)
         return RememberResult(memory_ids=memory_ids, source_id=sid, duplicate_of=dup_of, facts_recorded=facts_recorded, conflicts=conflicts, redactions=redactions)
+
+    def _extract_chunks(
+        self, scope: Scope, level: ScopeLevel, chunks: list[str], explicit: list[ExtractedFact] | None, extract: bool
+    ) -> list[ExtractionResult | None]:
+        out: list[ExtractionResult | None] = []
+        for i, chunk in enumerate(chunks):
+            if explicit is not None:
+                out.append(ExtractionResult(facts=explicit if i == 0 else []))
+            elif not extract:
+                out.append(ExtractionResult())
+            else:
+                out.append(self._extract_cached(chunk))
+        return out
+
+    def _extract_cached(self, chunk: str) -> ExtractionResult:
+        """Exact repeats (restatements) re-use the earlier extraction so a model is not paid twice for the same text."""
+        key = (self.extractor.version, chunk)
+        hit = self._extract_cache.get(key)
+        if hit is not None:
+            return ExtractionResult(facts=list(hit.facts), attempts=[])
+        res = self.extractor.extract(chunk)
+        if len(self._extract_cache) >= 256:
+            self._extract_cache.pop(next(iter(self._extract_cache)))
+        self._extract_cache[key] = res
+        return res
 
     def remember_conversation(
         self, messages: Sequence[dict], *, user_id: str, tenant_id: str = "default", session_id: str | None = None,
@@ -372,7 +418,41 @@ class MemoryOS:
         return [self._record(r) for r in rows]
 
     def facts(self, *, user_id: str, tenant_id: str = "default", as_of: str | None = None, **scope_kw: Any) -> list[Fact]:
-        return load_facts(self.db, self.scope_for(user_id, tenant_id, **scope_kw), as_of=to_ts(as_of) if as_of else None)
+        """All stored facts including negated ones (see ``Fact.polarity``)."""
+        return load_facts(self.db, self.scope_for(user_id, tenant_id, **scope_kw), as_of=to_ts(as_of) if as_of else None, include_negated=True)
+
+    def rebuild_facts(self, *, user_id: str, tenant_id: str = "default", dry_run: bool = False, **scope_kw: Any) -> dict:
+        """Re-derive facts from the PRESERVED original text with the current extractor.
+
+        Old facts are retracted (kept for time travel), never deleted. Facts supplied explicitly by the caller
+        (structured records) cannot be re-derived from text and are left untouched. Use after upgrading from v0.1
+        or after switching ``extraction_mode``; ``dry_run`` reports what would change without writing.
+        """
+        scope = self.scope_for(user_id, tenant_id, **scope_kw)
+        vis, params = visibility_clause(scope, "m")
+        rows = self.db.query(
+            f"SELECT m.id, m.scope_level, m.original_content, m.effective_at, m.source_id FROM memories m WHERE m.status='active' AND m.derived=0 AND m.user_id=? AND {vis} ORDER BY m.rowid",
+            [user_id, *params],
+        )
+        report = {"memories": 0, "skipped_explicit": 0, "facts_retracted": 0, "facts_inserted": 0, "dry_run": dry_run}
+        for row in rows:
+            if self.db.one("SELECT 1 FROM facts WHERE memory_id=? AND extraction_method='explicit' AND retracted_at IS NULL LIMIT 1", (row["id"],)):
+                report["skipped_explicit"] += 1
+                continue
+            extraction = self.extractor.extract(row["original_content"])
+            report["memories"] += 1
+            old = self.db.one("SELECT COUNT(*) FROM facts WHERE memory_id=? AND retracted_at IS NULL", (row["id"],))[0]
+            report["facts_retracted"] += old
+            report["facts_inserted"] += len(extraction.facts)
+            if dry_run:
+                continue
+            reliability = self.db.one("SELECT reliability FROM sources WHERE id=?", (row["source_id"],))["reliability"]
+            with self.db.tx() as conn:
+                self.store.retract_facts(conn, row["id"])
+                self.store.insert_facts(conn, scope, row["scope_level"], row["id"], extraction.facts, reliability=reliability, default_valid_from=row["effective_at"])
+                self.store.insert_extraction_attempts(conn, tenant_id, row["id"], extraction.attempts)
+                self.store.append_event(conn, tenant_id, user_id, "memory.facts_rebuilt", row["id"], {"retracted": old, "inserted": len(extraction.facts), "extractor": self.extractor.version})
+        return report
 
     def contradictions(self, *, user_id: str, tenant_id: str = "default", include_resolved: bool = True, **scope_kw: Any) -> list[Contradiction]:
         """Every conflict or version change across the visible facts."""
@@ -384,6 +464,64 @@ class MemoryOS:
         for fs in groups.values():
             if len({f.object_key for f in fs}) > 1:
                 out.extend(c for c in build_timeline(fs).contradictions if include_resolved or not c.resolved)
+        return out
+
+    # ------------------------------------------------------------------ embedding maintenance
+    def reembed(self, *, tenant_id: str = "default", force: bool = False, batch_size: int = 64, prune_stale: bool = False) -> dict:
+        """Embed every memory with the CURRENT model (e.g. after switching providers).
+
+        Re-embedding is derived from the preserved original text, so nothing is lost. Batches that fail (provider
+        outage) are counted and skipped, leaving those memories on their previous vectors; call again to finish.
+        Vectors of other models are kept (marked stale) so a rollback is possible, unless ``prune_stale``.
+        """
+        model = self.store.model_key
+        if force:
+            self.store.drop_model_vectors(model)
+            self.store._registered = None
+        rows = self.db.query(
+            "SELECT m.id, m.normalized_content FROM memories m WHERE m.tenant_id=? AND m.status='active'"
+            " AND (m.embedding_model IS NULL OR m.embedding_model != ?) ORDER BY m.rowid",
+            (tenant_id, model),
+        )
+        embedded = failed = 0
+        errors: list[str] = []
+        for i in range(0, len(rows), max(1, batch_size)):
+            part = rows[i : i + batch_size]
+            try:
+                self.store.embed_texts([r["normalized_content"] for r in part])
+            except ProviderError as exc:
+                failed += len(part)
+                errors.append(str(exc)[:200])
+                continue
+            with self.db.tx() as conn:
+                for r in part:
+                    conn.execute("UPDATE memories SET embedding_hash=?, embedding_model=? WHERE id=?", (content_hash(r["normalized_content"]), model, r["id"]))
+            embedded += len(part)
+        with self.db.tx() as conn:
+            if failed == 0:
+                conn.execute("UPDATE embeddings SET status='stale' WHERE model != ?", (model,))
+            if prune_stale and failed == 0:
+                conn.execute("DELETE FROM embeddings WHERE status='stale'")
+        self.vectors.invalidate()
+        return {"model": model, "embedded": embedded, "failed": failed, "remaining": failed, "errors": errors[:5], "forced": force}
+
+    def rebuild_index(self, *, tenant_id: str = "default") -> dict:
+        """Rebuild every search index from the stored originals: vectors for the current model and the full-text index."""
+        report = self.reembed(tenant_id=tenant_id)
+        with self.db.tx() as conn:
+            conn.execute("DELETE FROM memories_fts")
+            rows = conn.execute("SELECT rowid, normalized_content FROM memories WHERE status='active'").fetchall()
+            conn.executemany("INSERT INTO memories_fts(rowid, content) VALUES(?,?)", [(r["rowid"], r["normalized_content"]) for r in rows])
+        self.vectors.invalidate()
+        return {**report, "fts_rows": len(rows)}
+
+    def embedding_info(self, *, deep: bool = False) -> dict:
+        info = self.embedder.get_model_info().to_dict()
+        stored = self.db.query("SELECT model, provider, model_version, dim, active FROM embedding_models ORDER BY first_seen_at")
+        out = {"active": info, "registered": [dict(r) for r in stored]}
+        if deep:
+            h = self.embedder.health_check()
+            out["health"] = {"ok": h.ok, "detail": h.detail, "latency_ms": round(h.latency_ms, 2)}
         return out
 
     # ------------------------------------------------------------------ correct / verify / forget
@@ -399,7 +537,8 @@ class MemoryOS:
         self.store.embed_texts([new_content])  # warms the embedding cache used by vector search
         level = row["scope_level"]
         src = self.db.one("SELECT reliability FROM sources WHERE id=?", (row["source_id"],))
-        new_facts = extract_facts(new_content)
+        extraction = self.extractor.extract(new_content)
+        new_facts = extraction.facts
         with self.db.tx() as conn:
             version = row["version"] + 1
             now = self.store.now()
@@ -415,8 +554,9 @@ class MemoryOS:
             )
             retracted = self.store.retract_facts(conn, memory_id)
             conn.execute("DELETE FROM mentions WHERE memory_id=?", (memory_id,))
-            entities = extract_entities(new_content, new_facts)
+            entities = self.extractor.extract_entities(new_content, new_facts)
             self.store.insert_mentions(conn, scope, level, memory_id, entities)
+            self.store.insert_extraction_attempts(conn, tenant_id, memory_id, extraction.attempts)
             if new_facts:
                 self.store.insert_facts(conn, scope, level, memory_id, new_facts, reliability=src["reliability"], default_valid_from=row["effective_at"])
             self.store.append_event(conn, tenant_id, user_id, "memory.corrected", memory_id, {"from_version": row["version"], "to_version": version, "reason": reason, "facts_retracted": retracted})
@@ -487,7 +627,7 @@ class MemoryOS:
             if not fs:
                 return {"subject": subject, "predicate": predicate, "timeline": [], "contradictions": []}
             tl = build_timeline(fs)
-            return {"subject": subject, "predicate": predicate, "timeline": [e.model_dump() for e in tl.entries(ts(self.clock()))], "contradictions": [c.model_dump() for c in tl.contradictions]}
+            return {"subject": subject, "predicate": predicate, "timeline": [e.model_dump() for e in tl.entries(self.store.now())], "contradictions": [c.model_dump() for c in tl.contradictions]}
         raise ValueError("provide memory_id, or subject and predicate")
 
     def snapshot(self, as_of: str, *, user_id: str, tenant_id: str = "default", **scope_kw: Any) -> dict:
@@ -500,7 +640,7 @@ class MemoryOS:
 
     def changes(self, since: str, until: str | None = None, *, user_id: str, tenant_id: str = "default") -> list[dict]:
         """Change log (before/after) of this user's memories between two instants."""
-        a, b = to_ts(since), to_ts(until) if until else ts(self.clock())
+        a, b = to_ts(since), to_ts(until) if until else self.store.now()
         rows = self.db.query(
             "SELECT e.seq, e.ts, e.type, e.memory_id, e.payload FROM events e LEFT JOIN memories m ON m.id = e.memory_id"
             " WHERE e.tenant_id=? AND e.ts > ? AND e.ts <= ? AND (m.user_id=? OR (m.id IS NULL AND e.actor=?)) AND e.type != 'fact.recorded' ORDER BY e.seq",
@@ -644,9 +784,15 @@ class MemoryOS:
             "embedder": self.embedder.name,
         }
 
-    def health(self) -> dict:
+    def health(self, *, deep: bool = False) -> dict:
+        """Liveness. ``deep=True`` also probes the embedding provider (may make a network call)."""
         ok = self.db.one("SELECT 1")[0] == 1
-        return {"status": "ok" if ok else "error", "schema_version": self.db.schema_version, "audit_chain_valid": self.verify_audit_chain(), "embedder": self.embedder.name, "chat_provider": getattr(self.chat, "name", None)}
+        out = {"status": "ok" if ok else "error", "schema_version": self.db.schema_version, "audit_chain_valid": self.verify_audit_chain(), "embedder": self.embedder.name, "chat_provider": getattr(self.chat, "name", None), "extractor": self.extractor.name}
+        if deep:
+            out["embedding"] = self.embedding_info(deep=True)
+            if ok and not out["embedding"]["health"]["ok"]:
+                out["status"] = "degraded"
+        return out
 
 
 def _to_extracted(f: dict | ExtractedFact) -> ExtractedFact:
@@ -661,6 +807,7 @@ def _to_extracted(f: dict | ExtractedFact) -> ExtractedFact:
         subject=str(f["subject"]), predicate=norm_predicate(str(f["predicate"])), object=str(f["object"]),
         valid_from=f.get("valid_from"), valid_until=f.get("valid_until"), precision=None,
         confidence=float(f.get("confidence", 1.0)), excerpt=str(f.get("excerpt", f"{f['subject']} {f['predicate']} {f['object']}")),
+        polarity=str(f.get("polarity", "affirmed")), method="explicit",
     )
 
 

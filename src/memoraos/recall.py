@@ -6,13 +6,16 @@ import json
 import re
 import time
 from collections import OrderedDict
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime
 from typing import Protocol
 
 import numpy as np
 
 from .config import Settings
+from .extraction.validate import predicate_cue_present
+from .fusion import FusionResult, evidence_fusion
+from .fusion.plan import names_a_chain
 from .models import (
     Confidence,
     Contradiction,
@@ -21,9 +24,13 @@ from .models import (
     TimelineEntry,
 )
 from .models import RecallResult as RecallResultModel
-from .providers.base import ChatProvider, ProviderError
-from .retrieval.facts import SlotQuery, match_slots
-from .retrieval.fusion import rrf
+from .providers.base import ChatProvider, ProviderError, RerankProvider
+from .providers.local import split_sentences
+from .retrieval.answer_type import detect_answer_type
+from .retrieval.entity import entity_search, exact_search
+from .retrieval.expand import expand_query, predicate_hints
+from .retrieval.facts import SlotQuery, load_aliases, match_slots
+from .retrieval.fusion import fuse, rrf
 from .retrieval.graph import GraphResult, build_graph, graph_retrieve, query_entities
 from .retrieval.lexical import Candidate, PyBM25, fts_search
 from .retrieval.vector import VectorIndex, top_k_cosine
@@ -37,6 +44,7 @@ from .util import Clock, estimate_tokens, new_id, parse_ts, stem, to_ts, tokeniz
 
 INSUFFICIENT = "The stored memory does not establish an answer to this question."
 EXCERPT_CHARS = 300
+_VERSION_TOKEN = re.compile(r"(?<![\w.])v?(\d+(?:\.\d+)+)(?!\w)")
 
 
 class LatentBackend(Protocol):
@@ -96,6 +104,7 @@ class Ctx:
     top_k: int
     now_iso: str
     _sq: SlotQuery | None = None
+    _fusion: FusionResult | None = None
 
     @property
     def when(self) -> str:
@@ -105,11 +114,14 @@ class Ctx:
 class Recaller:
     def __init__(
         self, db: Database, store: Store, settings: Settings, router: AdaptiveRouter, vectors: VectorIndex, clock: Clock,
-        *, chat: ChatProvider | None = None, latent: LatentBackend | None = None,
+        *, chat: ChatProvider | None = None, latent: LatentBackend | None = None, reranker: RerankProvider | None = None,
     ):
         self.db, self.store, self.settings, self.router, self.vectors, self.clock = db, store, settings, router, vectors, clock
         self.chat = chat
         self.latent = latent
+        self.reranker = reranker
+        self.usage_sink = None
+        self.rerank_failures = 0
         self._cache: OrderedDict[tuple, RecallResultModel] = OrderedDict()
         self._graph_cache: tuple | None = None
         self.cache_hits = 0
@@ -118,7 +130,13 @@ class Recaller:
     # ---------------------------------------------------------------- helpers
     def _slots(self, ctx: Ctx) -> SlotQuery:
         if ctx._sq is None:
-            ctx._sq = match_slots(self.db, ctx.scope, ctx.query, as_of=ctx.as_of)
+            query = ctx.query
+            if self.settings.predicate_hints:
+                # "How much does Priya make?" never says "salary"; the hint lets the attribute match without changing the question
+                hints = [term for term, _ in predicate_hints(query)]
+                if hints:
+                    query = f"{query} {' '.join(hints)}"
+            ctx._sq = match_slots(self.db, ctx.scope, query, as_of=ctx.as_of)
         return ctx._sq
 
     def _graph(self, scope: Scope, as_of: str | None):
@@ -167,7 +185,48 @@ class Recaller:
         return RouterHints(
             slot_match=bool(self._slots(ctx)), graph_entities=entities, procedural_memories=proc is not None,
             latent_available=self.latent is not None,
+            fusion_applicable=self._fusion_applicable(ctx),
         )
+
+    def _fusion_result(self, ctx: Ctx) -> FusionResult:
+        if ctx._fusion is None:
+            cfg = self.settings
+            ctx._fusion = evidence_fusion(
+                self.db, ctx.scope, ctx.query, when=ctx.when, as_of=ctx.as_of, max_hops=cfg.evidence_max_hops,
+                max_paths=cfg.evidence_max_paths, max_expansions=cfg.evidence_max_expansions,
+            )
+        return ctx._fusion
+
+    def _fusion_applicable(self, ctx: Ctx) -> bool:
+        # cheap textual gate first: building the fact graph is only worth it for questions with a typed answer
+        if not self.settings.evidence_fusion or detect_answer_type(ctx.query) is None or ctx.feats.capitalized_entities < 1:
+            return False
+        plan = self._fusion_result(ctx).plan
+        return bool(plan and plan.applicable)
+
+    def _fusion_outcome(self, ctx: Ctx) -> Outcome:
+        res = self._fusion_result(ctx)
+        out = Outcome("fusion", n_candidates=len(res.paths), notes=list(res.notes))
+        if res.status == "insufficient_evidence":
+            return out
+        rows = self.load_rows(ctx.scope, list({f.memory_id for f in res.facts}), ctx.as_of)
+        for f in res.facts:
+            row = rows.get(f.memory_id)
+            if row is None:
+                continue
+            ev = self._evidence(row, f.excerpt or self._short(row.content), "path", f.extraction_confidence)
+            ev.effective_at = f.valid_from or row.effective_at
+            ev.source_reliability = f.source_reliability
+            if res.status == "conflict":
+                ev.flags.append("conflicting_value")
+            out.evidence.append(ev)
+        out.notes.extend(f"path: {t}" for t in res.trace)
+        out.status, out.answer = res.status, res.answer
+        out.temporal_validity = "conflicted" if res.status == "conflict" else ("historical" if ctx.as_of else "current")
+        out.extraction_confidence, out.source_reliability = res.confidence, res.reliability
+        out.coverage = out.relevance = 1.0
+        out.flags = list(dict.fromkeys(f for e in out.evidence for f in e.flags if f == INJECTION_FLAG))
+        return out
 
     # ---------------------------------------------------------------- candidate generation
     def _snapshot(self, scope: Scope, as_of: str) -> dict[str, str]:
@@ -196,8 +255,65 @@ class Recaller:
         return self.vectors.search(ctx.scope, ctx.query, k)
 
     def hybrid(self, ctx: Ctx, k: int) -> list[Candidate]:
-        lists = {"bm25": self.lexical(ctx, k), "vector": self.vector(ctx, k)}
-        return rrf({n: c for n, c in lists.items() if c}, self.settings.rrf_k)
+        """Fuse the configured retrievers (default BM25 + vector), optionally over query variants, then rerank."""
+        cfg = self.settings
+        queries: list[tuple[Ctx, float, str]] = [(ctx, 1.0, "")]
+        if cfg.query_expansion:
+            exp = expand_query(
+                ctx.query, aliases=load_aliases(self.db, ctx.scope), chat=self.chat, use_llm=cfg.query_rewrite_llm,
+                on_usage=self.usage_sink,
+            )
+            for i, v in enumerate(exp.variants, start=1):
+                queries.append((replace(ctx, query=v.text, _sq=None), v.weight * cfg.expansion_weight / 0.5, f"x{i}"))
+        lists: dict[str, list[Candidate]] = {}
+        weights: dict[str, float] = {}
+        for sub, qw, tag in queries:
+            for name in cfg.fusion_retrievers:
+                cands = self._retrieve(name, sub, k)
+                if not cands:
+                    continue
+                key = f"{name}@{tag}" if tag else name
+                lists[key] = cands
+                base_w = cfg.fusion_weights.get(name, 1.0) if cfg.fusion_strategy != "rrf" else 1.0
+                weights[key] = base_w * qw
+        fused = fuse(lists, strategy=cfg.fusion_strategy, weights=weights, k=cfg.rrf_k)
+        return self._rerank(ctx, fused)
+
+    def _retrieve(self, name: str, ctx: Ctx, k: int) -> list[Candidate]:
+        if name == "bm25":
+            return self.lexical(ctx, k)
+        if name == "vector":
+            return self.vector(ctx, k)
+        if ctx.as_of:  # entity/exact read the live index only; historical queries use bm25 + vector
+            return []
+        if name == "entity":
+            return entity_search(self.db, ctx.scope, ctx.query, k)
+        if name == "exact":
+            return exact_search(self.db, ctx.scope, ctx.query, k)
+        raise ValueError(f"unknown retriever '{name}'")
+
+    def _rerank(self, ctx: Ctx, cands: list[Candidate]) -> list[Candidate]:
+        """Reorder the head of the fused list with the reranker; any failure keeps the fused order."""
+        if self.settings.rerank != "on" or self.reranker is None or len(cands) < 2:
+            return cands
+        head = cands[: self.settings.rerank_top_n]
+        rows = self.load_rows(ctx.scope, [c.memory_id for c in head], ctx.as_of)
+        head = [c for c in head if c.memory_id in rows]
+        if len(head) < 2:
+            return cands
+        try:
+            scores = self.reranker.rerank(ctx.query, [rows[c.memory_id].content for c in head])
+            if len(scores) != len(head):
+                raise ProviderError("reranker returned the wrong number of scores")
+        except Exception:  # noqa: BLE001 - a reranker outage must degrade to the fused order, never fail recall
+            self.rerank_failures += 1
+            return cands
+        order = sorted(range(len(head)), key=lambda i: (-scores[i], i))
+        out = []
+        for new_rank, i in enumerate(order, start=1):
+            c = head[i]
+            out.append(Candidate(c.memory_id, c.score, c.strategy, {**(c.detail or {}), "rerank_score": float(scores[i]), "pre_rank": i + 1, "post_rank": new_rank}))
+        return out + [c for c in cands[self.settings.rerank_top_n :]]
 
     def _filter_rows(self, ctx: Ctx, cands: list[Candidate], pred) -> tuple[list[Candidate], dict[str, Row]]:
         rows = self.load_rows(ctx.scope, [c.memory_id for c in cands], ctx.as_of)
@@ -226,16 +342,86 @@ class Recaller:
             return 0.0
         top = cands[0]
         if top.strategy == "hybrid":
+            ceiling = (top.detail or {}).get("ceiling")
+            if ceiling:
+                return max(0.0, min(1.0, top.score / ceiling))
             n_lists = max(1, len((top.detail or {}).get("ranks", {1: 1})))
             return min(1.0, top.score / (n_lists / (self.settings.rrf_k + 1)) / max(1, 1))
         if top.strategy == "vector":
             return max(0.0, min(1.0, top.score))
         return top.score / (top.score + 3.0)
 
+    def _anchored(self, pa, caller_max_sentences: int) -> bool:
+        """Extra sentences may extend an answer but never create its support: when the answer was composed from more
+        sentences than the strategy itself asked for, its best single sentence must meet the coverage threshold alone."""
+        if len(pa.sentences) <= caller_max_sentences:
+            return True
+        return pa.anchor_coverage >= self.settings.min_anchor_coverage
+
     def _supported(self, coverage: float, cands: list[Candidate]) -> bool:
         if coverage >= self.settings.min_evidence_coverage:
             return True
         return False
+
+    @staticmethod
+    def _unmentioned_version(query: str, sentences: list[tuple[str, str]]) -> str:
+        """A question that names a specific version or number ("Python 3.11", "0.5") is not answered by a passage that
+        never contains it: sharing the other words ("latest version of Python") is not support."""
+        if not sentences:
+            return ""
+        text = " ".join(s for _, s in sentences)
+        for m in _VERSION_TOKEN.finditer(query):
+            if not re.search(rf"(?<![\d.]){re.escape(m.group(1))}(?!\d)", text):
+                return f"the question names {m.group(1)}, which the best passage never mentions"
+        return ""
+
+    @staticmethod
+    def _lacks_answer_type(query: str, sentences: list[tuple[str, str]]) -> str:
+        """For questions that ask for a specific kind of value (a region, a person who leads, a residence), a
+        passage that never mentions anything of that kind cannot be the answer, however many query words it shares."""
+        at = detect_answer_type(query)
+        if at is None or not at.strict or not sentences:
+            return ""
+        if any(predicate_cue_present(p, s) for p in at.predicates for _, s in sentences):
+            return ""
+        return f"the question asks for a {at.name}, but the best passage says nothing of that kind"
+
+    def _suppressed_sentences(self, ids: list[str], as_of: str | None = None) -> dict[str, list[str]]:
+        """Sentences that must not be quoted as positive answers: those that state a negation ("I do not use
+        Angular"), and those whose affirmed fact a later negation has retired ("I no longer use Angular").
+
+        This works per sentence, not per memory: a long document section that merely contains the word "not"
+        somewhere must remain answerable from its other sentences.
+        """
+        if not ids:
+            return {}
+        marks = ",".join("?" * len(ids))
+        cap = " AND n.recorded_at <= ?" if as_of else ""
+        out: dict[str, list[str]] = {}
+        for r in self.db.query(f"SELECT memory_id, excerpt FROM facts WHERE memory_id IN ({marks}) AND retracted_at IS NULL AND polarity='negated'", ids):
+            out.setdefault(r[0], []).append(r[1])
+        retired = self.db.query(
+            f"SELECT f.memory_id, f.excerpt FROM facts f WHERE f.memory_id IN ({marks}) AND f.retracted_at IS NULL AND f.polarity='affirmed'"
+            " AND EXISTS(SELECT 1 FROM facts n WHERE n.polarity='negated' AND n.retracted_at IS NULL"
+            " AND n.tenant_id=f.tenant_id AND n.user_id=f.user_id AND n.subject_key=f.subject_key AND n.predicate=f.predicate"
+            f" AND n.object_key=f.object_key AND n.recorded_at>f.recorded_at{cap})",
+            [*ids, *([as_of] if as_of else [])],
+        )
+        for r in retired:
+            out.setdefault(r[0], []).append(r[1])
+        return out
+
+    @staticmethod
+    def _without_suppressed(text: str, excerpts: list[str]) -> str:
+        if not excerpts:
+            return text
+        kept = []
+        for s in split_sentences(text):
+            st = s.strip()
+            if any(e.strip() and (st == e.strip() or (e.strip() in st and len(e.strip()) >= 0.6 * len(st))) for e in excerpts):
+                continue
+            kept.append(s)
+        return " ".join(kept)
 
     def _passages(self, ctx: Ctx, strategy: str, cands: list[Candidate], *, whole: bool = False, max_sentences: int = 1, prefer_derived: bool = False, rows: dict[str, Row] | None = None) -> Outcome:
         out = Outcome(strategy=strategy, n_candidates=len(cands))
@@ -247,15 +433,30 @@ class Recaller:
         # collapse near-duplicates onto their canonical memory
         present = {c.memory_id for c in ordered}
         ordered = [c for c in ordered if not (rows[c.memory_id].duplicate_of and rows[c.memory_id].duplicate_of in present)]
+        # a sentence that only states a negation ("I do not use Angular") must not be quoted as if it affirmed something
+        suppressed = self._suppressed_sentences([c.memory_id for c in ordered], ctx.as_of)
+        texts = {c.memory_id: self._without_suppressed(rows[c.memory_id].content, suppressed.get(c.memory_id, [])) for c in ordered}
+        dropped = [c for c in ordered if not texts[c.memory_id].strip()]
+        if dropped:
+            ordered = [c for c in ordered if texts[c.memory_id].strip()]
+            out.notes.append("ignored memories that only state what is NOT the case")
         orig = [c for c in ordered if not rows[c.memory_id].derived]
         der = [c for c in ordered if rows[c.memory_id].derived]
         ordered = (der + orig) if prefer_derived else (orig + der)
         if not ordered:
             return out
         out.relevance = round(self._relevance(cands), 4)
-        pa = compose_passage_answer(ctx.feats.terms, [(c.memory_id, rows[c.memory_id].content) for c in ordered[: max(5, ctx.top_k)]], max_sentences=max_sentences, whole_passage=whole)
+        limit = max(max_sentences, self.settings.answer_max_sentences)
+        # A question that names a chain ("the project Alice manages ...") must be proven by evidence fusion; stitching
+        # sentences from different memories would answer it by coincidence, so extra sentences must share one memory.
+        chain = names_a_chain(ctx.query)
+        pa = compose_passage_answer(
+            ctx.feats.terms, [(c.memory_id, texts[c.memory_id]) for c in ordered[: max(5, ctx.top_k)]], max_sentences=limit, whole_passage=whole,
+            same_memory_after=max_sentences if (limit > max_sentences and chain) else None,
+        )
         out.flags = pa.flags
         out.coverage = round(pa.coverage, 4)
+        wrong_kind = self._lacks_answer_type(ctx.query, pa.sentences) or self._unmentioned_version(ctx.query, pa.sentences)
         chosen_ids = {m for m, _ in pa.sentences}
         score_of = {c.memory_id: c.score for c in ordered}
         for mid, sent in pa.sentences:
@@ -269,11 +470,13 @@ class Recaller:
         has_answer_terms = not non_entity or bool(pa.covered & set(non_entity))
         missing_entities = [t for t in ctx.feats.entity_terms if t in set(ctx.feats.terms) and t not in pa.covered]
         head = ctx.feats.head_term
-        missing_head = bool(head and len(non_entity) >= 2 and head not in pa.covered and head not in set(ctx.feats.entity_terms))
-        if pa.text and has_answer_terms and not missing_entities and not missing_head and self._supported(pa.coverage, ordered):
+        missing_head = bool(head and len(non_entity) >= 2 and head not in pa.covered and head not in set(ctx.feats.entity_terms) and pa.coverage < self.settings.head_guard_coverage)
+        if pa.text and has_answer_terms and not missing_entities and not missing_head and not wrong_kind and self._supported(pa.coverage, ordered) and self._anchored(pa, max_sentences):
             out.status, out.answer = "answered", pa.text
         else:
-            if missing_entities:
+            if wrong_kind:
+                out.notes.append(wrong_kind)
+            elif missing_entities:
                 out.notes.append("evidence does not mention " + ", ".join(missing_entities) + " from the question")
             elif missing_head:
                 out.notes.append(f"evidence does not mention '{head}', the attribute the question asks about")
@@ -291,7 +494,7 @@ class Recaller:
             if sq:
                 return self._fact_outcome(ctx, name, sq)
             if name == "exact":
-                return Outcome(name, notes=["no stored fact matches the question's subject and attribute"])
+                return Outcome(name, notes=[sq.rejected or "no stored fact matches the question's subject and attribute"])
             return self._episodic(ctx, name)
         if name == "bm25":
             return self._passages(ctx, name, self.lexical(ctx, pool))
@@ -301,6 +504,8 @@ class Recaller:
             return self._passages(ctx, name, self.hybrid(ctx, pool))
         if name == "graph":
             return self._graph_outcome(ctx)
+        if name == "fusion":
+            return self._fusion_outcome(ctx)
         if name == "episodic":
             return self._episodic(ctx, name)
         if name == "procedural":
@@ -477,7 +682,7 @@ class Recaller:
         self.cache_misses += 1
         t0 = time.perf_counter()
         feats = analyze_query(query, now)
-        ctx = Ctx(scope, query, feats, as_of, top_k, ts(now))
+        ctx = Ctx(scope, query, feats, as_of, top_k, self.store.now())
         hints = self._hints(ctx)
         plan = self.router.route(query, hints, now=now, allow_strategies={strategy} | {"hybrid"} if strategy else None)
         if strategy:

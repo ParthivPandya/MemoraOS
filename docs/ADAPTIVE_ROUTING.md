@@ -13,17 +13,19 @@ The router decides *which retrieval strategy answers a question*. It is determin
 
 ## Categories → strategies
 
-| Question | Category | Primary | Fallbacks |
-|---|---|---|---|
-| "What is my exact current salary?" | exact_fact | `exact` (slot lookup + timeline) | hybrid |
-| "What was Parth's salary in 2025?" | temporal | `temporal` | episodic, hybrid |
-| "How is Alice related to Azure Functions?" | multi_hop | `graph` | hybrid |
-| "How do I deploy Project Atlas?" | procedural | `procedural` | hybrid |
-| "What happened before the Atlas migration failed?" | episodic | `episodic` (anchor event, follow shared entities in time order) | temporal, hybrid |
-| "Summarize everything about AI memory" | summarization | `multistage` (BM25 + vector + graph + latent, fused; derived summaries preferred) | hybrid |
-| "Find error E4021" | semantic | `bm25` | hybrid, vector |
+Each row is a real question whose plan was produced by running the router on a store holding MemoraOS's own documentation and the dated CPython release history (`data/python_releases.json`); `scripts/make_figures.py` regenerates the same table as `docs/assets/routing.png`.
 
-These are asserted in `tests/integration/test_scenarios.py::test_i_*`.
+| Question | Category (score) | Primary | Fallbacks |
+|---|---|---|---|
+| "What is the latest version of Python 3.14?" | exact_fact (0.80) | `exact` (slot lookup + timeline) | hybrid |
+| "What was the latest version of Python 3.14 in March 2026?" | temporal (0.95) | `temporal` | episodic, hybrid |
+| "How is Memorilla related to SlotAttentionMemory?" | multi_hop (0.95) | `graph` | hybrid |
+| "How do I run the benchmark?" | procedural (0.85) | `procedural` | hybrid |
+| "What happened before the CI test failed on Windows?" | episodic (0.70) | `episodic` (anchor event, follow shared entities in time order) | temporal, hybrid |
+| "Summarize everything about latent memory" | summarization (0.80) | `multistage` (BM25 + vector + graph + latent, fused; derived summaries preferred) | hybrid |
+| "Find test_temporal_memory" | semantic (0.50) | `bm25` (identifier detected: lexical first) | hybrid, vector |
+
+The categories are also asserted on controlled inputs in `tests/integration/test_scenarios.py::test_i_*`; routing says nothing about whether the answer was right (see the benchmarks for that).
 
 ## Adaptive strategy learning
 
