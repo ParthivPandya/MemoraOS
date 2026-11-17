@@ -1,5 +1,12 @@
 # MemoraOS
 
+[![CI](https://github.com/ParthivPandya/MemoraOS/actions/workflows/ci.yml/badge.svg)](https://github.com/ParthivPandya/MemoraOS/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-green.svg)](https://www.python.org/downloads/)
+[![Release](https://img.shields.io/github/v/release/ParthivPandya/MemoraOS)](https://github.com/ParthivPandya/MemoraOS/releases)
+[![GitHub stars](https://img.shields.io/github/stars/ParthivPandya/MemoraOS?style=social)](https://github.com/ParthivPandya/MemoraOS/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ParthivPandya/MemoraOS?style=social)](https://github.com/ParthivPandya/MemoraOS/network/members)
+
 **Don't just give AI a bigger context window. Give it a better memory.**
 
 MemoraOS is a local-first, open-source memory engine for AI agents. It stores what an agent is told, understands how facts change over time, answers with traceable evidence, **says so when memory does not establish an answer**, and ships a reproducible benchmark so its claims can be checked. No API key, cloud service or Docker is required.
@@ -39,7 +46,7 @@ Full diagram, schema, contracts and risk register: [docs/ARCHITECTURE.md](docs/A
 ## Install
 
 ```bash
-git clone https://github.com/<you>/memora-os && cd memora-os
+git clone https://github.com/ParthivPandya/MemoraOS && cd MemoraOS
 python -m venv .venv && .venv\Scripts\activate        # Windows; use source .venv/bin/activate on Linux/macOS
 pip install -e ".[dev,api]"
 ```
