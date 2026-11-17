@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: pip install -e ".[dev,api]"
+      - run: ruff check src tests benchmarks examples
+      - run: python -m pytest
+        env:
+          PYTHONIOENCODING: utf-8
+      - name: Benchmark smoke run (determinism + report generation)
+        run: python -m benchmarks.run --quick --seed 7 --out ${{ runner.temp }}/bench
+        env:
+          PYTHONIOENCODING: utf-8
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[api]" pip-audit bandit
+      - run: bandit -q -r src -ll -c pyproject.toml
+      - run: pip-audit
+
+  typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: SDK
+        working-directory: sdk/typescript
+        run: npm install && npm test
+      - name: Dashboard
+        working-directory: apps/dashboard
+        run: npm install && npm run typecheck && npm run build

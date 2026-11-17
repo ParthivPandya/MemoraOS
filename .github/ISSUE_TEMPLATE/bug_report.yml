@@ -1,0 +1,26 @@
+name: Bug report
+description: Something is wrong or a memory behaves incorrectly
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the memories stored, the question asked, the answer/status you got, and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: A short Python snippet using `MemoryOS.in_memory()` is ideal. Do not paste real personal data or secrets.
+      render: python
+  - type: input
+    id: version
+    attributes:
+      label: Version / Python / OS
+  - type: textarea
+    id: explain
+    attributes:
+      label: Output of `memory.explain(result.recall_id, user_id=...)` (optional)
+      render: json

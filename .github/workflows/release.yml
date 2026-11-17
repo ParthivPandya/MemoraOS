@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev,api]" build
+      - run: python -m pytest
+        env:
+          PYTHONIOENCODING: utf-8
+      - run: python -m benchmarks.run --out benchmarks/reports
+        env:
+          PYTHONIOENCODING: utf-8
+      - run: python -m build
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*
+            benchmarks/reports/REPORT.md
+            benchmarks/reports/benchmark_results.json
+          generate_release_notes: true
+      # Publishing to PyPI uses trusted publishing; enable it in the PyPI project settings first.
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        if: ${{ vars.PUBLISH_TO_PYPI == 'true' }}

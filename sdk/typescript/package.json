@@ -1,0 +1,18 @@
+{
+  "name": "@memoraos/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript client for the MemoraOS REST API",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "tsc -p . && node --test dist/index.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
