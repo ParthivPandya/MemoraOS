@@ -63,12 +63,12 @@ From `benchmarks/reports/REPORT.md` (3 seeds, ≈ 850 questions pooled; Windows 
 | vector | 60.7% | 64.7% [61.7, 67.7] |
 | hybrid_rag | 56.3% | 57.9% [54.8, 61.0] |
 | hybrid_rag_gated | 57.6% | 59.2% [56.0, 62.1] |
-| memoraos_hybrid_only | 63.5% | 62.8% [60.0, 65.7] |
+| memoraos_hybrid_only | 73.7% | 76.9% [74.2, 79.6] |
 | **memoraos** | **100.0%** | **100.0% [100.0, 100.0]** |
 
 On the 16 v0.1 scenarios alone (unchanged definitions) MemoraOS is 100% (was 97.2% in v0.1); the 3 v0.2 scenarios are 100% for MemoraOS and 22–26% for the RAG baselines. Those 3 were written for v0.2's features, so treat them as feature checks. **A perfect score on datasets written by the same project means this synthetic suite no longer discriminates for MemoraOS**; it still guards against regressions, but the real-document benchmark below is the harder and more informative test.
 
-Where the gap comes from (all in the report): multi-document aggregation, multi-hop chains, temporal and historical questions, contradiction handling, update/correction and degradation — capabilities RAG baselines do not have — plus abstention (0% vs. 37.5–100% unsupported-answer rate). The ablation row shows these gains come from routing + the fact/truth engine, not from the retrieval primitives.
+Where the gap comes from (all in the report): multi-document aggregation, multi-hop chains, temporal and historical questions, contradiction handling, update/correction and degradation — capabilities RAG baselines do not have — plus abstention (0% vs. 37.5–100% unsupported-answer rate). The ablation row shows these gains come from routing + the fact/truth engine, not from the retrieval primitives: forcing plain hybrid retrieval leaves 76.9%. (It was 62.8% before the passage fallback learned to prefer the later of two near-identical statements, a heuristic that helps wherever no fact was extracted; see the CHANGELOG.)
 
 Where MemoraOS lost earlier: `paraphrase_robustness` was 77.1% in v0.1 against 100% for plain RAG. It is 100% now, from three changes (predicate hints, multi-sentence answers, a relaxed attribute guard). The synthetic phrasings are templated by the same authors, so this shows the mechanisms work on those templates, not that paraphrase robustness is solved; real prose is measured in the real-document benchmark, where MemoraOS is **not** ahead of a gated RAG baseline.
 

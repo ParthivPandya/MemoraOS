@@ -19,3 +19,6 @@ next-env.d.ts
 sdk/typescript/dist/
 apps/dashboard/.env
 .env
+
+# third-party benchmark datasets are downloaded locally, never redistributed
+data/external/

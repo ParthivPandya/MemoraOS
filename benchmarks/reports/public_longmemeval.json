@@ -1,0 +1,160 @@
+{
+  "dataset": "LongMemEval (longmemeval_s_cleaned.json), non-abstention questions",
+  "metric": "session hit@k: an answer-bearing session is among the sessions of the top-k retrieved chunks",
+  "questions": 60,
+  "seed": 7,
+  "embedder": "hashing",
+  "unit": "session (chunked to 800 chars)",
+  "systems": {
+    "bm25": {
+      "hit@5": {
+        "hits": 55,
+        "n": 60,
+        "rate": 0.9167,
+        "ci95": [
+          0.8193,
+          0.9639
+        ]
+      },
+      "hit@10": {
+        "hits": 58,
+        "n": 60,
+        "rate": 0.9667,
+        "ci95": [
+          0.8864,
+          0.9908
+        ]
+      }
+    },
+    "vector": {
+      "hit@5": {
+        "hits": 51,
+        "n": 60,
+        "rate": 0.85,
+        "ci95": [
+          0.7389,
+          0.919
+        ]
+      },
+      "hit@10": {
+        "hits": 54,
+        "n": 60,
+        "rate": 0.9,
+        "ci95": [
+          0.7985,
+          0.9534
+        ]
+      }
+    },
+    "hybrid_rag": {
+      "hit@5": {
+        "hits": 54,
+        "n": 60,
+        "rate": 0.9,
+        "ci95": [
+          0.7985,
+          0.9534
+        ]
+      },
+      "hit@10": {
+        "hits": 57,
+        "n": 60,
+        "rate": 0.95,
+        "ci95": [
+          0.863,
+          0.9829
+        ]
+      }
+    },
+    "memoraos_retriever": {
+      "hit@5": {
+        "hits": 53,
+        "n": 60,
+        "rate": 0.8833,
+        "ci95": [
+          0.7782,
+          0.9423
+        ]
+      },
+      "hit@10": {
+        "hits": 56,
+        "n": 60,
+        "rate": 0.9333,
+        "ci95": [
+          0.8407,
+          0.9738
+        ]
+      }
+    },
+    "memoraos_recall": {
+      "hit@5": {
+        "hits": 30,
+        "n": 60,
+        "rate": 0.5,
+        "ci95": [
+          0.3774,
+          0.6226
+        ]
+      },
+      "hit@10": {
+        "hits": 31,
+        "n": 60,
+        "rate": 0.5167,
+        "ci95": [
+          0.3931,
+          0.6382
+        ]
+      }
+    }
+  },
+  "per_type_hit@5": {
+    "bm25": {
+      "knowledge-update": "10/10",
+      "multi-session": "10/10",
+      "single-session-assistant": "10/10",
+      "single-session-preference": "6/10",
+      "single-session-user": "10/10",
+      "temporal-reasoning": "9/10"
+    },
+    "vector": {
+      "knowledge-update": "9/10",
+      "multi-session": "10/10",
+      "single-session-assistant": "8/10",
+      "single-session-preference": "5/10",
+      "single-session-user": "10/10",
+      "temporal-reasoning": "9/10"
+    },
+    "hybrid_rag": {
+      "knowledge-update": "10/10",
+      "multi-session": "10/10",
+      "single-session-assistant": "9/10",
+      "single-session-preference": "7/10",
+      "single-session-user": "9/10",
+      "temporal-reasoning": "9/10"
+    },
+    "memoraos_retriever": {
+      "knowledge-update": "10/10",
+      "multi-session": "10/10",
+      "single-session-assistant": "9/10",
+      "single-session-preference": "6/10",
+      "single-session-user": "9/10",
+      "temporal-reasoning": "9/10"
+    },
+    "memoraos_recall": {
+      "knowledge-update": "8/10",
+      "multi-session": "8/10",
+      "single-session-assistant": "3/10",
+      "single-session-preference": "1/10",
+      "single-session-user": "4/10",
+      "temporal-reasoning": "6/10"
+    }
+  },
+  "paired_hit@5": {
+    "a": "memoraos_retriever",
+    "b": "hybrid_rag",
+    "k": 5,
+    "a_only": 0,
+    "b_only": 1
+  },
+  "seconds": 528
+}

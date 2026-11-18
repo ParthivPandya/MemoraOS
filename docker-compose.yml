@@ -1,0 +1,19 @@
+# Local, authenticated REST API with a persistent volume.
+#   docker compose run --rm memoraos keys create --tenant default --role admin   # shown once
+#   docker compose up -d
+# The port is bound to loopback only; put a TLS reverse proxy in front before exposing it.
+services:
+  memoraos:
+    build: .
+    image: memoraos:local
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - memoraos-data:/data
+    environment:
+      # Optional encryption at rest: set a passphrase in your shell (never commit it).
+      MEMORAOS_ENCRYPTION_KEY: ${MEMORAOS_ENCRYPTION_KEY:-}
+    restart: unless-stopped
+
+volumes:
+  memoraos-data:

@@ -1,0 +1,221 @@
+{
+  "dataset": "LoCoMo (locomo10.json), categories 1-4 with labelled evidence turns",
+  "license_note": "CC BY-NC 4.0 data, downloaded locally and not redistributed",
+  "metric": "any-hit@k: at least one gold turn in the top-k; all-hit@k: every gold turn in the top-k",
+  "questions": 1532,
+  "skipped_unlabelled_or_adversarial": 454,
+  "embedder": "hashing",
+  "unit": "dialogue turn",
+  "any_hit": {
+    "bm25": {
+      "hit@5": {
+        "hits": 898,
+        "n": 1532,
+        "rate": 0.5862,
+        "ci95": [
+          0.5613,
+          0.6106
+        ]
+      },
+      "hit@10": {
+        "hits": 1022,
+        "n": 1532,
+        "rate": 0.6671,
+        "ci95": [
+          0.6431,
+          0.6903
+        ]
+      }
+    },
+    "vector": {
+      "hit@5": {
+        "hits": 689,
+        "n": 1532,
+        "rate": 0.4497,
+        "ci95": [
+          0.425,
+          0.4747
+        ]
+      },
+      "hit@10": {
+        "hits": 812,
+        "n": 1532,
+        "rate": 0.53,
+        "ci95": [
+          0.505,
+          0.5549
+        ]
+      }
+    },
+    "hybrid_rag": {
+      "hit@5": {
+        "hits": 816,
+        "n": 1532,
+        "rate": 0.5326,
+        "ci95": [
+          0.5076,
+          0.5575
+        ]
+      },
+      "hit@10": {
+        "hits": 946,
+        "n": 1532,
+        "rate": 0.6175,
+        "ci95": [
+          0.5929,
+          0.6415
+        ]
+      }
+    },
+    "memoraos_retriever": {
+      "hit@5": {
+        "hits": 859,
+        "n": 1532,
+        "rate": 0.5607,
+        "ci95": [
+          0.5357,
+          0.5854
+        ]
+      },
+      "hit@10": {
+        "hits": 979,
+        "n": 1532,
+        "rate": 0.639,
+        "ci95": [
+          0.6147,
+          0.6627
+        ]
+      }
+    },
+    "memoraos_recall": {
+      "hit@5": {
+        "hits": 640,
+        "n": 1532,
+        "rate": 0.4178,
+        "ci95": [
+          0.3933,
+          0.4426
+        ]
+      },
+      "hit@10": {
+        "hits": 702,
+        "n": 1532,
+        "rate": 0.4582,
+        "ci95": [
+          0.4334,
+          0.4832
+        ]
+      }
+    }
+  },
+  "all_hit": {
+    "bm25": {
+      "hit@5": {
+        "hits": 737,
+        "n": 1532,
+        "rate": 0.4811,
+        "ci95": [
+          0.4561,
+          0.5061
+        ]
+      },
+      "hit@10": {
+        "hits": 830,
+        "n": 1532,
+        "rate": 0.5418,
+        "ci95": [
+          0.5168,
+          0.5666
+        ]
+      }
+    },
+    "vector": {
+      "hit@5": {
+        "hits": 562,
+        "n": 1532,
+        "rate": 0.3668,
+        "ci95": [
+          0.3431,
+          0.3913
+        ]
+      },
+      "hit@10": {
+        "hits": 649,
+        "n": 1532,
+        "rate": 0.4236,
+        "ci95": [
+          0.3991,
+          0.4485
+        ]
+      }
+    },
+    "hybrid_rag": {
+      "hit@5": {
+        "hits": 664,
+        "n": 1532,
+        "rate": 0.4334,
+        "ci95": [
+          0.4088,
+          0.4584
+        ]
+      },
+      "hit@10": {
+        "hits": 754,
+        "n": 1532,
+        "rate": 0.4922,
+        "ci95": [
+          0.4672,
+          0.5172
+        ]
+      }
+    },
+    "memoraos_retriever": {
+      "hit@5": {
+        "hits": 687,
+        "n": 1532,
+        "rate": 0.4484,
+        "ci95": [
+          0.4237,
+          0.4734
+        ]
+      },
+      "hit@10": {
+        "hits": 781,
+        "n": 1532,
+        "rate": 0.5098,
+        "ci95": [
+          0.4848,
+          0.5348
+        ]
+      }
+    },
+    "memoraos_recall": {
+      "hit@5": {
+        "hits": 527,
+        "n": 1532,
+        "rate": 0.344,
+        "ci95": [
+          0.3206,
+          0.3681
+        ]
+      },
+      "hit@10": {
+        "hits": 577,
+        "n": 1532,
+        "rate": 0.3766,
+        "ci95": [
+          0.3527,
+          0.4012
+        ]
+      }
+    }
+  },
+  "paired_any_hit@5": {
+    "a": "memoraos_retriever",
+    "b": "hybrid_rag",
+    "k": 5,
+    "a_only": 51,
+    "b_only": 8
+  },
+  "seconds": 151
+}

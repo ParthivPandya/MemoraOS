@@ -33,8 +33,18 @@ from .systems import TOP_K, MemoraSystem, available_systems
 
 ROOT = Path(__file__).resolve().parent.parent
 EXCLUDE = {"docs/EVIDENCE.md"}
+# Documents about the benchmarks, the competitors and the next release are excluded so the corpus stays the v0.2
+# documentation it was written against (a document that discusses the questions would contaminate the answers).
+EXCLUDE_PATTERNS = (
+    r"docs/NEXT_[A-Z_]+\.md", r"docs/COMPETITIVE_INTELLIGENCE\.md", r"docs/MEMORY_CI\.md", r"docs/ADR/00(?:0[89]|[1-9]\d)-.*\.md",
+    r"docs/DOCKER\.md", r"docs/PUBLIC_BENCHMARKS\.md", r"docs/SCALING\.md",
+)
 FILES = ["CHANGELOG.md", "SECURITY.md"]
 SCENARIO = "real_docs_qa"
+
+
+def _excluded(rel: str) -> bool:
+    return rel in EXCLUDE or any(re.fullmatch(p, rel) for p in EXCLUDE_PATTERNS)
 
 # (question, gold substring that must appear in the source, kind tag)
 ANSWERABLE: list[tuple[str, str, str]] = [
@@ -96,7 +106,7 @@ HELDOUT_ANSWERABLE: list[tuple[str, str, str]] = [
     ("How much RAM did the benchmark machine have?", "7.7 GB", "performance"),
     ("Which security control prevents SQL injection?", "parameterised", "security"),
     ("What does forget() do to the stored memory rows?", "hard-delete", "security"),
-    ("Is encryption at rest implemented in code?", "not implemented in code", "security"),
+    ("Is encryption at rest implemented in code?", "AES-256-GCM", "security"),
     ("Which tool is suggested for disk encryption of the data directory on Windows?", "BitLocker", "security"),
     ("Which Python version does the Memorilla reproduction plan require?", "Python 3.11", "latent"),
     ("What is the default value of adaptive_learning?", "adaptive_learning=False", "routing"),
@@ -115,9 +125,59 @@ HELDOUT_UNANSWERABLE: list[tuple[str, str, str]] = [
     ("Which Snowflake warehouse stores the benchmark results?", "snowflake", "absent_topic"),
 ]
 
+# Validation set V2: written for the answerability work (spec 8.3) BEFORE any answerability change was implemented, from
+# documents the dev and held-out questions barely touch (API, MCP, design, architecture, performance, roadmap). It is
+# evaluated by `benchmarks.answerability` only; `real_docs.build()` excludes it unless asked, so the published
+# real-docs numbers stay comparable. A term written "a+b+c" in an unanswerable question means: these words must never
+# all occur in one section (every word is known to the corpus, but the fact is not there).
+VALIDATION_ANSWERABLE: list[tuple[str, str, str]] = [
+    ("Which method returns the value timeline for a subject and predicate?", "history(subject=", "api"),
+    ("Which role is needed to delete everything a user owns through the REST API?", "forget everything the user owns", "api"),
+    ("What status code does the API return for a bad or missing key?", "401", "api"),
+    ("Which error is raised when a memory is visible but not yours to modify?", "PermissionDenied", "api"),
+    ("Which TypeScript package provides the client?", "@memoraos/sdk", "api"),
+    ("Which MCP tool lets a model correct a memory?", "memora_correct", "mcp"),
+    ("What does the MCP server do with a user_id the model supplies?", "ignored", "mcp"),
+    ("What source reliability does a user statement get?", "user statement 0.9", "design"),
+    ("What is the default chunk size?", "default 800 chars", "design"),
+    ("What fraction of question terms must a passage answer cover at least?", "at least 50% of the question's content terms", "design"),
+    ("What happens to old facts when a memory is corrected?", "retracted", "design"),
+    ("Which reliability do consolidation summaries carry?", "reliability 0.3", "design"),
+    ("Which table stores reversible entity-resolution aliases?", "reversible entity-resolution aliases", "architecture"),
+    ("What does the embeddings table use as its cache key?", "(content_hash, model)", "architecture"),
+    ("Which FTS5 tokenizer powers the BM25 index?", "Porter", "architecture"),
+    ("What vector index does the architecture use today?", "Brute-force cosine", "architecture"),
+    ("How is time represented so that ordering is lexicographic?", "Fixed-width UTC ISO strings", "architecture"),
+    ("Which graph library is built on demand from facts?", "NetworkX", "architecture"),
+    ("What is the default embedder?", "Feature-hashing", "architecture"),
+    ("Which table keeps tokens, cost and latency for provider calls?", "provider_usage", "architecture"),
+    ("How long does the committed report say a median query takes for MemoraOS?", "2.6 ms", "performance"),
+    ("How many milliseconds per event does MemoraOS spend on ingest in the committed report?", "5.4 ms", "performance"),
+    ("Which component caches the vector matrix per scope?", "VectorIndex._matrix", "performance"),
+    ("What invalidates the vector matrix cache?", "event sequence number", "performance"),
+    ("Which roadmap item concerns the reranking step?", "Reranker integration", "roadmap"),
+]
+VALIDATION_UNANSWERABLE: list[tuple[str, str, str]] = [
+    ("Which Elasticsearch cluster stores the vector index?", "elasticsearch", "absent_term"),
+    ("Which Datadog dashboard shows recall latency?", "datadog", "absent_term"),
+    ("Which Jenkins job publishes the package?", "jenkins", "absent_term"),
+    ("What is the Okta tenant for single sign-on?", "okta", "absent_term"),
+    ("Which Cassandra keyspace holds the events?", "cassandra", "absent_term"),
+    ("What is the Twilio number for alerts?", "twilio", "absent_term"),
+    ("What is the maximum number of API keys a tenant can hold?", "maximum+keys+tenant", "x"),
+    ("How often are API keys rotated?", "rotate+keys", "x"),
+    ("When do API keys expire?", "expire+keys", "x"),
+    ("Which user receives a notification when consolidation fails?", "notification+consolidation", "x"),
+    ("Which cipher encrypts the embedding cache?", "cipher+embedding", "x"),
+    ("What is the rate limit per API key?", "rate+limit+keys", "x"),
+    ("Which language is the dashboard backend written in?", "dashboard+language", "x"),
+    ("How many memories can a single user store?", "memories+single+user", "x"),
+    ("In which format is the audit log exported?", "audit+export+format", "x"),
+]
+
 
 def corpus_files() -> list[Path]:
-    paths = sorted(p for p in (ROOT / "docs").rglob("*.md") if p.relative_to(ROOT).as_posix() not in EXCLUDE)
+    paths = sorted(p for p in (ROOT / "docs").rglob("*.md") if not _excluded(p.relative_to(ROOT).as_posix()))
     return [*paths, *(ROOT / f for f in FILES)]
 
 
@@ -133,7 +193,7 @@ def sections(path: Path) -> list[tuple[str, str]]:
     return out
 
 
-def build(root: Path = ROOT) -> tuple[Scenario, dict[int, str], str]:
+def build(root: Path = ROOT, validation: bool = False) -> tuple[Scenario, dict[int, str], str]:
     events: list[Event] = []
     origin: dict[int, str] = {}
     digest = hashlib.sha256()
@@ -146,21 +206,28 @@ def build(root: Path = ROOT) -> tuple[Scenario, dict[int, str], str]:
             digest.update(text.encode("utf-8"))
     questions: list[Question] = []
     low = [e.text.lower() for e in events]
+    extra_a = [(q, g, t, "validation") for q, g, t in VALIDATION_ANSWERABLE] if validation else []
+    extra_u = [(q, g, t, "validation") for q, g, t in VALIDATION_UNANSWERABLE] if validation else []
     # contamination guard: no question may appear verbatim in the corpus (a doc that quotes the test would answer it)
     flat = [re.sub(r"\s+", " ", t) for t in low]
-    for q_text in [q for q, *_ in ANSWERABLE + HELDOUT_ANSWERABLE + UNANSWERABLE + HELDOUT_UNANSWERABLE]:
+    for q_text in [q for q, *_ in ANSWERABLE + HELDOUT_ANSWERABLE + UNANSWERABLE + HELDOUT_UNANSWERABLE] + [q for q, *_ in extra_a + extra_u]:
         needle = re.sub(r"\s+", " ", q_text.lower().rstrip("?").strip())
         if any(needle in t for t in flat):
             raise SystemExit(f"integrity: the question {q_text!r} is quoted in the corpus; reword the document, not the question")
-    answerable = [(q, g, t, "dev") for q, g, t in ANSWERABLE] + [(q, g, t, "heldout") for q, g, t in HELDOUT_ANSWERABLE]
-    unanswerable = [(q, g, t, "dev") for q, g, t in UNANSWERABLE] + [(q, g, t, "heldout") for q, g, t in HELDOUT_UNANSWERABLE]
+    answerable = [(q, g, t, "dev") for q, g, t in ANSWERABLE] + [(q, g, t, "heldout") for q, g, t in HELDOUT_ANSWERABLE] + extra_a
+    unanswerable = [(q, g, t, "dev") for q, g, t in UNANSWERABLE] + [(q, g, t, "heldout") for q, g, t in HELDOUT_UNANSWERABLE] + extra_u
     for i, (q, gold, tag, split) in enumerate(answerable):
         rel = [e.idx for e in events if gold.lower() in e.text.lower()]
         if not rel:
             raise SystemExit(f"integrity: gold {gold!r} for {q!r} occurs in no section; fix the question or the corpus")
         questions.append(Question(f"rd{i}", SCENARIO, q, "u1", [gold], [], rel, tag=f"{split}/{tag}"))
     for j, (q, term, tag, split) in enumerate(unanswerable):
-        if any(re.search(rf"\b{re.escape(term)}\b", t) for t in low):
+        parts = term.split("+")
+        if tag == "x":  # label by what is true of the corpus: are all of this question's key words known to it?
+            tag = "known_words" if all(any(re.search(rf"\b{re.escape(p)}", t) for t in low) for p in parts) else "absent_term"
+        # "a+b": every word is known to the corpus, but they must never all occur in one section
+        present = any(all(re.search(rf"\b{re.escape(p)}" + (r"\b" if len(parts) == 1 else ""), t) for p in parts) for t in low)
+        if present:
             raise SystemExit(f"integrity: {term!r} occurs in the corpus, so {q!r} is not unanswerable")
         questions.append(Question(f"ru{j}", SCENARIO, q, "u1", answerable=False, tag=f"{split}/{tag}"))
     sc = Scenario(SCENARIO, "Questions about MemoraOS's own documentation (real text, project-authored questions).", events, questions, "real-document QA")

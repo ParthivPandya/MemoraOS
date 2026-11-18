@@ -28,7 +28,7 @@ SINGLE_VALUED = {
     "salary", "works_at", "lives_in", "title", "role", "email", "phone", "age", "status", "database",
     "version", "reports_to", "budget", "deadline", "name", "owner", "location", "hosted_in",
 }
-SINGLE_HEADS = {"framework", "database", "version", "salary", "language", "title", "role", "status", "owner", "lead", "manager", "location", "city", "budget", "deadline", "email", "phone", "region", "provider", "editor", "stack", "os"}
+SINGLE_HEADS = {"framework", "database", "version", "salary", "language", "title", "role", "status", "owner", "lead", "manager", "location", "city", "budget", "deadline", "email", "phone", "region", "provider", "editor", "stack", "os", "plan", "tier"}
 
 RELATIONAL_PREDICATES = {"works_at", "uses", "depends_on", "leads", "part_of", "hosted_in", "reports_to", "connected_to", "building", "lives_in"}
 # Nouns that name an attribute of something ("the budget is ...") as opposed to a verb relation.

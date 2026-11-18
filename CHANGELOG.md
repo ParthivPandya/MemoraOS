@@ -2,6 +2,28 @@
 
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/); versioning: [SemVer](https://semver.org/).
 
+## [Unreleased] - MemoraOS Next (work in progress on `feature/memoraos-next`)
+
+Status of each item: see `docs/NEXT_IMPLEMENTATION_STATUS.md`. Nothing here changes a default; every new behaviour is opt-in.
+
+### Added
+- **Encryption at rest** (opt-in): AES-256-GCM with a scrypt-derived key, `Settings.encryption_passphrase` or `MEMORAOS_ENCRYPTION_KEY`, `memoraos encrypt` / `memoraos decrypt`, encrypted backups, no plaintext `sources/` copy. Extra: `memoraos[encryption]`. Every commit rewrites the file, so writes cost O(database size). See `docs/SECURITY.md`.
+- **Docker**: `Dockerfile`, `.dockerignore`, `docker-compose.yml` (non-root, `/data` volume, health check, loopback port). See `docs/DOCKER.md`.
+- **Public benchmarks, retrieval only** (`python -m benchmarks.public locomo|longmemeval`): LoCoMo (1,532 questions) and a 60-question LongMemEval-S sample against BM25, vector and hybrid baselines, with Wilson intervals and paired counts. Plain BM25 is at least as good as MemoraOS here. See `docs/PUBLIC_BENCHMARKS.md`.
+- **Opt-in IVF vector index** (`Settings.vector_index="ivf"`) and `python -m benchmarks.scaling`. Measured recall 0.52-0.93, so exact search stays the default. See `docs/SCALING.md`.
+- `memoraos ci run --set KEY=VALUE` (repeatable) and `--embedder`.
+- `docs/COMPETITIVE_INTELLIGENCE.md`: sourced comparison of other memory systems and benchmarks, with unverified items marked.
+- **Memory CI** (`memoraos ci run|compare`, `memoraos.contracts`): memory contracts in JSON (or YAML with PyYAML) with expected answers, expected refusals, temporal and evidence requirements, tenant-isolation checks and token budgets, plus a regression report against a previous run (broken expectations, abstention that got worse, new unsupported answers, status changes, token/latency deltas). Exit code 1 on a failed assertion or regression. Guide: `docs/MEMORY_CI.md`.
+- **Answerability policies** (`Settings.answerability`: `strict` (default, unchanged), `balanced`, `high_recall`, `extractive_only`): optional section-level and, with a neural embedder, semantic support for answers. Measured, and not enabled by default because the independent validation set did not confirm the dev-set gain. Details and every number: `docs/NEXT_ANSWERABILITY.md`.
+- **Failure taxonomy** for the real-document benchmark (`python -m benchmarks.failures`): every wrong answer gets exactly one cause read from the engine's own trace.
+- **Answerability evaluation** (`python -m benchmarks.answerability`): Wilson intervals, answerable recall, false-abstention and unsupported-answer rates, correct abstention, Brier score and ECE, a separate validation set (V2), and optional neural-embedder runs (`--embedder`).
+- `benchmarks/stats.py` (Wilson interval, Brier, ECE).
+
+### Fixed
+- The documents-only passage fallback returned the **older** of two near-identical statements ("The customer plan is Basic" / "...Premium" with no extracted facts). It now quotes the later one when both cover exactly the same question terms and are otherwise near-identical, flags the earlier as `older_variant`, and leaves questions that name a time to the temporal strategies. Side effect, disclosed: the forced-hybrid ablation rises (synthetic 62.8% to 76.9%, real temporal 33.3% to 38.1%); the full engine's results are unchanged and the synthetic digest is now `c35859a13f53`.
+- `docs/SECURITY.md`, the roadmap and the status docs no longer say encryption at rest is missing.
+- `plan` and `tier` are single-valued attributes, so "the current plan" no longer returns the old and the new plan together (found while writing a Memory CI contract).
+
 ## [0.2.0] - unreleased
 
 Scope: Phase Zero audit, semantic extraction, embeddings and retrieval, and evidence fusion. The specification supplied for this release was truncated after Part 8.1 step 7, so anything after that point is **not** implemented. See `docs/V02_REPOSITORY_AUDIT.md`, `docs/V02_IMPLEMENTATION_PLAN.md` and `docs/ADR/`.

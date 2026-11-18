@@ -6,12 +6,23 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, field_validator
 
+# policy -> (section-support coverage, semantic-support cosine); None = off. strict is exactly the v0.2 behaviour.
+# The non-strict numbers are PROVISIONAL until docs/NEXT_ANSWERABILITY.md records the dev measurement that chose
+# them. The semantic threshold applies only with a neural embedder (it is meaningless for lexical hashing).
+ANSWERABILITY_POLICIES: dict[str, tuple[float | None, float | None]] = {
+    "strict": (None, None), "balanced": (0.6, 0.55), "high_recall": (0.5, 0.45), "extractive_only": (0.6, 0.55),
+}
+
 
 class Settings(BaseModel):
     """All tunables in one validated place. Every value has a documented reason."""
 
     data_dir: Path = Field(default=Path("./.memoraos"), description="Directory for the SQLite file and source copies.")
     db_filename: str = "memoraos.db"
+    encryption_passphrase: str | None = Field(
+        default=None, repr=False, exclude=True,
+        description="Encrypt the database file at rest (AES-256-GCM; needs memoraos[encryption]). Falls back to the MEMORAOS_ENCRYPTION_KEY environment variable. Never serialised.",
+    )
 
     # Retrieval
     default_top_k: int = Field(default=5, ge=1, le=200)
@@ -33,6 +44,19 @@ class Settings(BaseModel):
         description="Evidence must mention the attribute the question ends with, unless it already covers at least this fraction of the question's terms (1.01 = always require it, the v0.1 behaviour).",
     )
     max_graph_hops: int = Field(default=6, ge=1, le=8)
+    answerability: str = Field(
+        default="strict",
+        description="strict (v0.2 behaviour) | balanced | high_recall | extractive_only. Policies differ in how much section-level evidence may support an answer (see docs/NEXT_ANSWERABILITY.md).",
+    )
+    memory_support_coverage: float | None = Field(
+        default=None, ge=0.0, le=1.0,
+        description="Override: a memory whose whole text covers at least this fraction of the question's terms may support a windowed answer even when no single sentence does. None = taken from the policy (strict: off).",
+    )
+    semantic_support: float | None = Field(
+        default=None, ge=0.0, le=1.0,
+        description="Override: with a NEURAL embedder, a sentence whose cosine similarity to the question is at least this may support a windowed answer. Ignored (with a note in explain()) for the lexical hashing embedder. None = from the policy.",
+    )
+    memory_window: int = Field(default=1, ge=0, le=3, description="Sentences taken on each side of the best-covering sentence for a section- or semantically-supported answer.")
     evidence_fusion: bool = Field(default=True, description="Answer chain questions ('the project Alice manages') by typed path search over facts.")
     evidence_max_hops: int = Field(default=4, ge=2, le=6, description="Longest chain of facts evidence fusion will follow.")
     evidence_max_paths: int = Field(default=50, ge=1, le=500)
@@ -70,6 +94,9 @@ class Settings(BaseModel):
     learning_min_samples: int = Field(default=20, ge=5)
 
     # Embeddings
+    vector_index: str = Field(default="exact", description="exact (brute-force cosine, default) | ivf (approximate inverted-file index, see docs/SCALING.md).")
+    ann_min_vectors: int = Field(default=20000, ge=100, description="The ivf index is used only once a scope holds at least this many vectors.")
+    ann_nprobe: int = Field(default=8, ge=1, le=256, description="Clusters scored per query; higher is slower and closer to exact.")
     embedding_dim: int = Field(default=512, ge=32)
     embedding_on_mismatch: str = Field(default="error", description="error | reindex when a model's vector size changes under the same name.")
 
@@ -109,6 +136,13 @@ class Settings(BaseModel):
             raise ValueError("embedding_on_mismatch must be 'error' or 'reindex'")
         return v
 
+    @field_validator("vector_index")
+    @classmethod
+    def _vindex_known(cls, v: str) -> str:
+        if v not in ("exact", "ivf"):
+            raise ValueError("vector_index must be 'exact' or 'ivf'")
+        return v
+
     @field_validator("extraction_mode")
     @classmethod
     def _mode_known(cls, v: str) -> str:
@@ -123,6 +157,27 @@ class Settings(BaseModel):
         if v >= chunk:
             raise ValueError("chunk_overlap must be smaller than chunk_chars")
         return v
+
+    @field_validator("answerability")
+    @classmethod
+    def _policy_known(cls, v: str) -> str:
+        if v not in ANSWERABILITY_POLICIES:
+            raise ValueError(f"answerability must be one of {', '.join(ANSWERABILITY_POLICIES)}")
+        return v
+
+    @property
+    def section_support(self) -> float | None:
+        """Section-level support threshold in force: the explicit override, else the policy's value (None = off)."""
+        if self.memory_support_coverage is not None:
+            return self.memory_support_coverage
+        return ANSWERABILITY_POLICIES[self.answerability][0]
+
+    @property
+    def semantic_threshold(self) -> float | None:
+        """Cosine a best sentence needs to support an answer when a neural embedder is configured (None = off)."""
+        if self.semantic_support is not None:
+            return self.semantic_support
+        return ANSWERABILITY_POLICIES[self.answerability][1]
 
     @property
     def db_path(self) -> Path:

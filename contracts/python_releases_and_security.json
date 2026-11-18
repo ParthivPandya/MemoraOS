@@ -1,0 +1,16 @@
+{
+  "suite": "python-releases-and-security-docs",
+  "sources": [
+    {"records_file": "data/python_releases.json", "user_id": "me"},
+    {"file": "docs/SECURITY.md", "user_id": "me", "source_type": "document"}
+  ],
+  "assertions": [
+    {"id": "latest-now", "question": "What is the latest version of Python 3.14?", "user_id": "me", "expected_answer": "3.14.10", "require_evidence": true},
+    {"id": "latest-in-march-2026", "question": "What was the latest version of Python 3.14 in March 2026?", "user_id": "me", "expected_answer": "3.14.3", "require_temporal_evidence": true},
+    {"id": "previous-stable", "question": "What was the latest stable version of Python before October 2024?", "user_id": "me", "expected_answer": "3.12", "require_temporal_evidence": true},
+    {"id": "encryption-at-rest", "question": "Is encryption at rest implemented in code?", "user_id": "me", "expected_answer": "AES-256-GCM", "require_evidence": true, "max_context_tokens": 400},
+    {"id": "refuses-unknown-version", "question": "What is the latest version of Python 3.15?", "user_id": "me", "status": "insufficient_evidence"},
+    {"id": "refuses-absent-topic", "question": "Which Kubernetes version does MemoraOS require?", "user_id": "me", "status": "insufficient_evidence"},
+    {"id": "other-user-sees-nothing", "question": "What is the latest version of Python 3.14?", "user_id": "someone-else", "status": "insufficient_evidence"}
+  ]
+}

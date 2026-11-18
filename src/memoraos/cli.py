@@ -4,19 +4,68 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
 from . import __version__
+from .config import Settings
 from .engine import MemoryOS
+from .storage.crypto import ENV_KEY, EncryptionError
+from .storage.db import convert_database
 
 
 def _engine(args: argparse.Namespace) -> MemoryOS:
-    return MemoryOS.local(args.data_dir)
+    try:
+        return MemoryOS.local(args.data_dir)
+    except EncryptionError as exc:
+        print(f"memoraos: {exc}", file=sys.stderr)
+        raise SystemExit(2) from exc
 
 
 def _print(obj) -> None:
     print(json.dumps(obj, indent=2, default=str, ensure_ascii=False))
+
+
+def _ci(args: argparse.Namespace) -> int:
+    from . import contracts
+
+    try:
+        if args.ci_cmd == "compare":
+            base = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
+            cur = json.loads(Path(args.current).read_text(encoding="utf-8"))
+            diff = contracts.compare(base, cur)
+            print(contracts.render(cur, diff))
+            return 0 if diff["ok"] and cur["passed"] else 1
+        doc = contracts.load_contract(args.contract)
+        settings = None
+        if args.set or args.embedder:
+            overrides = {**doc.get("settings", {})}
+            for item in args.set or []:
+                key, sep, raw = item.partition("=")
+                if not sep:
+                    raise contracts.ContractError(f"--set expects key=value, got {item!r}")
+                try:
+                    overrides[key] = json.loads(raw)
+                except json.JSONDecodeError:
+                    overrides[key] = raw
+            settings = Settings(**overrides)
+        embedder = None
+        if args.embedder:
+            from .providers.embeddings import SentenceTransformerEmbedder
+
+            embedder = SentenceTransformerEmbedder(args.embedder)
+        result = contracts.run_contract(doc, settings=settings, embedder=embedder).to_dict()
+        diff = None
+        if args.baseline:
+            diff = contracts.compare(json.loads(Path(args.baseline).read_text(encoding="utf-8")), result)
+        if args.out:
+            Path(args.out).write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(contracts.render(result, diff))
+        return 0 if result["passed"] and (diff is None or diff["ok"]) else 1
+    except (contracts.ContractError, OSError, json.JSONDecodeError, KeyError, ValueError, ImportError) as exc:
+        print(f"memoraos ci: {exc}", file=sys.stderr)
+        return 2
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -43,6 +92,8 @@ def main(argv: list[str] | None = None) -> int:
     e = sub.add_parser("export")
     e.add_argument("--user", required=True)
     sub.add_parser("backup").add_argument("dest")
+    sub.add_parser("encrypt", help=f"encrypt the database file in place (passphrase from {ENV_KEY})")
+    sub.add_parser("decrypt", help=f"decrypt the database file in place (passphrase from {ENV_KEY})")
 
     k = sub.add_parser("keys", help="manage API keys")
     ks = k.add_subparsers(dest="keys_cmd", required=True)
@@ -62,8 +113,35 @@ def main(argv: list[str] | None = None) -> int:
     b.add_argument("--out", default="benchmarks/reports")
     b.add_argument("--quick", action="store_true", help="smaller dataset for smoke runs")
 
+    ci = sub.add_parser("ci", help="Memory CI: run memory contracts and diff two runs")
+    cis = ci.add_subparsers(dest="ci_cmd", required=True)
+    cr = cis.add_parser("run", help="run a contract (JSON, or YAML with PyYAML); exit 1 on a failed assertion or regression")
+    cr.add_argument("contract")
+    cr.add_argument("--baseline", help="a previous --out file of the same contract; adds a regression report")
+    cr.add_argument("--out", help="write this run's result JSON here (use it as the next baseline)")
+    cr.add_argument("--set", action="append", metavar="KEY=VALUE", help='override a Settings field for this run, e.g. --set answerability=balanced (value is parsed as JSON when possible)')
+    cr.add_argument("--embedder", help="sentence-transformers model name to run the contract with (needs sentence-transformers); default is the offline hashing embedder")
+    cc = cis.add_parser("compare", help="regression report between two result files")
+    cc.add_argument("baseline")
+    cc.add_argument("current")
+
     args = p.parse_args(argv)
 
+    if args.cmd == "ci":
+        return _ci(args)
+    if args.cmd in ("encrypt", "decrypt"):
+        passphrase = os.environ.get(ENV_KEY)
+        if not passphrase:
+            print(f"Set {ENV_KEY} (a passphrase is never accepted on the command line).", file=sys.stderr)
+            return 2
+        db_file = Settings(data_dir=Path(args.data_dir or ".memoraos")).db_path
+        try:
+            convert_database(db_file, passphrase, to_encrypted=args.cmd == "encrypt")
+        except (EncryptionError, OSError) as exc:
+            print(f"memoraos {args.cmd}: {exc}", file=sys.stderr)
+            return 2
+        print(f"{db_file}: {args.cmd}ed. Plain copies under 'sources/' and old backups are not touched; remove them if they are sensitive.")
+        return 0
     if args.cmd == "keys":
         data = Path(args.data_dir or ".memoraos")
         from .api.auth import ApiKeyStore

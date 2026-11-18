@@ -115,3 +115,41 @@ def test_a_passage_without_the_version_named_in_the_question_is_not_an_answer(me
     q = "What was the latest version of Python 3.11 on 2023-01-01?"
     assert mem.recall(q, user_id=U, use_cache=False).status == "insufficient_evidence"
     assert mem.recall("What was the latest version of Python 3.14?", user_id=U, use_cache=False).status == "answered"
+
+
+def test_a_plan_is_one_value_at_a_time(mem):
+    # found while writing a Memory CI contract: "current plan" returned both the old and the new plan
+    mem.remember("The plan of Acme is Professional.", user_id=U, effective_at="2024-03-01T00:00:00Z")
+    mem.remember("The plan of Acme is Enterprise.", user_id=U, effective_at="2025-06-01T00:00:00Z")
+    assert mem.recall("What is the current plan of Acme?", user_id=U, use_cache=False).answer == "Enterprise"
+    assert mem.recall("What was the plan of Acme in 2024?", user_id=U, use_cache=False).answer.startswith("Professional")
+
+
+def test_a_later_near_identical_statement_beats_an_earlier_one_without_extracted_facts(mem):
+    mem.remember("The customer plan is Basic.", user_id=U, effective_at="2024-01-01")
+    mem.remember("The customer plan is Premium.", user_id=U, effective_at="2024-06-01")
+    r = mem.recall("What is the customer plan?", user_id=U, use_cache=False)
+    assert "Premium" in r.answer and "Basic" not in r.answer
+
+
+def test_the_older_of_two_passage_variants_is_flagged(mem):
+    mem.remember("Acme billing review: the customer tier is Basic.", user_id=U, effective_at="2024-01-01")
+    mem.remember("Acme billing review: the customer tier is Premium.", user_id=U, effective_at="2024-06-01")
+    r = mem.recall("What is the customer tier?", user_id=U, use_cache=False)
+    assert "Premium" in r.answer and "Basic" not in r.answer
+    assert any("older_variant" in e.flags for e in r.evidence)
+
+
+def test_recency_preference_is_order_independent_and_skipped_for_timed_questions(mem):
+    mem.remember("The customer plan is Premium.", user_id=U, effective_at="2024-06-01")
+    mem.remember("The customer plan is Basic.", user_id=U, effective_at="2024-01-01")
+    assert "Premium" in mem.recall("What is the customer plan?", user_id=U, use_cache=False).answer
+    r = mem.recall("What was the customer plan in January 2024?", user_id=U, use_cache=False)
+    assert "Basic" in r.answer
+
+
+def test_different_subjects_with_similar_wording_are_not_treated_as_updates(mem):
+    mem.remember("Python 3.11 reaches end of life in 2027.", user_id=U, effective_at="2024-01-01")
+    mem.remember("Python 3.12 reaches end of life in 2028.", user_id=U, effective_at="2024-06-01")
+    r = mem.recall("When does Python 3.11 reach end of life?", user_id=U, use_cache=False)
+    assert "2027" in r.answer

@@ -8,6 +8,7 @@ from ..models import Scope
 from ..storage.db import Database
 from ..storage.visibility import visibility_clause
 from ..store import Store
+from .ann import IVFIndex
 from .lexical import Candidate
 
 
@@ -16,9 +17,11 @@ class VectorIndex:
         self.db = db
         self.store = store
         self._cache: dict[tuple, tuple[list[str], np.ndarray]] = {}
+        self._ann: dict[tuple, IVFIndex] = {}
 
     def invalidate(self) -> None:
         self._cache.clear()
+        self._ann.clear()
 
     def ensure_embeddings(self, scope: Scope) -> int:
         """Backfill vectors for memories embedded with a different model (incremental re-indexing)."""
@@ -69,6 +72,16 @@ class VectorIndex:
         if not ids:
             return []
         q = self.store.embed_texts([query], persist=False)[0]
+        cfg = self.store.settings
+        if cfg.vector_index == "ivf" and len(ids) >= cfg.ann_min_vectors:
+            key = (scope.model_dump_json(), self.db.store_version(), self.store.embedder.name)
+            index = self._ann.get(key)
+            if index is None:
+                if len(self._ann) > 4:
+                    self._ann.clear()
+                index = self._ann[key] = IVFIndex(mat, nprobe=cfg.ann_nprobe)
+            rows, scores = index.search(q, k)
+            return [Candidate(ids[int(i)], float(s), "vector") for i, s in zip(rows, scores, strict=True) if s >= min_score]
         return top_k_cosine(ids, mat, q, k, min_score)
 
 

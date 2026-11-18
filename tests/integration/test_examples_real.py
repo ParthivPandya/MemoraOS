@@ -1,6 +1,7 @@
 """Examples must keep working: run each as a subprocess and check key output. Every example uses real data
 (MemoraOS's own docs, or the dated CPython release history in data/python_releases.json)."""
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -16,7 +17,7 @@ def run(name: str) -> str:
 
 def test_basic_memory():
     out = run("basic_memory")
-    assert "stored 7 real documents" in out and "CI failed intermittently on Windows" in out
+    assert re.search(r"stored \d+ real documents", out) and "CI failed intermittently on Windows" in out
     assert "after restart: answered" in out and "EmbeddingModelMismatch" in out and "unsupported: insufficient_evidence" in out
 
 

@@ -1,4 +1,4 @@
-"""Systems under test: in-repo baselines, MemoraOS, and probes for external systems."""
+﻿"""Systems under test: in-repo baselines, MemoraOS, and probes for external systems."""
 
 from __future__ import annotations
 
@@ -95,7 +95,7 @@ class _Doc:
 class RagBaseline(System):
     """mode: bm25 | vector | hybrid. ``gate`` adds the same coverage-based abstention MemoraOS uses."""
 
-    def __init__(self, mode: str, gate: bool = False, reader_sentences: int = READER_SENTENCES):
+    def __init__(self, mode: str, gate: bool = False, reader_sentences: int = READER_SENTENCES, embedder=None, label: str | None = None):
         self.mode, self.gate, self.reader_sentences = mode, gate, reader_sentences
         self.name = {"bm25": "bm25", "vector": "vector", "hybrid": "hybrid_rag"}[mode] + ("_top1" if reader_sentences == 1 else "") + ("_gated" if gate else "")
         self.description = {
@@ -103,9 +103,12 @@ class RagBaseline(System):
             "vector": "Cosine over hashing embeddings, extractive reader",
             "hybrid": "BM25 + vector with reciprocal rank fusion, extractive reader",
         }[mode] + (" returning only the single best sentence" if reader_sentences == 1 else f" returning up to {reader_sentences} best sentences") + ("; abstains when evidence covers <50% of question terms" if gate else "; always answers")
-        self.embedder = HashingEmbedder(512)
+        self.embedder = embedder or HashingEmbedder(512)
+        self._dim = self.embedder.dim
+        if label:
+            self.name = label
         self.docs: list[_Doc] = []
-        self.vecs = np.zeros((0, 512), np.float32)
+        self.vecs = np.zeros((0, self._dim), np.float32)
         self._bm25: dict[tuple, PyBM25] = {}
         self.event_chunks: dict[int, list[int]] = {}
         self._raw: list[Event] = []
@@ -125,7 +128,7 @@ class RagBaseline(System):
     def correct(self, e: Event) -> None:  # in-place upsert of the original document
         keep = [i for i, d in enumerate(self.docs) if d.event != e.target]
         self.docs = [self.docs[i] for i in keep]
-        self.vecs = self.vecs[keep] if keep else np.zeros((0, 512), np.float32)
+        self.vecs = self.vecs[keep] if keep else np.zeros((0, self._dim), np.float32)
         self._bm25.clear()
         parts = self._chunks(e.text)
         for p in parts:
@@ -172,7 +175,7 @@ class RagBaseline(System):
         """A vector/BM25 index held in memory is rebuilt from the raw documents after a restart."""
         t0 = time.perf_counter()
         raw = self._raw
-        self.docs, self.vecs, self._bm25, self._raw = [], np.zeros((0, 512), np.float32), {}, []
+        self.docs, self.vecs, self._bm25, self._raw = [], np.zeros((0, self._dim), np.float32), {}, []
         for e in raw:
             self.add(e)
         return time.perf_counter() - t0
@@ -182,7 +185,8 @@ class RagBaseline(System):
 # MemoraOS
 # --------------------------------------------------------------------------------------------
 class MemoraSystem(System):
-    def __init__(self, force_strategy: str | None = None, label: str | None = None, settings=None, reranker=None, description: str | None = None):
+    def __init__(self, force_strategy: str | None = None, label: str | None = None, settings=None, reranker=None, description: str | None = None, embedder=None):
+        self.embedder = embedder
         self.force = force_strategy
         self.settings = settings
         self.reranker = reranker
@@ -197,6 +201,8 @@ class MemoraSystem(System):
 
     def _open(self) -> MemoryOS:
         kw = {"reranker": self.reranker} if self.reranker is not None else {}
+        if self.embedder is not None:
+            kw["embedder"] = self.embedder
         return MemoryOS.local(self.dir, settings=self.settings, clock=self.clock, id_factory=lambda p: f"{p}_{next(self._counter):07d}", **kw)
 
     def add(self, e: Event) -> None:
@@ -280,3 +286,4 @@ def available_systems(include_ablation: bool = True) -> list[System]:
     if include_ablation:
         systems.append(MemoraSystem(force_strategy="hybrid", label="memoraos_hybrid_only"))
     return systems
+

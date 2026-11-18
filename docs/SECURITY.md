@@ -24,13 +24,27 @@ Assets: stored memories (may contain personal data), API keys, the audit trail. 
 
 ## Not implemented / limitations
 
-- **Encryption at rest** is not implemented in code. Use OS/disk encryption (BitLocker, LUKS, FileVault) for the data directory. SQLCipher integration is on the roadmap.
+- **Encryption at rest** is opt-in and implemented in code with AES-256-GCM (see [Encryption at rest](#encryption-at-rest)). It is off by default; without a passphrase the database is a plain SQLite file, so use OS/disk encryption (BitLocker, LUKS, FileVault) as well for the data directory.
 - **Backups are not rewritten on deletion.** A backup taken before `forget()` still contains the data; delete old backups per your retention policy. The content-free `memory.forgotten` event remains in the audit chain.
 - Prompt-injection detection is pattern based and cannot catch every attack; the structural defences (data tagging, never executing, not answering from injection-like sentences) are the real protection. Downstream LLM applications must still honour the `untrusted` tags.
 - No rate limiting, TLS termination or key rotation UI: run behind a reverse proxy; rotate by creating a new key and deleting the old hash from `api_keys.json`.
 - The project/org scope levels trust the caller to supply a legitimate `project_id`; membership is an application concern.
 - SQLite is single-writer; the dashboard and API are intended for a trusted network.
 - No formal third-party security audit has been performed.
+
+## Encryption at rest
+
+Opt-in, via the `encryption` extra (`pip install "memoraos[encryption]"`, which installs `cryptography`).
+
+- **Format:** the database file is `MOSENC01 | salt(16) | nonce(12) | ciphertext`. The key is derived from the passphrase with scrypt (n=2^15, r=8, p=1) and the data is sealed with AES-256-GCM. The header is authenticated as associated data, so a modified header or ciphertext fails to decrypt instead of yielding garbage.
+- **Passphrase:** `Settings.encryption_passphrase` or the `MEMORAOS_ENCRYPTION_KEY` environment variable. The CLI reads it only from the environment, never from an argument, so it does not land in shell history or process listings. There is no recovery: a lost passphrase means lost data.
+- **Working model:** the decrypted database lives only in process memory. Each committed write serialises it, encrypts it and atomically replaces the file, so a write costs O(database size). That suits small and medium stores; for large stores prefer disk encryption. Requires Python 3.11+ (`sqlite3.Connection.serialize`).
+- **Refusals:** opening a plain database with a passphrase, or an encrypted one without it, is an error, never a silent downgrade.
+- **Conversion:** `memoraos encrypt` / `memoraos decrypt` convert a data directory in place.
+- **Covers:** the database and the backups MemoraOS creates. When encryption is on, MemoraOS does not write the plaintext `sources/` copy of ingested documents.
+- **Does not cover:** `sources/` copies and `.bak` files that were written **before** you ran `memoraos encrypt` (delete them yourself), the process's memory, swap, or the key in your environment. It is not a substitute for a security audit; no third party has reviewed it.
+
+Tests: `tests/unit/test_encryption.py`.
 
 ## Operating guidance
 

@@ -124,8 +124,59 @@ class Recaller:
         self.rerank_failures = 0
         self._cache: OrderedDict[tuple, RecallResultModel] = OrderedDict()
         self._graph_cache: tuple | None = None
+        self._sentence_vecs: OrderedDict[tuple[str, str], np.ndarray] = OrderedDict()
         self.cache_hits = 0
         self.cache_misses = 0
+
+    @property
+    def semantic_embedder(self) -> bool:
+        """True when the configured embedder is a real semantic model (not lexical feature hashing)."""
+        emb = self.store.embedder
+        return "hashing" not in f"{getattr(emb, 'provider', '')} {getattr(emb, 'name', '')}".lower()
+
+    def _embed_sentences(self, texts: list[str]) -> np.ndarray:
+        """Embeddings for answer-support checks, cached in process only (sentences are never written to the store)."""
+        model = self.store.embedder.name
+        missing = [t for t in dict.fromkeys(texts) if (model, t) not in self._sentence_vecs]
+        if missing:
+            for t, v in zip(missing, self.store.embed_texts(missing, persist=False), strict=True):
+                self._sentence_vecs[(model, t)] = np.asarray(v)
+            while len(self._sentence_vecs) > 4096:
+                self._sentence_vecs.popitem(last=False)
+        return np.vstack([self._sentence_vecs[(model, t)] for t in texts])
+
+    def _semantic_answer(self, ctx: Ctx, ordered: list[Candidate], texts: dict[str, str]) -> tuple[str, list[str], float] | None:
+        """Semantic support (neural embedders only): the retrieved sentence closest in meaning to the question may
+        support a windowed answer when its cosine similarity reaches ``semantic_threshold``. Lexical coverage cannot
+        see paraphrase ("protect against" vs "untrusted"); similarity can, so this is the only path that does."""
+        tau = self.settings.semantic_threshold
+        if tau is None or not self.semantic_embedder:
+            return None
+        cands: list[tuple[str, int, str]] = []
+        for c in ordered[: max(5, ctx.top_k)]:
+            if detect_prompt_injection(texts[c.memory_id]):
+                continue
+            cands += [(c.memory_id, i, s) for i, s in enumerate(split_sentences(texts[c.memory_id]))]
+        if not cands:
+            return None
+        q = self.store.embed_texts([ctx.query], persist=False)[0]
+        sims = self._embed_sentences([s for _, _, s in cands]) @ np.asarray(q)
+        best = int(np.argmax(sims))
+        score = float(sims[best])
+        if score < tau:
+            return None
+        mid, centre, _ = cands[best]
+        sents = [s for m, _, s in cands if m == mid]
+        terms = ctx.feats.terms
+        entities = set(ctx.feats.entity_terms)
+        covered = covered_terms(terms, texts[mid])
+        if any(t in entities and t not in covered for t in terms):
+            return None
+        w = self.settings.memory_window
+        window = [s for s in sents[max(0, centre - w): centre + w + 1] if not detect_prompt_injection(s)]
+        if not window or self._lacks_answer_type(ctx.query, [(mid, s) for s in window]) or self._unmentioned_version(ctx.query, [(mid, s) for s in window]):
+            return None
+        return mid, window, score
 
     # ---------------------------------------------------------------- helpers
     def _slots(self, ctx: Ctx) -> SlotQuery:
@@ -363,6 +414,76 @@ class Recaller:
             return True
         return False
 
+    def _section_answer(self, ctx: Ctx, ordered: list[Candidate], texts: dict[str, str]) -> tuple[str, list[str], float] | None:
+        """Section-level support (policies other than strict). A memory (one document section) whose WHOLE text covers
+        enough of the question's terms and every named entity may support an answer even when the question's words are
+        spread over neighbouring sentences. The answer is a window around its best-covering sentence, never the
+        whole section, and the usual answer-type and version guards still apply."""
+        threshold = self.settings.section_support
+        terms = ctx.feats.terms
+        if threshold is None or not terms:
+            return None
+        best: tuple[float, str, set[str]] | None = None
+        for c in ordered[: max(5, ctx.top_k)]:
+            text = texts[c.memory_id]
+            if detect_prompt_injection(text):
+                continue
+            cov = covered_terms(terms, text)
+            frac = len(cov) / len(terms)
+            if best is None or frac > best[0] + 1e-9:
+                best = (frac, c.memory_id, cov)
+        if best is None or best[0] < threshold:
+            return None
+        frac, mid, cov = best
+        entities = set(ctx.feats.entity_terms)
+        if any(t in entities and t not in cov for t in terms):
+            return None
+        sents = [s for s in split_sentences(texts[mid])]
+        if not sents:
+            return None
+        centre = max(range(len(sents)), key=lambda i: (len(covered_terms(terms, sents[i])), -i))
+        w = self.settings.memory_window
+        window = [s for s in sents[max(0, centre - w): centre + w + 1] if not detect_prompt_injection(s)]
+        if not window or not covered_terms(terms, " ".join(window)):
+            return None
+        if self._lacks_answer_type(ctx.query, [(mid, s) for s in window]) or self._unmentioned_version(ctx.query, [(mid, s) for s in window]):
+            return None
+        return mid, window, frac
+
+    def _prefer_latest_variant(self, ctx: Ctx, ordered: list[Candidate], texts: dict[str, str], rows: dict[str, Row]) -> tuple[list[Candidate], set[str], str]:
+        """Two memories whose best sentences cover exactly the same question terms and are otherwise near-identical
+        ("the customer plan is Basic" / "...is Premium") are an update, not two answers: when no fact was extracted
+        to resolve it, the later statement (valid time, else recorded time) is quoted and the earlier one is flagged.
+        Questions that name a time are left to the temporal strategies."""
+        terms = ctx.feats.terms
+        if len(ordered) < 2 or not terms or ctx.feats.time_ref is not None:
+            return ordered, set(), ""
+
+        def best(mid: str) -> tuple[set[str], set[str]]:
+            sents = split_sentences(texts[mid]) or [texts[mid]]
+            s = max(sents, key=lambda x: len(covered_terms(terms, x)))
+            return covered_terms(terms, s), {stem(t) for t in tokenize(s)}
+
+        top = ordered[0]
+        a_cov, a_tok = best(top.memory_id)
+        if not a_cov:
+            return ordered, set(), ""
+        variants = []
+        for c in ordered[1:5]:
+            b_cov, b_tok = best(c.memory_id)
+            if b_cov != a_cov or b_tok == a_tok or not (a_tok | b_tok):
+                continue
+            if len(a_tok & b_tok) / len(a_tok | b_tok) >= 0.5:
+                variants.append(c)
+        if not variants:
+            return ordered, set(), ""
+        newest = max([top, *variants], key=lambda c: rows[c.memory_id].when)
+        if newest is top:
+            return ordered, set(), ""
+        older = {c.memory_id for c in [top, *variants] if c is not newest}
+        reordered = [newest] + [c for c in ordered if c is not newest]
+        return reordered, older, "a later statement was preferred over an earlier near-identical one (flagged older_variant in the evidence)"
+
     @staticmethod
     def _unmentioned_version(query: str, sentences: list[tuple[str, str]]) -> str:
         """A question that names a specific version or number ("Python 3.11", "0.5") is not answered by a passage that
@@ -445,7 +566,9 @@ class Recaller:
         ordered = (der + orig) if prefer_derived else (orig + der)
         if not ordered:
             return out
-        out.relevance = round(self._relevance(cands), 4)
+        ordered, older, newer_note = self._prefer_latest_variant(ctx, ordered, texts, rows)
+        if newer_note:
+            out.notes.append(newer_note)
         limit = max(max_sentences, self.settings.answer_max_sentences)
         # A question that names a chain ("the project Alice manages ...") must be proven by evidence fusion; stitching
         # sentences from different memories would answer it by coincidence, so extra sentences must share one memory.
@@ -471,8 +594,23 @@ class Recaller:
         missing_entities = [t for t in ctx.feats.entity_terms if t in set(ctx.feats.terms) and t not in pa.covered]
         head = ctx.feats.head_term
         missing_head = bool(head and len(non_entity) >= 2 and head not in pa.covered and head not in set(ctx.feats.entity_terms) and pa.coverage < self.settings.head_guard_coverage)
-        if pa.text and has_answer_terms and not missing_entities and not missing_head and not wrong_kind and self._supported(pa.coverage, ordered) and self._anchored(pa, max_sentences):
+        strict_ok = bool(pa.text and has_answer_terms and not missing_entities and not missing_head and not wrong_kind and self._supported(pa.coverage, ordered) and self._anchored(pa, max_sentences))
+        use_semantic = self.semantic_embedder and self.settings.semantic_threshold is not None
+        # with a semantic embedder the similarity signal replaces the lexical section signal (combining them only adds
+        # unsupported answers, measured in docs/NEXT_ANSWERABILITY.md)
+        section = None if (strict_ok or chain or use_semantic) else self._section_answer(ctx, ordered, texts)
+        basis = "section level: the memory covers {:.0%} of the question's terms although no single sentence does"
+        if section is None and use_semantic and not (strict_ok or chain):
+            section = self._semantic_answer(ctx, ordered, texts)
+            basis = "semantic level: the closest sentence has cosine similarity {:.2f} to the question"
+        if strict_ok:
             out.status, out.answer = "answered", pa.text
+        elif section:
+            mid, window, frac = section
+            out.status, out.answer, out.coverage = "answered", " ".join(window), round(frac, 4)
+            rest = [e for e in out.evidence if e.memory_id != mid]
+            out.evidence = [self._evidence(rows[mid], s, "passage", score_of.get(mid, 0.0)) for s in window] + rest
+            out.notes.append("supported at " + basis.format(frac))
         else:
             if wrong_kind:
                 out.notes.append(wrong_kind)
@@ -484,6 +622,9 @@ class Recaller:
                 out.notes.append("evidence matches only the entity named in the question, not what was asked about it")
             else:
                 out.notes.append(f"evidence covers {pa.coverage:.0%} of question terms (< {self.settings.min_evidence_coverage:.0%})")
+        for e in out.evidence:
+            if e.memory_id in older and "older_variant" not in e.flags:
+                e.flags.append("older_variant")
         return out
 
     # ---------------------------------------------------------------- strategies
@@ -713,7 +854,7 @@ class Recaller:
             final.notes = ["no strategy produced evidence that covers the question"] + ([f"near-miss memories (not supporting): {near_misses}"] if near_misses else [])
         flags = list(dict.fromkeys(final.flags + [f for e in final.evidence for f in e.flags if f == INJECTION_FLAG]))
         answer = final.answer
-        if synthesize and self.chat and final.status == "answered":
+        if synthesize and self.chat and final.status == "answered" and self.settings.answerability != "extractive_only":
             answer = self._synthesize(query, final) or answer
         confidence = Confidence(
             extraction_confidence=final.extraction_confidence, source_reliability=final.source_reliability,

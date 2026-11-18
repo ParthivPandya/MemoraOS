@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real-document benchmark",
   "command": "python -m benchmarks.real_docs",
-  "generated_at": "2026-11-17T17:09:50+00:00",
+  "generated_at": "2026-11-18T07:00:32+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -14,9 +14,9 @@
   },
   "corpus": {
     "files": 26,
-    "sections": 122,
-    "characters": 117567,
-    "sha256": "8714aa10284b1b85bb531613841460b7e8a1aa622075ac8b8ddede313d50d741"
+    "sections": 126,
+    "characters": 123552,
+    "sha256": "0129e552bb6bd733de88dc867a3992b86a73d92b336ac095e62937556e9be0ba"
   },
   "questions": {
     "answerable": 46,
@@ -33,16 +33,16 @@
         0.4844,
         0.7031
       ],
-      "recall_at_5": 0.8372153209109731,
-      "precision_at_5": 0.3065217391304348,
-      "mrr": 0.8641304347826086,
-      "ndcg_at_5": 0.8038402753590684,
-      "evidence_coverage": 0.9782608695652174,
+      "recall_at_5": 0.794824016563147,
+      "precision_at_5": 0.3115942028985507,
+      "mrr": 0.855072463768116,
+      "ndcg_at_5": 0.777691152121057,
+      "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 746.203125,
-      "latency_ms_p50": 3.3454999938840047,
-      "latency_ms_p95": 5.597199997282587,
+      "mean_context_tokens": 744.75,
+      "latency_ms_p50": 4.023599991342053,
+      "latency_ms_p95": 6.642300009843893,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -60,8 +60,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 1.0
       },
-      "ingest_ms_per_event": 2.104709016375786,
-      "storage_overhead_ratio": 4.7578463569880824,
+      "ingest_ms_per_event": 3.1481944444951497,
+      "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
         0.4844,
         0.7031
@@ -74,16 +74,16 @@
         0.4062,
         0.6406
       ],
-      "recall_at_5": 0.7102311939268461,
-      "precision_at_5": 0.23695652173913045,
-      "mrr": 0.7373188405797101,
-      "ndcg_at_5": 0.6657302793094108,
+      "recall_at_5": 0.6827294685990338,
+      "precision_at_5": 0.2423913043478261,
+      "mrr": 0.7282608695652174,
+      "ndcg_at_5": 0.6402831827031897,
       "evidence_coverage": 0.9130434782608695,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 695.609375,
-      "latency_ms_p50": 5.261199999949895,
-      "latency_ms_p95": 9.584999999788124,
+      "mean_context_tokens": 704.15625,
+      "latency_ms_p50": 3.3623999916017056,
+      "latency_ms_p95": 5.687000011675991,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -101,8 +101,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 1.0
       },
-      "ingest_ms_per_event": 2.9669885246176655,
-      "storage_overhead_ratio": 4.7578463569880824,
+      "ingest_ms_per_event": 2.37483968256071,
+      "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
         0.4062,
         0.6406
@@ -110,21 +110,21 @@
     },
     "hybrid_rag": {
       "n": 64,
-      "accuracy": 0.625,
+      "accuracy": 0.609375,
       "accuracy_ci95": [
-        0.5156,
-        0.7344
+        0.5,
+        0.7188
       ],
-      "recall_at_5": 0.7978778467908902,
-      "precision_at_5": 0.2757246376811594,
-      "mrr": 0.8351449275362318,
-      "ndcg_at_5": 0.7539157868878427,
+      "recall_at_5": 0.774120082815735,
+      "precision_at_5": 0.28007246376811595,
+      "mrr": 0.8278985507246377,
+      "ndcg_at_5": 0.7268870596853914,
       "evidence_coverage": 0.9782608695652174,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 705.0,
-      "latency_ms_p50": 3.744300003745593,
-      "latency_ms_p95": 5.533700001251418,
+      "mean_context_tokens": 713.90625,
+      "latency_ms_p50": 3.650200000265613,
+      "latency_ms_p95": 5.306500010192394,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -138,34 +138,34 @@
         "heldout/decisions": 1.0,
         "heldout/latent": 1.0,
         "heldout/performance": 1.0,
-        "heldout/routing": 0.6666666666666666,
+        "heldout/routing": 0.3333333333333333,
         "heldout/security": 1.0,
         "heldout/temporal": 1.0
       },
-      "ingest_ms_per_event": 2.6325729507886133,
-      "storage_overhead_ratio": 4.7578463569880824,
+      "ingest_ms_per_event": 2.398396825435431,
+      "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
-        0.5156,
-        0.7344
+        0.5,
+        0.7188
       ]
     },
     "hybrid_rag_top1": {
       "n": 64,
-      "accuracy": 0.421875,
+      "accuracy": 0.40625,
       "accuracy_ci95": [
-        0.3125,
-        0.5469
+        0.2969,
+        0.5312
       ],
-      "recall_at_5": 0.7978778467908902,
-      "precision_at_5": 0.2757246376811594,
-      "mrr": 0.8351449275362318,
-      "ndcg_at_5": 0.7539157868878427,
+      "recall_at_5": 0.774120082815735,
+      "precision_at_5": 0.28007246376811595,
+      "mrr": 0.8278985507246377,
+      "ndcg_at_5": 0.7268870596853914,
       "evidence_coverage": 0.9782608695652174,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 705.0,
-      "latency_ms_p50": 3.6059999983990565,
-      "latency_ms_p95": 5.7114999945042655,
+      "mean_context_tokens": 713.90625,
+      "latency_ms_p50": 3.2546000002184883,
+      "latency_ms_p95": 4.703700004029088,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 0.5,
@@ -179,34 +179,34 @@
         "heldout/decisions": 0.0,
         "heldout/latent": 0.0,
         "heldout/performance": 0.6666666666666666,
-        "heldout/routing": 0.3333333333333333,
+        "heldout/routing": 0.0,
         "heldout/security": 1.0,
         "heldout/temporal": 1.0
       },
-      "ingest_ms_per_event": 2.19481885243545,
-      "storage_overhead_ratio": 4.7578463569880824,
+      "ingest_ms_per_event": 2.339653968293634,
+      "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
-        0.3125,
-        0.5469
+        0.2969,
+        0.5312
       ]
     },
     "hybrid_rag_gated": {
       "n": 64,
-      "accuracy": 0.703125,
+      "accuracy": 0.6875,
       "accuracy_ci95": [
-        0.5938,
-        0.7969
+        0.5781,
+        0.7812
       ],
-      "recall_at_5": 0.7978778467908902,
-      "precision_at_5": 0.2757246376811594,
-      "mrr": 0.8351449275362318,
-      "ndcg_at_5": 0.7539157868878427,
+      "recall_at_5": 0.774120082815735,
+      "precision_at_5": 0.28007246376811595,
+      "mrr": 0.8278985507246377,
+      "ndcg_at_5": 0.7268870596853914,
       "evidence_coverage": 0.9782608695652174,
       "unsupported_answer_rate": 0.7222222222222222,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 655.625,
-      "latency_ms_p50": 3.3782999962568283,
-      "latency_ms_p95": 4.611099997418933,
+      "mean_context_tokens": 664.53125,
+      "latency_ms_p50": 3.54029999289196,
+      "latency_ms_p95": 4.9307000008411705,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.16666666666666666,
         "dev/changelog": 1.0,
@@ -220,15 +220,15 @@
         "heldout/decisions": 1.0,
         "heldout/latent": 1.0,
         "heldout/performance": 1.0,
-        "heldout/routing": 0.6666666666666666,
+        "heldout/routing": 0.3333333333333333,
         "heldout/security": 1.0,
         "heldout/temporal": 1.0
       },
-      "ingest_ms_per_event": 2.5125672130895107,
-      "storage_overhead_ratio": 4.7578463569880824,
+      "ingest_ms_per_event": 2.6933849205508724,
+      "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
-        0.5938,
-        0.7969
+        0.5781,
+        0.7812
       ]
     },
     "memoraos": {
@@ -238,16 +238,16 @@
         0.4844,
         0.7344
       ],
-      "recall_at_5": 0.5190217391304348,
-      "precision_at_5": 0.18405797101449275,
+      "recall_at_5": 0.5019927536231884,
+      "precision_at_5": 0.1927536231884058,
       "mrr": 0.532608695652174,
-      "ndcg_at_5": 0.4942087958733039,
+      "ndcg_at_5": 0.48344212877293347,
       "evidence_coverage": 0.5869565217391305,
       "unsupported_answer_rate": 0.16666666666666666,
       "false_abstain_rate": 0.34782608695652173,
-      "mean_context_tokens": 142.90625,
-      "latency_ms_p50": 27.163,
-      "latency_ms_p95": 44.059,
+      "mean_context_tokens": 143.953125,
+      "latency_ms_p50": 32.065,
+      "latency_ms_p95": 61.904,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.75,
         "dev/changelog": 0.5,
@@ -265,8 +265,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 12.797788524636179,
-      "storage_overhead_ratio": 23.748645720476706,
+      "ingest_ms_per_event": 10.287812698469867,
+      "storage_overhead_ratio": 23.690986571288175,
       "pooled_accuracy_ci95": [
         0.4844,
         0.7344
@@ -279,16 +279,16 @@
         0.4688,
         0.7188
       ],
-      "recall_at_5": 0.5289855072463768,
-      "precision_at_5": 0.17753623188405795,
+      "recall_at_5": 0.5119565217391304,
+      "precision_at_5": 0.186231884057971,
       "mrr": 0.5181159420289855,
-      "ndcg_at_5": 0.49058502915954205,
+      "ndcg_at_5": 0.4798183620591715,
       "evidence_coverage": 0.5869565217391305,
       "unsupported_answer_rate": 0.16666666666666666,
       "false_abstain_rate": 0.41304347826086957,
-      "mean_context_tokens": 142.15625,
-      "latency_ms_p50": 16.84,
-      "latency_ms_p95": 42.158,
+      "mean_context_tokens": 143.203125,
+      "latency_ms_p50": 16.991,
+      "latency_ms_p95": 51.742,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.75,
         "dev/changelog": 0.5,
@@ -306,8 +306,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 9.033234426229296,
-      "storage_overhead_ratio": 23.12459371614301,
+      "ingest_ms_per_event": 10.377896825380121,
+      "storage_overhead_ratio": 23.130057919878844,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -320,16 +320,16 @@
         0.5156,
         0.7656
       ],
-      "recall_at_5": 0.5842391304347826,
-      "precision_at_5": 0.21340579710144927,
+      "recall_at_5": 0.5672101449275362,
+      "precision_at_5": 0.22101449275362317,
       "mrr": 0.605072463768116,
-      "ndcg_at_5": 0.5543817491454471,
+      "ndcg_at_5": 0.5436150820450767,
       "evidence_coverage": 0.6739130434782609,
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.2391304347826087,
-      "mean_context_tokens": 173.765625,
-      "latency_ms_p50": 35.487,
-      "latency_ms_p95": 70.799,
+      "mean_context_tokens": 174.8125,
+      "latency_ms_p50": 34.63,
+      "latency_ms_p95": 75.666,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -347,8 +347,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 12.142413934419832,
-      "storage_overhead_ratio": 23.748645720476706,
+      "ingest_ms_per_event": 9.351103174609191,
+      "storage_overhead_ratio": 23.690986571288175,
       "pooled_accuracy_ci95": [
         0.5156,
         0.7656
@@ -361,16 +361,16 @@
         0.5469,
         0.7656
       ],
-      "recall_at_5": 0.6479037267080745,
-      "precision_at_5": 0.24818840579710144,
+      "recall_at_5": 0.6308747412008282,
+      "precision_at_5": 0.25471014492753624,
       "mrr": 0.6920289855072463,
-      "ndcg_at_5": 0.6263896189849322,
+      "ndcg_at_5": 0.6156229518845617,
       "evidence_coverage": 0.7608695652173914,
       "unsupported_answer_rate": 0.4444444444444444,
       "false_abstain_rate": 0.15217391304347827,
-      "mean_context_tokens": 201.21875,
-      "latency_ms_p50": 23.634,
-      "latency_ms_p95": 43.667,
+      "mean_context_tokens": 201.515625,
+      "latency_ms_p50": 35.016,
+      "latency_ms_p95": 52.528,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
@@ -388,8 +388,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 8.187495081968889,
-      "storage_overhead_ratio": 23.679306608884072,
+      "ingest_ms_per_event": 14.343858730243815,
+      "storage_overhead_ratio": 23.624994965240017,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7656
@@ -402,16 +402,16 @@
         0.5625,
         0.7812
       ],
-      "recall_at_5": 0.6696428571428571,
-      "precision_at_5": 0.252536231884058,
-      "mrr": 0.6992753623188406,
-      "ndcg_at_5": 0.6372591842023234,
+      "recall_at_5": 0.6526138716356108,
+      "precision_at_5": 0.25905797101449274,
+      "mrr": 0.7028985507246377,
+      "ndcg_at_5": 0.6293388160926369,
       "evidence_coverage": 0.782608695652174,
       "unsupported_answer_rate": 0.4444444444444444,
       "false_abstain_rate": 0.13043478260869565,
-      "mean_context_tokens": 205.109375,
-      "latency_ms_p50": 19.598,
-      "latency_ms_p95": 36.466,
+      "mean_context_tokens": 205.390625,
+      "latency_ms_p50": 64.476,
+      "latency_ms_p95": 110.506,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
@@ -429,8 +429,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 13.812609016418183,
-      "storage_overhead_ratio": 23.679306608884072,
+      "ingest_ms_per_event": 20.93732777783381,
+      "storage_overhead_ratio": 23.624994965240017,
       "pooled_accuracy_ci95": [
         0.5625,
         0.7812
@@ -475,51 +475,51 @@
     "hybrid_rag": {
       "dev:answerable": 0.8333333333333334,
       "dev:unanswerable": 0.0,
-      "heldout:answerable": 0.9375,
+      "heldout:answerable": 0.875,
       "heldout:unanswerable": 0.0,
       "split:dev": 0.5952380952380952,
-      "split:heldout": 0.6818181818181818,
+      "split:heldout": 0.6363636363636364,
       "topic:absent_topic": 0.0,
       "topic:changelog": 1.0,
       "topic:decisions": 0.8461538461538461,
       "topic:latent": 0.8,
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
-      "topic:routing": 0.8333333333333334,
+      "topic:routing": 0.6666666666666666,
       "topic:security": 0.8,
       "topic:temporal": 1.0
     },
     "hybrid_rag_top1": {
       "dev:answerable": 0.5333333333333333,
       "dev:unanswerable": 0.0,
-      "heldout:answerable": 0.6875,
+      "heldout:answerable": 0.625,
       "heldout:unanswerable": 0.0,
       "split:dev": 0.38095238095238093,
-      "split:heldout": 0.5,
+      "split:heldout": 0.45454545454545453,
       "topic:absent_topic": 0.0,
       "topic:changelog": 0.5,
       "topic:decisions": 0.46153846153846156,
       "topic:latent": 0.6,
       "topic:performance": 0.8,
       "topic:roadmap": 0.0,
-      "topic:routing": 0.5,
+      "topic:routing": 0.3333333333333333,
       "topic:security": 0.6,
       "topic:temporal": 1.0
     },
     "hybrid_rag_gated": {
       "dev:answerable": 0.8333333333333334,
       "dev:unanswerable": 0.16666666666666666,
-      "heldout:answerable": 0.9375,
+      "heldout:answerable": 0.875,
       "heldout:unanswerable": 0.5,
       "split:dev": 0.6428571428571429,
-      "split:heldout": 0.8181818181818182,
+      "split:heldout": 0.7727272727272727,
       "topic:absent_topic": 0.2777777777777778,
       "topic:changelog": 1.0,
       "topic:decisions": 0.8461538461538461,
       "topic:latent": 0.8,
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
-      "topic:routing": 0.8333333333333334,
+      "topic:routing": 0.6666666666666666,
       "topic:security": 0.8,
       "topic:temporal": 1.0
     },
@@ -730,7 +730,7 @@
       "cited": [
         "docs/SECURITY.md > Implemented controls",
         "docs/RETRIEVAL.md > Real-document findings (what the synthetic suite had hidden)",
-        "docs/ADR/0002-structured-facts-and-value-keys.md > ADR-0002: Structured facts, canonical value keys, and source spans"
+        "docs/V02_ARCHITECTURE.md > Invariants"
       ],
       "correct": true
     },
@@ -776,11 +776,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "When enabled, a learned override replaces the default strategy only if **all** hold (`routing/learning.py`): - both strategies have ≥ `learning_min_samples` (20) labelled outcomes in that category; - the challenger's Wilson 95% **lower** bound ≥ the default's observed accuracy; | Cognee | BEAM 0.79 @100K tokens (20 questions) | README; exploratory, same set used to select routing.",
+      "answer": "When enabled, a learned override replaces the default strategy only if **all** hold (`routing/learning.py`): - both strategies have ≥ `learning_min_samples` (20) labelled outcomes in that category; - the challenger's Wilson 95% **lower** bound ≥ the default's observed accuracy; Neural-embedder runs on the public sets are ⏳.",
       "cited": [
         "docs/ADAPTIVE_ROUTING.md > Adaptive strategy learning",
-        "docs/RESEARCH_AND_COMPETITIVE_ANALYSIS.md > 3. Self-reported benchmark numbers (context only)",
-        "docs/BENCHMARK_METHODOLOGY.md > Real-document benchmark"
+        "docs/ROADMAP.md > Next (highest value first)",
+        "docs/BENCHMARK_METHODOLOGY.md > Results snapshot"
       ],
       "correct": true
     },
@@ -876,11 +876,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "Objects implementing only the v0.1 protocol are wrapped by `adapt_embedder()`. PostgreSQL / external vector / graph / object-storage adapters: **not implemented** (only the interface seams: providers and `Database`). - **Embedding provider v2** (`BaseEmbeddingProvider`, `adapt_embedder` for v0.1 providers, health checks), dimension-mismatch guard, `reembed()`, `rebuild_index()`, `embedding_info()`, optional lazy `SentenceTransformerEmbedder`.",
+      "answer": "Objects implementing only the v0.1 protocol are wrapped by `adapt_embedder()`. - **Embedding provider v2** (`BaseEmbeddingProvider`, `adapt_embedder` for v0.1 providers, health checks), dimension-mismatch guard, `reembed()`, `rebuild_index()`, `embedding_info()`, optional lazy `SentenceTransformerEmbedder`.",
       "cited": [
         "docs/ADR/0004-embedding-provider-v2.md > ADR-0004: Embedding provider v2 and a model registry",
-        "docs/IMPLEMENTATION_STATUS.md > Known issues and limitations",
-        "CHANGELOG.md > Added"
+        "CHANGELOG.md > Added",
+        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit"
       ],
       "correct": true
     },
@@ -898,7 +898,7 @@
       "cited": [
         "docs/ADR/0005-configurable-rank-fusion.md > ADR-0005: Configurable weighted RRF with entity and exact-value retrievers",
         "CHANGELOG.md > Added",
-        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit"
+        "docs/V02_ARCHITECTURE.md > v0.2 Architecture"
       ],
       "correct": true
     },
@@ -1110,7 +1110,7 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "⏳ **Standard benchmarks**: LoCoMo and LongMemEval adapters (license permitting) with a fixed, disclosed judge; neural-embedder runs (Ollama `nomic-embed-text`, Qwen embeddings) alongside the hashing embedder. - Vector search is exact brute force over an in-memory matrix: fine to roughly 10⁵ memories per scope; beyond that use an ANN adapter (roadmap). Legend: ✅ done · 🧪 experimental · ⏳ planned.",
+      "answer": "🧪 **Standard benchmarks**: LoCoMo and LongMemEval retrieval-only adapters now exist (`benchmarks/public.py`); the answer-accuracy judge is still ⏳ and needs an LLM. - Vector search is exact brute force over an in-memory matrix: fine to roughly 10⁵ memories per scope; beyond that use an ANN adapter (roadmap). Legend: ✅ done · 🧪 experimental · ⏳ planned.",
       "cited": [
         "docs/ROADMAP.md > Next (highest value first)",
         "docs/PERFORMANCE.md > Known scaling limits",
@@ -1266,15 +1266,15 @@
       "tag": "heldout/security",
       "answerable": true,
       "gold": [
-        "not implemented in code"
+        "AES-256-GCM"
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "- **Encryption at rest** is not implemented in code.",
+      "answer": "- **Encryption at rest** is opt-in and implemented in code with AES-256-GCM (see [Encryption at rest](#encryption-at-rest)).",
       "cited": [
         "docs/SECURITY.md > Not implemented / limitations",
-        "docs/IMPLEMENTATION_STATUS.md > Phases",
-        "docs/V02_IMPLEMENTATION_PLAN.md > Scope"
+        "docs/SECURITY.md > Encryption at rest",
+        "CHANGELOG.md > Added"
       ],
       "correct": true
     },
@@ -1382,11 +1382,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "SQLite + FTS5; brute-force cosine; NetworkX graph on demand; deterministic routing; extractive answers; bitemporal facts as rows (retract, never overwrite); append-only hash-chained events; API keys hashed with tenant/role binding; hard deletion with a content-free audit stub. Hard deletion removes content from every table but keeps a content-free `memory.forgotten` event. **Context.** The spec asks to improve v0.1 without unnecessary rewrites and to keep every v0.1 database usable.",
+      "answer": "SQLite + FTS5; brute-force cosine; NetworkX graph on demand; deterministic routing; extractive answers; bitemporal facts as rows (retract, never overwrite); append-only hash-chained events; API keys hashed with tenant/role binding; hard deletion with a content-free audit stub. Hard deletion removes content from every table but keeps a content-free `memory.forgotten` event. - **Working model:** the decrypted database lives only in process memory.",
       "cited": [
         "docs/IMPLEMENTATION_STATUS.md > Architectural decisions (see ARCHITECTURE.md for rationale)",
         "docs/TEMPORAL_MEMORY.md > Audit trail",
-        "docs/ADR/0001-evolve-modular-monolith.md > ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only"
+        "docs/SECURITY.md > Encryption at rest"
       ],
       "correct": true
     },
@@ -1635,5 +1635,5 @@
       "correct": true
     }
   ],
-  "wall_clock_seconds": 22.0
+  "wall_clock_seconds": 28.8
 }

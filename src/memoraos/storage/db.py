@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import os
+import shutil
 import sqlite3
 import threading
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
+
+from . import crypto
 
 # Each entry is applied exactly once, in order, inside a transaction. Never edit an applied
 # migration; append a new one.
@@ -188,20 +192,50 @@ CREATE INDEX idx_extract_attempts_status ON extraction_attempts(tenant_id, statu
 class Database:
     """Thread-safe wrapper around one SQLite connection (WAL, foreign keys, busy timeout)."""
 
-    def __init__(self, path: str | Path):
+    def __init__(self, path: str | Path, passphrase: str | None = None):
         self.path = str(path)
+        self.encrypted = bool(passphrase) and self.path != ":memory:"
         if self.path != ":memory:":
             Path(self.path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
-        self._conn = sqlite3.connect(self.path, check_same_thread=False, isolation_level=None, timeout=30)
+        self._tx_depth = 0
+        if self.encrypted:
+            self._open_encrypted(passphrase or "")
+        else:
+            if self.path != ":memory:" and crypto.is_encrypted_file(self.path):
+                raise crypto.EncryptionError(
+                    f"{self.path} is encrypted: set Settings.encryption_passphrase or {crypto.ENV_KEY}."
+                )
+            self._conn = sqlite3.connect(self.path, check_same_thread=False, isolation_level=None, timeout=30)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute("PRAGMA foreign_keys=ON")
         self._conn.execute("PRAGMA busy_timeout=30000")
-        if self.path != ":memory:":
+        if self.path != ":memory:" and not self.encrypted:
             self._conn.execute("PRAGMA journal_mode=WAL")
             self._conn.execute("PRAGMA synchronous=NORMAL")
-        self._tx_depth = 0
         self.migrate()
+
+    def _open_encrypted(self, passphrase: str) -> None:
+        """Working copy lives in memory; the file on disk only ever holds ciphertext."""
+        if not hasattr(sqlite3.Connection, "serialize"):
+            raise crypto.EncryptionError("Encryption at rest needs Python 3.11+ (sqlite3 serialize/deserialize).")
+        self._conn = sqlite3.connect(":memory:", check_same_thread=False, isolation_level=None, timeout=30)
+        target = Path(self.path)
+        if target.is_file() and target.stat().st_size > 0:
+            blob = target.read_bytes()
+            if not blob.startswith(crypto.MAGIC):
+                raise crypto.EncryptionError(
+                    f"{self.path} is a plain SQLite file; run `memoraos encrypt` to convert it before opening with a passphrase."
+                )
+            self._salt = crypto.read_salt(blob)
+            self._key = crypto.derive_key(passphrase, self._salt)
+            self._conn.deserialize(crypto.decrypt(self._key, blob))
+        else:
+            self._salt = crypto.new_salt()
+            self._key = crypto.derive_key(passphrase, self._salt)
+
+    def _persist(self) -> None:
+        crypto.write_atomic(Path(self.path), crypto.encrypt(self._key, self._salt, self._conn.serialize()))
 
     def migrate(self) -> list[int]:
         with self._lock:
@@ -228,12 +262,17 @@ class Database:
                     self._conn.execute("ROLLBACK")
                     raise
                 applied.append(version)
+            if applied and self.encrypted:
+                self._persist()
             return applied
 
     def _pre_migration_backup(self, from_version: int) -> None:
         """Keep a restorable copy of an existing database before upgrading its schema."""
         target = Path(f"{self.path}.bak-v{from_version}")
         if target.exists():
+            return
+        if self.encrypted:
+            shutil.copyfile(self.path, target)
             return
         self._conn.execute("PRAGMA wal_checkpoint(FULL)")
         dst = sqlite3.connect(str(target))
@@ -265,6 +304,8 @@ class Database:
                 self._tx_depth -= 1
                 if outer:
                     self._conn.execute("COMMIT")
+                    if self.encrypted:
+                        self._persist()
 
     def query(self, sql: str, params: tuple | list = ()) -> list[sqlite3.Row]:
         with self._lock:
@@ -276,13 +317,23 @@ class Database:
 
     def execute(self, sql: str, params: tuple | list = ()) -> sqlite3.Cursor:
         with self._lock:
-            return self._conn.execute(sql, params)
+            before = self._conn.total_changes
+            cur = self._conn.execute(sql, params)
+            if self.encrypted and self._tx_depth == 0 and (
+                self._conn.total_changes != before or sql.lstrip()[:6].upper() in ("CREATE", "DROP T", "ALTER ", "DROP I")
+            ):
+                self._persist()
+            return cur
 
     def backup(self, dest: str | Path) -> Path:
-        """Consistent online backup using SQLite's backup API."""
+        """Consistent online backup using SQLite's backup API (an encrypted database is backed up encrypted)."""
         dest = Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         with self._lock:
+            if self.encrypted:
+                self._persist()
+                shutil.copyfile(self.path, dest)
+                return dest
             target = sqlite3.connect(str(dest))
             try:
                 self._conn.backup(target)
@@ -298,6 +349,51 @@ class Database:
     def close(self) -> None:
         with self._lock:
             self._conn.close()
+
+
+def convert_database(path: str | Path, passphrase: str, *, to_encrypted: bool) -> None:
+    """Encrypt a plain database file in place, or decrypt it back. The result is verified before the original is replaced."""
+    p = Path(path)
+    if not p.is_file():
+        raise FileNotFoundError(str(p))
+    if to_encrypted:
+        if crypto.is_encrypted_file(p):
+            raise crypto.EncryptionError(f"{p} is already encrypted.")
+        src = sqlite3.connect(str(p))
+        try:
+            src.execute("PRAGMA journal_mode=DELETE")  # a WAL-flagged image cannot be loaded into memory
+            mem = sqlite3.connect(":memory:")
+            src.backup(mem)
+        finally:
+            src.close()
+        try:
+            plain = mem.serialize()
+        finally:
+            mem.close()
+        salt = crypto.new_salt()
+        key = crypto.derive_key(passphrase, salt)
+        blob = crypto.encrypt(key, salt, plain)
+        if crypto.decrypt(key, blob) != plain:
+            raise crypto.EncryptionError("Verification failed; the original file was left untouched.")
+        crypto.write_atomic(p, blob)
+        for suffix in ("-wal", "-shm"):
+            Path(str(p) + suffix).unlink(missing_ok=True)
+        return
+    blob = p.read_bytes()
+    plain = crypto.decrypt(crypto.derive_key(passphrase, crypto.read_salt(blob)), blob)
+    mem = sqlite3.connect(":memory:")
+    try:
+        mem.deserialize(plain)
+        tmp = p.with_name(p.name + ".tmp")
+        tmp.unlink(missing_ok=True)
+        dst = sqlite3.connect(str(tmp))
+        try:
+            mem.backup(dst)
+        finally:
+            dst.close()
+    finally:
+        mem.close()
+    os.replace(tmp, p)
 
 
 def _split_statements(script: str) -> list[str]:

@@ -1,0 +1,693 @@
+{
+  "corpus_sha256": "0129e552bb6bd733de88dc867a3992b86a73d92b336ac095e62937556e9be0ba",
+  "anchor": null,
+  "rows": [
+    {
+      "qid": "rd0",
+      "question": "Which hash function chains the audit events?",
+      "tag": "dev/security",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "ANSWER_GENERATION_FAILURE"
+    },
+    {
+      "qid": "rd1",
+      "question": "How are API keys stored on disk?",
+      "tag": "dev/security",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd2",
+      "question": "Which address does the REST API bind to by default?",
+      "tag": "dev/security",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd3",
+      "question": "What placeholder replaces a detected secret before it is stored?",
+      "tag": "dev/security",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd4",
+      "question": "What is the maximum number of characters accepted as input text?",
+      "tag": "dev/security",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd5",
+      "question": "How does the memory rendering protect against injected instructions in retrieved text?",
+      "tag": "dev/security",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd6",
+      "question": "Which setting is the score gap within which cheaper strategies win?",
+      "tag": "dev/routing",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd7",
+      "question": "Which setting sets the minimum labelled outcomes before a learned routing override applies?",
+      "tag": "dev/routing",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd8",
+      "question": "Which confidence interval bound must a challenger strategy meet to replace the default?",
+      "tag": "dev/routing",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd9",
+      "question": "Why did the Windows CI test fail intermittently?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "ANSWER_GENERATION_FAILURE"
+    },
+    {
+      "qid": "rd10",
+      "question": "What caused the wrong latest value to be chosen in that CI failure?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd11",
+      "question": "How much is a repeated system timestamp bumped?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd12",
+      "question": "Which exception is raised when a model name is reused with a different vector dimension?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd13",
+      "question": "Which function wraps embedding providers that implement only the v0.1 protocol?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd14",
+      "question": "What weight do expanded query lists get by default?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd15",
+      "question": "What is the canonical value key for a salary of 32 LPA?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "ANSWER_GENERATION_FAILURE"
+    },
+    {
+      "qid": "rd16",
+      "question": "For which kind of predicate are monthly amounts annualized?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd17",
+      "question": "What happens to prompt-injection sentences before the LLM extraction call?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd18",
+      "question": "Which table records every extraction attempt?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd19",
+      "question": "How is confidence computed over the steps of a fused evidence path?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd20",
+      "question": "What kind of storage changes does ADR-0001 allow?",
+      "tag": "dev/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "bm25",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd21",
+      "question": "What is the arXiv number of the Memorilla paper?",
+      "tag": "dev/latent",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "bm25",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd22",
+      "question": "How much GPU memory does the Memorilla README call for?",
+      "tag": "dev/latent",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "attribute-word guard"
+    },
+    {
+      "qid": "rd23",
+      "question": "How many training stages does Memorilla need?",
+      "tag": "dev/latent",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd24",
+      "question": "Which class is the CPU slot-attention baseline for latent memory?",
+      "tag": "dev/latent",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "exact",
+      "correct": false,
+      "cause": "ANSWER_GENERATION_FAILURE"
+    },
+    {
+      "qid": "rd25",
+      "question": "What per-query latency budget do the regression tests enforce?",
+      "tag": "dev/performance",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "attribute-word guard"
+    },
+    {
+      "qid": "rd26",
+      "question": "What is the maximum number of memories per consolidation run?",
+      "tag": "dev/performance",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd27",
+      "question": "Which standard memory benchmarks are planned as adapters in the roadmap?",
+      "tag": "dev/roadmap",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd28",
+      "question": "What is the name of the automatic backup taken before a schema upgrade?",
+      "tag": "dev/changelog",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "attribute-word guard"
+    },
+    {
+      "qid": "rd29",
+      "question": "Which schema migration added fact polarity and extraction method columns?",
+      "tag": "dev/changelog",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd30",
+      "question": "When several strategies score within the tolerance, which one does the router choose?",
+      "tag": "heldout/routing",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "attribute-word guard"
+    },
+    {
+      "qid": "rd31",
+      "question": "Which retrieval strategy does a question like 'Find error E4021' use?",
+      "tag": "heldout/routing",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "RETRIEVAL_MISS",
+      "guard": null
+    },
+    {
+      "qid": "rd32",
+      "question": "How many logical CPUs did the performance measurements run on?",
+      "tag": "heldout/performance",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd33",
+      "question": "Which Python version were the performance numbers measured with?",
+      "tag": "heldout/performance",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd34",
+      "question": "How much RAM did the benchmark machine have?",
+      "tag": "heldout/performance",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd35",
+      "question": "Which security control prevents SQL injection?",
+      "tag": "heldout/security",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd36",
+      "question": "What does forget() do to the stored memory rows?",
+      "tag": "heldout/security",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd37",
+      "question": "Is encryption at rest implemented in code?",
+      "tag": "heldout/security",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd38",
+      "question": "Which tool is suggested for disk encryption of the data directory on Windows?",
+      "tag": "heldout/security",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "exact",
+      "correct": false,
+      "cause": "ANSWER_GENERATION_FAILURE"
+    },
+    {
+      "qid": "rd39",
+      "question": "Which Python version does the Memorilla reproduction plan require?",
+      "tag": "heldout/latent",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "attribute-word guard"
+    },
+    {
+      "qid": "rd40",
+      "question": "What is the default value of adaptive_learning?",
+      "tag": "heldout/routing",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd41",
+      "question": "What happens when two values share the same explicit effective date?",
+      "tag": "heldout/temporal",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd42",
+      "question": "Which version pair is the example of a possible version change?",
+      "tag": "heldout/temporal",
+      "answerable": true,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "term coverage below the support threshold"
+    },
+    {
+      "qid": "rd43",
+      "question": "Which kind of relative date in stored text is not handled?",
+      "tag": "heldout/temporal",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd44",
+      "question": "Which database table is append-only and hash-chained?",
+      "tag": "heldout/temporal",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "rd45",
+      "question": "What is the name of the typed model for an extracted fact in ADR-0002?",
+      "tag": "heldout/decisions",
+      "answerable": true,
+      "status": "answered",
+      "strategy": "exact",
+      "correct": false,
+      "cause": "ANSWER_GENERATION_FAILURE"
+    },
+    {
+      "qid": "ru0",
+      "question": "What is the monthly price of the hosted MemoraOS plan?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru1",
+      "question": "Which Kubernetes version does MemoraOS require?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru2",
+      "question": "Who founded the company behind MemoraOS?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru3",
+      "question": "Which GraphQL endpoint exposes recall?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "FALSE_ACCEPTANCE",
+      "detail": "docs/PERFORMANCE.md > Optimisations implemented"
+    },
+    {
+      "qid": "ru4",
+      "question": "What is the Windows installer filename?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru5",
+      "question": "Which default port does the Redis cache use?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru6",
+      "question": "Which SQLAlchemy version does the storage layer use?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru7",
+      "question": "Which Android versions are supported by the mobile app?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru8",
+      "question": "What is the SOC 2 certification status?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru9",
+      "question": "Which cloud region hosts the MemoraOS SaaS?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru10",
+      "question": "How many GitHub stars does the repository have?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "FALSE_ACCEPTANCE",
+      "detail": "docs/IMPLEMENTATION_STATUS.md > Spec checklist (first-release definition of done)"
+    },
+    {
+      "qid": "ru11",
+      "question": "Which Prometheus metric tracks recall latency?",
+      "tag": "dev/absent_topic",
+      "answerable": false,
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "FALSE_ACCEPTANCE",
+      "detail": "docs/BENCHMARK_METHODOLOGY.md > Scoring (all mechanical, no LLM judge)"
+    },
+    {
+      "qid": "ru12",
+      "question": "What OAuth scopes does the API require?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru13",
+      "question": "Which Terraform module deploys MemoraOS?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru14",
+      "question": "Which Helm chart version is current?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru15",
+      "question": "Which PagerDuty service receives incident alerts?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru16",
+      "question": "What uptime does the service level agreement guarantee?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    },
+    {
+      "qid": "ru17",
+      "question": "Which Snowflake warehouse stores the benchmark results?",
+      "tag": "heldout/absent_topic",
+      "answerable": false,
+      "status": "insufficient_evidence",
+      "strategy": "vector",
+      "correct": true,
+      "cause": null
+    }
+  ],
+  "summary": {
+    "questions": 64,
+    "wrong": 25,
+    "answerable": 46,
+    "answerable_missed": 22,
+    "by_cause": {
+      "ANSWER_GENERATION_FAILURE": 6,
+      "OVERSTRICT_ABSTENTION": 15,
+      "RETRIEVAL_MISS": 1,
+      "FALSE_ACCEPTANCE": 3
+    },
+    "overstrict_guards": {
+      "term coverage below the support threshold": 10,
+      "attribute-word guard": 5
+    },
+    "by_split": {
+      "dev": {
+        "ANSWER_GENERATION_FAILURE": 4,
+        "OVERSTRICT_ABSTENTION": 9,
+        "FALSE_ACCEPTANCE": 3
+      },
+      "heldout": {
+        "OVERSTRICT_ABSTENTION": 6,
+        "RETRIEVAL_MISS": 1,
+        "ANSWER_GENERATION_FAILURE": 2
+      }
+    }
+  }
+}

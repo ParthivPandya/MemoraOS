@@ -1,4 +1,4 @@
-# Implementation Status
+﻿# Implementation Status
 
 _Last updated for v0.2.0 (unreleased). This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
 
@@ -16,7 +16,7 @@ _Last updated for v0.2.0 (unreleased). This file lists what works, what is parti
 
 ## Test results (v0.2)
 
-`python -m pytest` → **284 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
+`python -m pytest` → **327 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
 
 ## Test results (v0.1)
 
@@ -56,9 +56,9 @@ _Last updated for v0.2.0 (unreleased). This file lists what works, what is parti
 3. Lexical default embedder; neural embedders are adapters, **untested against real servers** (HTTP behaviour is tested with mock transports).
 4. A `RerankProvider` interface and `LexicalReranker` exist but are **not wired into the retrieval path**.
 5. Storage overhead on very short texts is large (≈351× raw text in the benchmark).
-6. No encryption at rest; backups are not rewritten on `forget`.
+6. Encryption at rest was added after v0.2 as an opt-in (see [SECURITY.md](SECURITY.md)); backups are not rewritten on `forget`.
 7. Vector search is exact brute force; scale beyond ~10⁵ memories per scope is unmeasured.
-8. Benchmark datasets are synthetic and project-authored; no LoCoMo/LongMemEval run; no external system run.
+8. Benchmark datasets are synthetic and project-authored; retrieval-only LoCoMo/LongMemEval runs now exist (`benchmarks/public.py`), but no answer-accuracy run and no external system run.
 9. Query cache and graph cache are process-local; multi-process deployments share only SQLite state (caches validate against the event sequence).
 10. PostgreSQL / external vector / graph / object-storage adapters: **not implemented** (only the interface seams: providers and `Database`).
 11. Multimodal ingestion: not implemented (text and JSON only).
@@ -84,3 +84,5 @@ memoraos serve                         # API on :8000
 cd apps/dashboard && npm install && npm run dev     # dashboard on :3000 (copy .env.example to .env.local)
 python examples/basic_memory/main.py   # examples
 ```
+
+

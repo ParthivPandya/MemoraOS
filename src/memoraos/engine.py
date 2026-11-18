@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 from collections.abc import Sequence
 from pathlib import Path
@@ -41,6 +42,7 @@ from .retrieval.vector import VectorIndex
 from .routing.learning import make_policy, strategy_stats
 from .routing.router import AdaptiveRouter
 from .security import detect_prompt_injection, redact_secrets
+from .storage.crypto import ENV_KEY
 from .storage.db import Database
 from .storage.visibility import visibility_clause, write_scope_id
 from .store import Store, adjust_reliability, content_hash, normalize_content
@@ -76,7 +78,10 @@ class MemoryOS:
         self.settings = settings or Settings()
         self.clock: Clock = clock or utcnow
         self.new_id: IdFactory = id_factory or new_id
-        self.db = Database(self.settings.db_path if str(self.settings.db_path) != ":memory:" else ":memory:")
+        self.db = Database(
+            self.settings.db_path if str(self.settings.db_path) != ":memory:" else ":memory:",
+            self.settings.encryption_passphrase or os.environ.get(ENV_KEY) or None,
+        )
         self.embedder: BaseEmbeddingProvider = adapt_embedder(embedder or HashingEmbedder(self.settings.embedding_dim))
         self.chat = chat
         self.reranker: RerankProvider = reranker or LexicalReranker()
@@ -314,10 +319,12 @@ class MemoryOS:
             dest_dir = Path(tempfile.gettempdir()) / "memoraos-sources"
         else:
             dest_dir = Path(self.settings.data_dir) / "sources"
+        kwargs.setdefault("source_type", "document")
+        if self.db.encrypted:  # a plaintext copy would defeat encryption at rest; the content is stored in the database
+            return self.remember(text, user_id=user_id, origin=str(src), **kwargs)
         dest_dir.mkdir(parents=True, exist_ok=True)
         dest = dest_dir / f"{content_hash(normalize_content(text))[:16]}_{src.name}"
         shutil.copyfile(src, dest)
-        kwargs.setdefault("source_type", "document")
         return self.remember(text, user_id=user_id, origin=str(src), file_path=str(dest), **kwargs)
 
     def _facts_for_slots(self, scope: Scope, memory_ids: list[str]) -> list[Fact]:
