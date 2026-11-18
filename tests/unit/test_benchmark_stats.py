@@ -13,7 +13,7 @@ def test_brier_and_ece_on_known_values():
     assert brier([1.0, 0.0], [True, False]) == 0.0
     assert brier([0.5, 0.5], [True, False]) == 0.25
     assert brier([], []) is None
-    assert ece([0.9] * 10, [True] * 9 + [False]) == 0.0  # confidence equals accuracy
+    assert abs(ece([0.9] * 10, [True] * 9 + [False])) < 1e-9  # confidence equals accuracy (float sum is not exact)
     assert abs(ece([0.9] * 10, [True] * 5 + [False] * 5) - 0.4) < 1e-9
 
 

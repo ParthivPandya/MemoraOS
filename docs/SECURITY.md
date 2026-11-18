@@ -34,7 +34,7 @@ Assets: stored memories (may contain personal data), API keys, the audit trail. 
 
 ## Encryption at rest
 
-Opt-in, via the `encryption` extra (`pip install "memoraos[encryption]"`, which installs `cryptography`).
+Opt-in, via the `encryption` extra (from a source checkout: `pip install -e ".[encryption]"`, which installs `cryptography`; MemoraOS is not published on PyPI).
 
 - **Format:** the database file is `MOSENC01 | salt(16) | nonce(12) | ciphertext`. The key is derived from the passphrase with scrypt (n=2^15, r=8, p=1) and the data is sealed with AES-256-GCM. The header is authenticated as associated data, so a modified header or ciphertext fails to decrypt instead of yielding garbage.
 - **Passphrase:** `Settings.encryption_passphrase` or the `MEMORAOS_ENCRYPTION_KEY` environment variable. The CLI reads it only from the environment, never from an argument, so it does not land in shell history or process listings. There is no recovery: a lost passphrase means lost data.

@@ -8,7 +8,7 @@ Everything on this page was produced by code in this repository and can be regen
 |---|---|
 | Is there generated data behind the headline numbers? | **Two of the three benchmarks use real data.** Real documentation (`benchmarks/real_docs.py`) and real dated CPython releases from three PEPs (`benchmarks/real_temporal.py`). The third (`benchmarks/run.py`) is a **synthetic** suite, kept as a regression guard. |
 | Does MemoraOS beat RAG on real prose? | **No.** On real documentation MemoraOS is level with plain RAG and behind a RAG baseline with an abstention gate on how many answerable questions it answers. It refuses unanswerable questions far more often and uses about 4.6x fewer evidence tokens. |
-| Where does it clearly win? | Questions about **change over time** on real dated data (21 of 21 against 19% for the best RAG baseline) and **abstention** on unanswerable questions. |
+| Where does it clearly win? | Questions about **change over time** on real dated data (21 of 21 against 29% for the best RAG baseline, plain vector search at 6 of 21) and **abstention** on unanswerable questions. |
 | Who judged the answers? | A mechanical judge (string containment and ID matching). No LLM anywhere. |
 | What is not measured? | The optional LLM extractor, neural embedders, rerankers and every external system (Mem0, Graphiti, Hindsight, Memorilla). |
 
@@ -16,14 +16,14 @@ The unit and integration tests, and the synthetic benchmark generators, use cont
 
 ## 1. Real documentation (46 answerable + 18 unanswerable questions)
 
-Corpus: this repository's own documentation, 26 Markdown files split by heading into 126 sections (123,552 characters, SHA-256 `0129e552bb6b…`), used exactly as written. Questions were written by the project. 30 + 12 are a **dev set** used to find defects; 16 + 6 are a **held-out set** written before any fix. The run aborts if a gold string is missing from the corpus, if an "unanswerable" term does occur in it, or if a question is quoted verbatim in the corpus.
+Corpus: this repository's own documentation, 26 Markdown files split by heading into 126 sections (123,607 characters, SHA-256 `c6a5fa5cadfe…`), used exactly as written. Questions were written by the project. 30 + 12 are a **dev set** used to find defects; 16 + 6 are a **held-out set** written before any fix. The run aborts if a gold string is missing from the corpus, if an "unanswerable" term does occur in it, or if a question is quoted verbatim in the corpus.
 
 <p align="center"><img src="assets/benchmark_real_docs.png" alt="Answerable questions answered correctly versus unanswerable questions refused, for every system" width="92%" /></p>
 
 | System | All 64 [95% CI] | Answerable answered correctly (46) | Unanswerable refused (18) | Held-out (22) | Evidence tokens / question |
 |---|---|---|---|---|---|
 | BM25 RAG | 59.4% [48.4, 70.3] | 82.6% | 0.0% | 59.1% | 745 |
-| Vector RAG | 51.6% [40.6, 64.1] | 71.7% | 0.0% | 63.6% | 704 |
+| Vector RAG | 51.6% [40.6, 64.1] | 71.7% | 0.0% | 63.6% | 705 |
 | Hybrid RAG | 60.9% [50.0, 71.9] | 84.8% | 0.0% | 63.6% | 714 |
 | Hybrid RAG + abstention gate | **68.8%** [57.8, 78.1] | **84.8%** | 27.8% | **77.3%** | 665 |
 | **MemoraOS (default)** | 60.9% [48.4, 73.4] | 52.2% | **83.3%** | 59.1% | **144** |

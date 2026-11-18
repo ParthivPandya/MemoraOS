@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import sqlite3
+
 import pytest
 
 from memoraos import MemoryOS
@@ -8,6 +10,8 @@ from memoraos.storage import crypto
 from memoraos.storage.db import Database, convert_database
 
 pytest.importorskip("cryptography")
+if not hasattr(sqlite3.Connection, "serialize"):
+    pytest.skip("encryption at rest needs Python 3.11+ (sqlite3 serialize)", allow_module_level=True)
 
 PLAIN_MARKER = "Zanzibar-Quokka-Secret"
 

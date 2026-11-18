@@ -283,7 +283,7 @@ Tested with an injected regression (disabling evidence fusion on a multi-hop con
 
 ### Encryption at rest
 
-Opt-in (`pip install "memoraos[encryption]"`): `MemoryOS.local(settings=Settings(encryption_passphrase="..."))`, or set `MEMORAOS_ENCRYPTION_KEY` (the only way the CLI takes it). The database is stored as an AES-256-GCM file (scrypt-derived key; layout `MOSENC01 | salt | nonce | ciphertext`). The working copy lives in memory and every commit atomically rewrites the encrypted file, so **write cost grows with database size**. Wrong keys and tampered files are rejected. `memoraos encrypt` / `decrypt` convert an existing database; they do **not** touch old plaintext `sources/` or `.bak` files, and there is no key recovery. Needs Python 3.11+. Tests: [`tests/unit/test_encryption.py`](tests/unit/test_encryption.py). Details: [docs/SECURITY.md](docs/SECURITY.md#encryption-at-rest).
+Opt-in (install from source with `pip install -e ".[encryption]"`; MemoraOS is not published on PyPI): `MemoryOS.local(settings=Settings(encryption_passphrase="..."))`, or set `MEMORAOS_ENCRYPTION_KEY` (the only way the CLI takes it). The database is stored as an AES-256-GCM file (scrypt-derived key; layout `MOSENC01 | salt | nonce | ciphertext`). The working copy lives in memory and every commit atomically rewrites the encrypted file, so **write cost grows with database size**. Wrong keys and tampered files are rejected. `memoraos encrypt` / `decrypt` convert an existing database; they do **not** touch old plaintext `sources/` or `.bak` files, and there is no key recovery. Needs Python 3.11+. Tests: [`tests/unit/test_encryption.py`](tests/unit/test_encryption.py). Details: [docs/SECURITY.md](docs/SECURITY.md#encryption-at-rest).
 
 ### Docker (optional)
 
@@ -353,7 +353,7 @@ Read these before relying on MemoraOS.
 - **Encryption at rest is opt-in** and rewrites the whole file on each commit; backups and plain `sources/` copies are not rewritten on delete or encryption. See [docs/SECURITY.md](docs/SECURITY.md) and [docs/PERFORMANCE.md](docs/PERFORMANCE.md).
 - **Not delivered:** the real-LLM extractor is unmeasured (no model was available), and lifecycle controls, change sets, connectors and the Memorilla adapter remain deferred ([status](docs/NEXT_IMPLEMENTATION_STATUS.md)).
 - **Test data.** Unit and integration tests and the synthetic benchmark generators use controlled inputs by necessity. They are fixtures, not evidence.
-- The CI workflow is defined in `.github/workflows` but had not run on GitHub when this was written; the same commands pass locally.
+- **CI status.** The workflow in `.github/workflows` runs on GitHub. Its run for the commit that added encryption, Docker and the public benchmarks failed on Python 3.10 (ubuntu and windows) because one new test compared a float to exactly `0.0`; the other jobs passed. The test is fixed in the source tree, and the tests were run locally only on Python 3.14. Encryption needs Python 3.11+, and CI only runs its tests where the `encryption` extra is installed (see `.github/workflows/ci.yml`). Check the Actions tab for the current state.
 
 ## Documentation
 
