@@ -38,6 +38,7 @@ EXCLUDE = {"docs/EVIDENCE.md"}
 EXCLUDE_PATTERNS = (
     r"docs/NEXT_[A-Z_]+\.md", r"docs/COMPETITIVE_INTELLIGENCE\.md", r"docs/MEMORY_CI\.md", r"docs/ADR/00(?:0[89]|[1-9]\d)-.*\.md",
     r"docs/DOCKER\.md", r"docs/PUBLIC_BENCHMARKS\.md", r"docs/SCALING\.md",
+        r"docs/MCP\.md",
 )
 FILES = ["CHANGELOG.md", "SECURITY.md"]
 SCENARIO = "real_docs_qa"
