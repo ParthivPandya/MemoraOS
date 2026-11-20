@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real-document benchmark",
   "command": "python -m benchmarks.real_docs",
-  "generated_at": "2026-11-20T06:52:45+00:00",
+  "generated_at": "2026-11-20T08:01:38+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -14,9 +14,9 @@
   },
   "corpus": {
     "files": 26,
-    "sections": 128,
-    "characters": 124722,
-    "sha256": "49b52b3c0aaa7fbbaab5a284cfb5b44e5a71d48b2acdfff261a48cc7950eef5f"
+    "sections": 129,
+    "characters": 125200,
+    "sha256": "ced27bbc003e6d41260b50a33e74fec9647aed7fa3874a73d3b034b38061d09f"
   },
   "questions": {
     "answerable": 46,
@@ -33,16 +33,16 @@
         0.4531,
         0.6875
       ],
-      "recall_at_5": 0.7933253340862036,
+      "recall_at_5": 0.7824557688688124,
       "precision_at_5": 0.3050724637681159,
       "mrr": 0.842391304347826,
-      "ndcg_at_5": 0.7736659340738813,
+      "ndcg_at_5": 0.7652560904383477,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
       "mean_context_tokens": 736.984375,
-      "latency_ms_p50": 11.267399997450411,
-      "latency_ms_p95": 16.229900007601827,
+      "latency_ms_p50": 6.474800000432879,
+      "latency_ms_p95": 8.159800025168806,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -60,8 +60,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 6.146351562165364,
-      "storage_overhead_ratio": 4.7737440644826625,
+      "ingest_ms_per_event": 3.070875193721564,
+      "storage_overhead_ratio": 4.775685108480478,
       "pooled_accuracy_ci95": [
         0.4531,
         0.6875
@@ -74,16 +74,16 @@
         0.3906,
         0.6406
       ],
-      "recall_at_5": 0.6816613338352469,
-      "precision_at_5": 0.2583333333333333,
-      "mrr": 0.7554347826086957,
-      "ndcg_at_5": 0.6584588180439455,
+      "recall_at_5": 0.6707917686178556,
+      "precision_at_5": 0.25724637681159424,
+      "mrr": 0.7518115942028986,
+      "ndcg_at_5": 0.648713266844184,
       "evidence_coverage": 0.9130434782608695,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 717.0,
-      "latency_ms_p50": 7.983999967109412,
-      "latency_ms_p95": 10.684899985790253,
+      "mean_context_tokens": 715.96875,
+      "latency_ms_p50": 4.091500013601035,
+      "latency_ms_p95": 6.223699951078743,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -101,8 +101,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 6.173209374992439,
-      "storage_overhead_ratio": 4.7737440644826625,
+      "ingest_ms_per_event": 4.400320155293385,
+      "storage_overhead_ratio": 4.775685108480478,
       "pooled_accuracy_ci95": [
         0.3906,
         0.6406
@@ -115,16 +115,16 @@
         0.4531,
         0.6875
       ],
-      "recall_at_5": 0.7688688123470733,
+      "recall_at_5": 0.7579992471296819,
       "precision_at_5": 0.28731884057971013,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7510694839919282,
+      "ndcg_at_5": 0.7426596403563946,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 718.34375,
-      "latency_ms_p50": 6.78590004099533,
-      "latency_ms_p95": 9.966200042981654,
+      "mean_context_tokens": 718.84375,
+      "latency_ms_p50": 5.8794000069610775,
+      "latency_ms_p95": 7.911299995612353,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -142,8 +142,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.428908593581582,
-      "storage_overhead_ratio": 4.7737440644826625,
+      "ingest_ms_per_event": 2.751220930042828,
+      "storage_overhead_ratio": 4.775685108480478,
       "pooled_accuracy_ci95": [
         0.4531,
         0.6875
@@ -156,16 +156,16 @@
         0.2969,
         0.5469
       ],
-      "recall_at_5": 0.7688688123470733,
+      "recall_at_5": 0.7579992471296819,
       "precision_at_5": 0.28731884057971013,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7510694839919282,
+      "ndcg_at_5": 0.7426596403563946,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 718.34375,
-      "latency_ms_p50": 5.991299985907972,
-      "latency_ms_p95": 8.295900013763458,
+      "mean_context_tokens": 718.84375,
+      "latency_ms_p50": 5.230400012806058,
+      "latency_ms_p95": 7.138099987059832,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -183,8 +183,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.186412499620928,
-      "storage_overhead_ratio": 4.7737440644826625,
+      "ingest_ms_per_event": 3.1261682170154454,
+      "storage_overhead_ratio": 4.775685108480478,
       "pooled_accuracy_ci95": [
         0.2969,
         0.5469
@@ -197,16 +197,16 @@
         0.5469,
         0.7656
       ],
-      "recall_at_5": 0.7688688123470733,
+      "recall_at_5": 0.7579992471296819,
       "precision_at_5": 0.28731884057971013,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7510694839919282,
+      "ndcg_at_5": 0.7426596403563946,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 0.7222222222222222,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 658.96875,
-      "latency_ms_p50": 11.646099970676005,
-      "latency_ms_p95": 27.1043999819085,
+      "mean_context_tokens": 659.46875,
+      "latency_ms_p50": 6.478499970398843,
+      "latency_ms_p95": 8.60369997099042,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.25,
         "dev/changelog": 1.0,
@@ -224,8 +224,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.7468328123395622,
-      "storage_overhead_ratio": 4.7737440644826625,
+      "ingest_ms_per_event": 3.226572868338418,
+      "storage_overhead_ratio": 4.775685108480478,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7656
@@ -238,16 +238,16 @@
         0.4688,
         0.7188
       ],
-      "recall_at_5": 0.5376317523056653,
+      "recall_at_5": 0.526762187088274,
       "precision_at_5": 0.2036231884057971,
       "mrr": 0.5634057971014493,
-      "ndcg_at_5": 0.5134979221528873,
+      "ndcg_at_5": 0.5092930003351205,
       "evidence_coverage": 0.6304347826086957,
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.2608695652173913,
-      "mean_context_tokens": 169.078125,
-      "latency_ms_p50": 42.914,
-      "latency_ms_p95": 87.856,
+      "mean_context_tokens": 167.890625,
+      "latency_ms_p50": 51.004,
+      "latency_ms_p95": 104.942,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -265,8 +265,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 24.300892968767585,
-      "storage_overhead_ratio": 23.56822153944376,
+      "ingest_ms_per_event": 14.796600775439437,
+      "storage_overhead_ratio": 23.543785726211013,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -279,16 +279,16 @@
         0.4688,
         0.7188
       ],
-      "recall_at_5": 0.5620882740447958,
+      "recall_at_5": 0.5512187088274044,
       "precision_at_5": 0.19818840579710145,
       "mrr": 0.5706521739130435,
-      "ndcg_at_5": 0.5276667251665741,
+      "ndcg_at_5": 0.5234618033488073,
       "evidence_coverage": 0.6521739130434783,
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.34782608695652173,
       "mean_context_tokens": 165.0,
-      "latency_ms_p50": 28.992,
-      "latency_ms_p95": 91.878,
+      "latency_ms_p50": 34.548,
+      "latency_ms_p95": 79.631,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -306,8 +306,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 15.818152343854308,
-      "storage_overhead_ratio": 22.97983320697498,
+      "ingest_ms_per_event": 15.701125581683808,
+      "storage_overhead_ratio": 22.95763338447962,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -320,16 +320,16 @@
         0.5156,
         0.7344
       ],
-      "recall_at_5": 0.6064723320158103,
+      "recall_at_5": 0.595602766798419,
       "precision_at_5": 0.23514492753623187,
       "mrr": 0.6503623188405797,
-      "ndcg_at_5": 0.5891923159627376,
+      "ndcg_at_5": 0.5849873941449708,
       "evidence_coverage": 0.717391304347826,
       "unsupported_answer_rate": 0.3888888888888889,
       "false_abstain_rate": 0.15217391304347827,
-      "mean_context_tokens": 200.625,
-      "latency_ms_p50": 45.106,
-      "latency_ms_p95": 122.293,
+      "mean_context_tokens": 199.4375,
+      "latency_ms_p50": 38.624,
+      "latency_ms_p95": 67.44,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
@@ -347,8 +347,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 13.65573437533385,
-      "storage_overhead_ratio": 23.56822153944376,
+      "ingest_ms_per_event": 16.213825581209054,
+      "storage_overhead_ratio": 23.543785726211013,
       "pooled_accuracy_ci95": [
         0.5156,
         0.7344
@@ -361,16 +361,16 @@
         0.5469,
         0.7812
       ],
-      "recall_at_5": 0.6665137398833051,
+      "recall_at_5": 0.6556441746659138,
       "precision_at_5": 0.26666666666666666,
       "mrr": 0.7590579710144927,
-      "ndcg_at_5": 0.6635031786627077,
+      "ndcg_at_5": 0.6592982568449409,
       "evidence_coverage": 0.8260869565217391,
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.043478260869565216,
-      "mean_context_tokens": 229.78125,
-      "latency_ms_p50": 33.057,
-      "latency_ms_p95": 78.35,
+      "mean_context_tokens": 228.59375,
+      "latency_ms_p50": 34.866,
+      "latency_ms_p95": 78.655,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -388,8 +388,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 12.347360937837948,
-      "storage_overhead_ratio": 23.502845058058337,
+      "ingest_ms_per_event": 15.42456434090268,
+      "storage_overhead_ratio": 23.478657688240858,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7812
@@ -402,16 +402,16 @@
         0.5781,
         0.7969
       ],
-      "recall_at_5": 0.6882528703180878,
+      "recall_at_5": 0.6773833051006964,
       "precision_at_5": 0.2710144927536232,
       "mrr": 0.7663043478260869,
-      "ndcg_at_5": 0.6743727438800989,
+      "ndcg_at_5": 0.6701678220623323,
       "evidence_coverage": 0.8478260869565217,
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 233.671875,
-      "latency_ms_p50": 29.005,
-      "latency_ms_p95": 96.431,
+      "mean_context_tokens": 232.484375,
+      "latency_ms_p50": 31.333,
+      "latency_ms_p95": 77.905,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -429,8 +429,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 13.648024999838526,
-      "storage_overhead_ratio": 23.502845058058337,
+      "ingest_ms_per_event": 13.87136124025727,
+      "storage_overhead_ratio": 23.478657688240858,
       "pooled_accuracy_ci95": [
         0.5781,
         0.7969
@@ -1362,10 +1362,10 @@
       ],
       "status": "answered",
       "strategy": "temporal",
-      "answer": "| Normalizer changes break v0.1 benchmark results | Benchmark guard: any regression blocks the change | | `ruff check src tests benchmarks examples scripts` | clean | - **Schema migration 2** (additive; tested against a real v0.1 database in `tests/fixtures/v01.db`): fact polarity, extraction method/version, source span and normalized value columns; embedding provider/version/status metadata; `embedding_models` and `extraction_attempts` tables.",
+      "answer": "| `ruff check src tests benchmarks examples scripts` | clean | | Normalizer changes break v0.1 benchmark results | Benchmark guard: any regression blocks the change | - **Schema migration 2** (additive; tested against a real v0.1 database in `tests/fixtures/v01.db`): fact polarity, extraction method/version, source span and normalized value columns; embedding provider/version/status metadata; `embedding_models` and `extraction_attempts` tables.",
       "cited": [
-        "docs/V02_IMPLEMENTATION_PLAN.md > Risks",
         "docs/V02_REPOSITORY_AUDIT.md > 1. Actual baseline",
+        "docs/V02_IMPLEMENTATION_PLAN.md > Risks",
         "CHANGELOG.md > Added"
       ],
       "correct": false
@@ -1659,5 +1659,5 @@
       "correct": true
     }
   ],
-  "wall_clock_seconds": 38.7
+  "wall_clock_seconds": 35.4
 }

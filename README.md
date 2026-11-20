@@ -13,7 +13,7 @@
   <a href="https://github.com/ParthivPandya/MemoraOS/actions/workflows/ci.yml"><img src="https://github.com/ParthivPandya/MemoraOS/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.10%2B-3776AB.svg?logo=python&logoColor=white" alt="Python 3.10+"></a>
-  <img src="https://img.shields.io/badge/tests-328_passing-brightgreen.svg" alt="328 tests passing">
+  <img src="https://img.shields.io/badge/tests-328_passing-brightgreen.svg" alt="330 tests passing">
   <img src="https://img.shields.io/badge/runs-100%25_local-success.svg" alt="Runs 100% local">
   <img src="https://img.shields.io/badge/status-v0.2_alpha-orange.svg" alt="Status: v0.2 alpha">
   <a href="https://github.com/ParthivPandya/MemoraOS/stargazers"><img src="https://img.shields.io/github/stars/ParthivPandya/MemoraOS?style=social" alt="GitHub stars"></a>
@@ -135,7 +135,7 @@ Also available: `explain()`, `history()`, `recall(as_of=...)`, `correct()`, `for
 ```bash
 memoraos keys create --tenant default --role admin     # prints an API key once
 memoraos serve                                         # REST API on http://127.0.0.1:8000 (docs at /docs)
-python -m pytest                                       # 328 tests
+python -m pytest                                       # 330 tests
 memoraos ci run contracts/python_releases_and_security.json   # Memory CI regression contract
 python -m benchmarks.public locomo --help              # public retrieval runs (download the data first, see docs/PUBLIC_BENCHMARKS.md)
 docker compose up --build                              # optional container, see docs/DOCKER.md

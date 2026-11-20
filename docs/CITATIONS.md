@@ -36,7 +36,7 @@ Statuses: `verified` (quote found at the cited offsets, hash matches, and it occ
 
 ## Measured on the real-document benchmark
 
-`python -m benchmarks.citations` (46 answerable questions, corpus sha `49b52b3c0aaa7fbb...`). Mechanical checks only:
+`python -m benchmarks.citations` (46 answerable questions, corpus sha `ced27bbc003e6d41...`). Mechanical checks only:
 
 | Measure | Result |
 |---|---|

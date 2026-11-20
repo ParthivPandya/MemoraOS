@@ -2,7 +2,7 @@
 
 Spec section 8: improve the recall of answerable questions without an unacceptable rise in unsupported answers. This page records the diagnosis, the opt-in policies that came out of it, and an honest verdict: **the gain measured on the design set did not reliably replicate on the independent validation set, so the default stays `strict`.**
 
-Reproduce: `python -m benchmarks.failures`, `python -m benchmarks.answerability --tag hashing`, `python -m benchmarks.answerability --embedder sentence-transformers/all-MiniLM-L6-v2 --tag neural` (needs `pip install sentence-transformers`; the first run downloads the model). Corpus: this repository's documentation, 26 files, 128 sections, SHA-256 `49b52b3c…`. Scoring is mechanical (the answer contains the gold string; unanswerable questions must be refused). Intervals are Wilson 95%.
+Reproduce: `python -m benchmarks.failures`, `python -m benchmarks.answerability --tag hashing`, `python -m benchmarks.answerability --embedder sentence-transformers/all-MiniLM-L6-v2 --tag neural` (needs `pip install sentence-transformers`; the first run downloads the model). Corpus: this repository's documentation, 26 files, 129 sections, SHA-256 `49b52b3c…`. Scoring is mechanical (the answer contains the gold string; unanswerable questions must be refused). Intervals are Wilson 95%.
 
 ## 1. Diagnosis (general mechanism, no per-question rules)
 

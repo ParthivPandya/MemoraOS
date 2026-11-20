@@ -24,6 +24,11 @@ Status of each item: see `docs/NEXT_IMPLEMENTATION_STATUS.md`. Nothing here chan
 - `docs/SECURITY.md`, the roadmap and the status docs no longer say encryption at rest is missing.
 - `plan` and `tier` are single-valued attributes, so "the current plan" no longer returns the old and the new plan together (found while writing a Memory CI contract).
 
+## [0.3.0] - 2026-11-20
+
+### Added
+- **Verifiable citations**: every `Evidence` carries `span_start`, `span_end` and `quote_sha256`. `MemoryOS.verify_citations` and `POST /v1/verify-citations` re-check each quote against the stored memory and the retained source (statuses: verified, unlocated, quote_changed, source_mismatch, memory_missing). Proves a quote exists unchanged; does not prove it supports the answer and does not change accuracy. See `docs/CITATIONS.md`; `python -m benchmarks.citations`.
+
 ## [0.2.1] - 2026-11-20
 
 ### Fixed
