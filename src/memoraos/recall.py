@@ -37,11 +37,10 @@ from .retrieval.vector import VectorIndex, top_k_cosine
 from .routing.router import AdaptiveRouter, QueryFeatures, RouterHints, analyze_query
 from .security import INJECTION_FLAG, detect_prompt_injection, render_untrusted_context
 from .storage.db import Database
-from .util import sha256
 from .storage.visibility import visibility_clause
 from .store import Store
 from .truth.answer import compose_passage_answer, covered_terms, resolve_facts
-from .util import Clock, estimate_tokens, new_id, parse_ts, stem, to_ts, tokenize, ts
+from .util import Clock, estimate_tokens, new_id, parse_ts, sha256, stem, to_ts, tokenize, ts
 
 INSUFFICIENT = "The stored memory does not establish an answer to this question."
 EXCERPT_CHARS = 300
