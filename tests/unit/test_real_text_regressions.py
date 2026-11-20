@@ -153,3 +153,13 @@ def test_different_subjects_with_similar_wording_are_not_treated_as_updates(mem)
     mem.remember("Python 3.12 reaches end of life in 2028.", user_id=U, effective_at="2024-06-01")
     r = mem.recall("When does Python 3.11 reach end of life?", user_id=U, use_cache=False)
     assert "2027" in r.answer
+
+
+def test_verb_forms_with_silent_e_share_a_stem_and_recall_answers(mem):
+    from memoraos.util import stem
+
+    assert len({stem(w) for w in ("rotate", "rotates", "rotating", "rotated")}) == 1
+    assert stem("release") == stem("releases")
+    mem.remember("The deploy key rotates every 90 days", user_id=U)
+    r = mem.recall("how often does the deploy key rotate", user_id=U, use_cache=False)
+    assert r.status == "answered" and "90 days" in r.answer

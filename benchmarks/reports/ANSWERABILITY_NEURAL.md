@@ -11,23 +11,23 @@ Corpus SHA-256 `0129e552bb6bd733…`. Questions: dev: 30 answerable + 12 unanswe
 
 | System | Accuracy | Answerable recall | False abstention | Unsupported-answer rate | Correct abstention |
 |---|---|---|---|---|---|
-| hybrid_rag[all-MiniLM-L6-v2] | 45% (18/40) [31, 60] | 72% (18/25) [52, 86] | 0% (0/25) [0, 13] | 100% (15/15) [80, 100] | 0% (0/15) [0, 20] |
-| hybrid_rag_gated[all-MiniLM-L6-v2] | 48% (19/40) [33, 63] | 72% (18/25) [52, 86] | 0% (0/25) [0, 13] | 93% (14/15) [70, 99] | 7% (1/15) [1, 30] |
-| memoraos[strict][all-MiniLM-L6-v2] | 62% (25/40) [47, 76] | 56% (14/25) [37, 73] | 16% (4/25) [6, 35] | 27% (4/15) [11, 52] | 73% (11/15) [48, 89] |
-| memoraos[balanced][all-MiniLM-L6-v2] | 57% (23/40) [42, 71] | 52% (13/25) [33, 70] | 16% (4/25) [6, 35] | 33% (5/15) [15, 58] | 67% (10/15) [42, 85] |
-| memoraos[high_recall][all-MiniLM-L6-v2] | 52% (21/40) [37, 67] | 56% (14/25) [37, 73] | 4% (1/25) [1, 20] | 53% (8/15) [30, 75] | 47% (7/15) [25, 70] |
-| memoraos[extractive_only][all-MiniLM-L6-v2] | 57% (23/40) [42, 71] | 52% (13/25) [33, 70] | 16% (4/25) [6, 35] | 33% (5/15) [15, 58] | 67% (10/15) [42, 85] |
+| hybrid_rag[all-MiniLM-L6-v2] | 48% (19/40) [33, 63] | 76% (19/25) [57, 89] | 0% (0/25) [0, 13] | 100% (15/15) [80, 100] | 0% (0/15) [0, 20] |
+| hybrid_rag_gated[all-MiniLM-L6-v2] | 50% (20/40) [35, 65] | 76% (19/25) [57, 89] | 0% (0/25) [0, 13] | 93% (14/15) [70, 99] | 7% (1/15) [1, 30] |
+| memoraos[strict][all-MiniLM-L6-v2] | 57% (23/40) [42, 71] | 56% (14/25) [37, 73] | 16% (4/25) [6, 35] | 40% (6/15) [20, 64] | 60% (9/15) [36, 80] |
+| memoraos[balanced][all-MiniLM-L6-v2] | 55% (22/40) [40, 69] | 52% (13/25) [33, 70] | 16% (4/25) [6, 35] | 40% (6/15) [20, 64] | 60% (9/15) [36, 80] |
+| memoraos[high_recall][all-MiniLM-L6-v2] | 50% (20/40) [35, 65] | 56% (14/25) [37, 73] | 4% (1/25) [1, 20] | 60% (9/15) [36, 80] | 40% (6/15) [20, 64] |
+| memoraos[extractive_only][all-MiniLM-L6-v2] | 55% (22/40) [40, 69] | 52% (13/25) [33, 70] | 16% (4/25) [6, 35] | 40% (6/15) [20, 64] | 60% (9/15) [36, 80] |
 
 ## heldout
 
 | System | Accuracy | Answerable recall | False abstention | Unsupported-answer rate | Correct abstention |
 |---|---|---|---|---|---|
 | hybrid_rag[all-MiniLM-L6-v2] | 59% (13/22) [39, 77] | 81% (13/16) [57, 93] | 0% (0/16) [0, 19] | 100% (6/6) [61, 100] | 0% (0/6) [0, 39] |
-| hybrid_rag_gated[all-MiniLM-L6-v2] | 68% (15/22) [47, 84] | 81% (13/16) [57, 93] | 0% (0/16) [0, 19] | 67% (4/6) [30, 90] | 33% (2/6) [10, 70] |
-| memoraos[strict][all-MiniLM-L6-v2] | 59% (13/22) [39, 77] | 44% (7/16) [23, 67] | 44% (7/16) [23, 67] | 0% (0/6) [0, 39] | 100% (6/6) [61, 100] |
-| memoraos[balanced][all-MiniLM-L6-v2] | 73% (16/22) [52, 87] | 62% (10/16) [39, 82] | 12% (2/16) [3, 36] | 0% (0/6) [0, 39] | 100% (6/6) [61, 100] |
-| memoraos[high_recall][all-MiniLM-L6-v2] | 68% (15/22) [47, 84] | 69% (11/16) [44, 86] | 6% (1/16) [1, 28] | 33% (2/6) [10, 70] | 67% (4/6) [30, 90] |
-| memoraos[extractive_only][all-MiniLM-L6-v2] | 73% (16/22) [52, 87] | 62% (10/16) [39, 82] | 12% (2/16) [3, 36] | 0% (0/6) [0, 39] | 100% (6/6) [61, 100] |
+| hybrid_rag_gated[all-MiniLM-L6-v2] | 64% (14/22) [43, 80] | 75% (12/16) [51, 90] | 6% (1/16) [1, 28] | 67% (4/6) [30, 90] | 33% (2/6) [10, 70] |
+| memoraos[strict][all-MiniLM-L6-v2] | 55% (12/22) [35, 73] | 38% (6/16) [18, 61] | 31% (5/16) [14, 56] | 0% (0/6) [0, 39] | 100% (6/6) [61, 100] |
+| memoraos[balanced][all-MiniLM-L6-v2] | 68% (15/22) [47, 84] | 56% (9/16) [33, 77] | 6% (1/16) [1, 28] | 0% (0/6) [0, 39] | 100% (6/6) [61, 100] |
+| memoraos[high_recall][all-MiniLM-L6-v2] | 59% (13/22) [39, 77] | 56% (9/16) [33, 77] | 6% (1/16) [1, 28] | 33% (2/6) [10, 70] | 67% (4/6) [30, 90] |
+| memoraos[extractive_only][all-MiniLM-L6-v2] | 68% (15/22) [47, 84] | 56% (9/16) [33, 77] | 6% (1/16) [1, 28] | 0% (0/6) [0, 39] | 100% (6/6) [61, 100] |
 
 ## dev
 
@@ -35,10 +35,10 @@ Corpus SHA-256 `0129e552bb6bd733…`. Questions: dev: 30 answerable + 12 unanswe
 |---|---|---|---|---|---|
 | hybrid_rag[all-MiniLM-L6-v2] | 60% (25/42) [44, 73] | 83% (25/30) [66, 93] | 0% (0/30) [0, 11] | 100% (12/12) [76, 100] | 0% (0/12) [0, 24] |
 | hybrid_rag_gated[all-MiniLM-L6-v2] | 62% (26/42) [47, 75] | 83% (25/30) [66, 93] | 0% (0/30) [0, 11] | 92% (11/12) [65, 99] | 8% (1/12) [1, 35] |
-| memoraos[strict][all-MiniLM-L6-v2] | 64% (27/42) [49, 77] | 60% (18/30) [42, 75] | 27% (8/30) [14, 44] | 25% (3/12) [9, 53] | 75% (9/12) [47, 91] |
-| memoraos[balanced][all-MiniLM-L6-v2] | 74% (31/42) [59, 85] | 73% (22/30) [56, 86] | 10% (3/30) [3, 26] | 25% (3/12) [9, 53] | 75% (9/12) [47, 91] |
-| memoraos[high_recall][all-MiniLM-L6-v2] | 64% (27/42) [49, 77] | 70% (21/30) [52, 83] | 7% (2/30) [2, 21] | 50% (6/12) [25, 75] | 50% (6/12) [25, 75] |
-| memoraos[extractive_only][all-MiniLM-L6-v2] | 74% (31/42) [59, 85] | 73% (22/30) [56, 86] | 10% (3/30) [3, 26] | 25% (3/12) [9, 53] | 75% (9/12) [47, 91] |
+| memoraos[strict][all-MiniLM-L6-v2] | 67% (28/42) [52, 79] | 67% (20/30) [49, 81] | 20% (6/30) [10, 37] | 33% (4/12) [14, 61] | 67% (8/12) [39, 86] |
+| memoraos[balanced][all-MiniLM-L6-v2] | 71% (30/42) [56, 83] | 73% (22/30) [56, 86] | 10% (3/30) [3, 26] | 33% (4/12) [14, 61] | 67% (8/12) [39, 86] |
+| memoraos[high_recall][all-MiniLM-L6-v2] | 62% (26/42) [47, 75] | 70% (21/30) [52, 83] | 7% (2/30) [2, 21] | 58% (7/12) [32, 81] | 42% (5/12) [19, 68] |
+| memoraos[extractive_only][all-MiniLM-L6-v2] | 71% (30/42) [56, 83] | 73% (22/30) [56, 86] | 10% (3/30) [3, 26] | 33% (4/12) [14, 61] | 67% (8/12) [39, 86] |
 
 ## Validation, unanswerable questions by kind
 
@@ -48,10 +48,10 @@ Corpus SHA-256 `0129e552bb6bd733…`. Questions: dev: 30 answerable + 12 unanswe
 |---|---|---|
 | hybrid_rag[all-MiniLM-L6-v2] | 0% (0/9) [0, 30] | 0% (0/6) [0, 39] |
 | hybrid_rag_gated[all-MiniLM-L6-v2] | 11% (1/9) [2, 43] | 0% (0/6) [0, 39] |
-| memoraos[strict][all-MiniLM-L6-v2] | 100% (9/9) [70, 100] | 33% (2/6) [10, 70] |
-| memoraos[balanced][all-MiniLM-L6-v2] | 100% (9/9) [70, 100] | 17% (1/6) [3, 56] |
-| memoraos[high_recall][all-MiniLM-L6-v2] | 78% (7/9) [45, 94] | 0% (0/6) [0, 39] |
-| memoraos[extractive_only][all-MiniLM-L6-v2] | 100% (9/9) [70, 100] | 17% (1/6) [3, 56] |
+| memoraos[strict][all-MiniLM-L6-v2] | 89% (8/9) [57, 98] | 17% (1/6) [3, 56] |
+| memoraos[balanced][all-MiniLM-L6-v2] | 89% (8/9) [57, 98] | 17% (1/6) [3, 56] |
+| memoraos[high_recall][all-MiniLM-L6-v2] | 67% (6/9) [35, 88] | 0% (0/6) [0, 39] |
+| memoraos[extractive_only][all-MiniLM-L6-v2] | 89% (8/9) [57, 98] | 17% (1/6) [3, 56] |
 
 ## Calibration of MemoraOS answers (all selected splits)
 
@@ -59,10 +59,10 @@ Stated confidence = `evidence_coverage`. Brier: lower is better. ECE with 5 bins
 
 | System | Answered | Brier | ECE |
 |---|---|---|---|
-| memoraos[strict][all-MiniLM-L6-v2] | 59 | 0.266 | 0.197 |
-| memoraos[balanced][all-MiniLM-L6-v2] | 70 | 0.263 | 0.192 |
-| memoraos[high_recall][all-MiniLM-L6-v2] | 83 | 0.261 | 0.217 |
-| memoraos[extractive_only][all-MiniLM-L6-v2] | 70 | 0.263 | 0.192 |
+| memoraos[strict][all-MiniLM-L6-v2] | 66 | 0.288 | 0.247 |
+| memoraos[balanced][all-MiniLM-L6-v2] | 73 | 0.285 | 0.223 |
+| memoraos[high_recall][all-MiniLM-L6-v2] | 85 | 0.281 | 0.259 |
+| memoraos[extractive_only][all-MiniLM-L6-v2] | 73 | 0.285 | 0.223 |
 
 ## Reading the intervals
 

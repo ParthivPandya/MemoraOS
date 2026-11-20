@@ -37,36 +37,16 @@
         ]
       },
       "hit@10": {
-        "hits": 54,
+        "hits": 51,
         "n": 60,
-        "rate": 0.9,
+        "rate": 0.85,
         "ci95": [
-          0.7985,
-          0.9534
+          0.7389,
+          0.919
         ]
       }
     },
     "hybrid_rag": {
-      "hit@5": {
-        "hits": 54,
-        "n": 60,
-        "rate": 0.9,
-        "ci95": [
-          0.7985,
-          0.9534
-        ]
-      },
-      "hit@10": {
-        "hits": 57,
-        "n": 60,
-        "rate": 0.95,
-        "ci95": [
-          0.863,
-          0.9829
-        ]
-      }
-    },
-    "memoraos_retriever": {
       "hit@5": {
         "hits": 53,
         "n": 60,
@@ -74,6 +54,26 @@
         "ci95": [
           0.7782,
           0.9423
+        ]
+      },
+      "hit@10": {
+        "hits": 55,
+        "n": 60,
+        "rate": 0.9167,
+        "ci95": [
+          0.8193,
+          0.9639
+        ]
+      }
+    },
+    "memoraos_retriever": {
+      "hit@5": {
+        "hits": 52,
+        "n": 60,
+        "rate": 0.8667,
+        "ci95": [
+          0.7583,
+          0.9309
         ]
       },
       "hit@10": {
@@ -117,8 +117,8 @@
       "temporal-reasoning": "9/10"
     },
     "vector": {
-      "knowledge-update": "9/10",
-      "multi-session": "10/10",
+      "knowledge-update": "10/10",
+      "multi-session": "9/10",
       "single-session-assistant": "8/10",
       "single-session-preference": "5/10",
       "single-session-user": "10/10",
@@ -128,16 +128,16 @@
       "knowledge-update": "10/10",
       "multi-session": "10/10",
       "single-session-assistant": "9/10",
-      "single-session-preference": "7/10",
+      "single-session-preference": "6/10",
       "single-session-user": "9/10",
       "temporal-reasoning": "9/10"
     },
     "memoraos_retriever": {
       "knowledge-update": "10/10",
-      "multi-session": "10/10",
+      "multi-session": "9/10",
       "single-session-assistant": "9/10",
-      "single-session-preference": "6/10",
-      "single-session-user": "9/10",
+      "single-session-preference": "5/10",
+      "single-session-user": "10/10",
       "temporal-reasoning": "9/10"
     },
     "memoraos_recall": {
@@ -153,8 +153,8 @@
     "a": "memoraos_retriever",
     "b": "hybrid_rag",
     "k": 5,
-    "a_only": 0,
-    "b_only": 1
+    "a_only": 1,
+    "b_only": 2
   },
-  "seconds": 528
+  "seconds": 464
 }

@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real-document benchmark",
   "command": "python -m benchmarks.real_docs",
-  "generated_at": "2026-11-20T05:30:15+00:00",
+  "generated_at": "2026-11-20T05:59:37+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -28,21 +28,21 @@
   "metrics": {
     "bm25": {
       "n": 64,
-      "accuracy": 0.59375,
+      "accuracy": 0.578125,
       "accuracy_ci95": [
-        0.4844,
-        0.7031
+        0.4531,
+        0.6875
       ],
-      "recall_at_5": 0.794824016563147,
-      "precision_at_5": 0.3115942028985507,
-      "mrr": 0.855072463768116,
-      "ndcg_at_5": 0.777691152121057,
+      "recall_at_5": 0.7939182194616976,
+      "precision_at_5": 0.3050724637681159,
+      "mrr": 0.8532608695652174,
+      "ndcg_at_5": 0.777431082227292,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 744.75,
-      "latency_ms_p50": 10.125000000698492,
-      "latency_ms_p95": 16.580199997406453,
+      "mean_context_tokens": 737.109375,
+      "latency_ms_p50": 6.893400015542284,
+      "latency_ms_p95": 9.603599988622591,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -54,77 +54,77 @@
         "dev/security": 0.6666666666666666,
         "heldout/absent_topic": 0.0,
         "heldout/decisions": 1.0,
-        "heldout/latent": 0.0,
+        "heldout/latent": 1.0,
         "heldout/performance": 1.0,
-        "heldout/routing": 0.3333333333333333,
+        "heldout/routing": 0.0,
         "heldout/security": 1.0,
-        "heldout/temporal": 1.0
+        "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.9428238094496053,
+      "ingest_ms_per_event": 3.460550000050312,
       "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
-        0.4844,
-        0.7031
+        0.4531,
+        0.6875
       ]
     },
     "vector": {
       "n": 64,
       "accuracy": 0.515625,
       "accuracy_ci95": [
-        0.4062,
+        0.3906,
         0.6406
       ],
-      "recall_at_5": 0.6827294685990338,
-      "precision_at_5": 0.2423913043478261,
-      "mrr": 0.7282608695652174,
-      "ndcg_at_5": 0.6402831827031897,
+      "recall_at_5": 0.6820565907522429,
+      "precision_at_5": 0.2583333333333333,
+      "mrr": 0.7554347826086957,
+      "ndcg_at_5": 0.659166035794181,
       "evidence_coverage": 0.9130434782608695,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 704.15625,
-      "latency_ms_p50": 8.639600011520088,
-      "latency_ms_p95": 11.767799995141104,
+      "mean_context_tokens": 720.09375,
+      "latency_ms_p50": 6.135899981018156,
+      "latency_ms_p95": 13.04700001492165,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
         "dev/decisions": 0.75,
-        "dev/latent": 0.5,
+        "dev/latent": 0.75,
         "dev/performance": 1.0,
         "dev/roadmap": 0.0,
         "dev/routing": 1.0,
-        "dev/security": 0.16666666666666666,
+        "dev/security": 0.3333333333333333,
         "heldout/absent_topic": 0.0,
         "heldout/decisions": 1.0,
         "heldout/latent": 1.0,
         "heldout/performance": 1.0,
-        "heldout/routing": 0.6666666666666666,
+        "heldout/routing": 0.3333333333333333,
         "heldout/security": 0.75,
-        "heldout/temporal": 1.0
+        "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 6.796668254075542,
+      "ingest_ms_per_event": 3.734415079446672,
       "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
-        0.4062,
+        0.3906,
         0.6406
       ]
     },
     "hybrid_rag": {
       "n": 64,
-      "accuracy": 0.609375,
+      "accuracy": 0.578125,
       "accuracy_ci95": [
-        0.5,
-        0.7188
+        0.4531,
+        0.6875
       ],
-      "recall_at_5": 0.774120082815735,
-      "precision_at_5": 0.28007246376811595,
-      "mrr": 0.8278985507246377,
-      "ndcg_at_5": 0.7268870596853914,
-      "evidence_coverage": 0.9782608695652174,
+      "recall_at_5": 0.7694616977225672,
+      "precision_at_5": 0.28731884057971013,
+      "mrr": 0.8442028985507247,
+      "ndcg_at_5": 0.7499151889816232,
+      "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 713.90625,
-      "latency_ms_p50": 8.778300019912422,
-      "latency_ms_p95": 11.91219998872839,
+      "mean_context_tokens": 723.046875,
+      "latency_ms_p50": 5.788299982668832,
+      "latency_ms_p95": 8.051499986322597,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -138,75 +138,75 @@
         "heldout/decisions": 1.0,
         "heldout/latent": 1.0,
         "heldout/performance": 1.0,
-        "heldout/routing": 0.3333333333333333,
+        "heldout/routing": 0.0,
         "heldout/security": 1.0,
-        "heldout/temporal": 1.0
+        "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 6.179158730129342,
+      "ingest_ms_per_event": 4.582993650858823,
       "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
-        0.5,
-        0.7188
+        0.4531,
+        0.6875
       ]
     },
     "hybrid_rag_top1": {
       "n": 64,
-      "accuracy": 0.40625,
+      "accuracy": 0.4375,
       "accuracy_ci95": [
-        0.2969,
-        0.5312
+        0.3125,
+        0.5625
       ],
-      "recall_at_5": 0.774120082815735,
-      "precision_at_5": 0.28007246376811595,
-      "mrr": 0.8278985507246377,
-      "ndcg_at_5": 0.7268870596853914,
-      "evidence_coverage": 0.9782608695652174,
+      "recall_at_5": 0.7694616977225672,
+      "precision_at_5": 0.28731884057971013,
+      "mrr": 0.8442028985507247,
+      "ndcg_at_5": 0.7499151889816232,
+      "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 713.90625,
-      "latency_ms_p50": 4.047900001751259,
-      "latency_ms_p95": 6.234900007257238,
+      "mean_context_tokens": 723.046875,
+      "latency_ms_p50": 4.460500000277534,
+      "latency_ms_p95": 7.504700013669208,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
-        "dev/changelog": 0.5,
-        "dev/decisions": 0.5,
+        "dev/changelog": 1.0,
+        "dev/decisions": 0.5833333333333334,
         "dev/latent": 0.75,
         "dev/performance": 1.0,
         "dev/roadmap": 0.0,
-        "dev/routing": 0.6666666666666666,
-        "dev/security": 0.3333333333333333,
+        "dev/routing": 0.3333333333333333,
+        "dev/security": 0.5,
         "heldout/absent_topic": 0.0,
         "heldout/decisions": 0.0,
-        "heldout/latent": 0.0,
+        "heldout/latent": 1.0,
         "heldout/performance": 0.6666666666666666,
         "heldout/routing": 0.0,
         "heldout/security": 1.0,
-        "heldout/temporal": 1.0
+        "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.0304182540340765,
+      "ingest_ms_per_event": 4.031666666768225,
       "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
-        0.2969,
-        0.5312
+        0.3125,
+        0.5625
       ]
     },
     "hybrid_rag_gated": {
       "n": 64,
-      "accuracy": 0.6875,
+      "accuracy": 0.640625,
       "accuracy_ci95": [
-        0.5781,
-        0.7812
+        0.5312,
+        0.75
       ],
-      "recall_at_5": 0.774120082815735,
-      "precision_at_5": 0.28007246376811595,
-      "mrr": 0.8278985507246377,
-      "ndcg_at_5": 0.7268870596853914,
-      "evidence_coverage": 0.9782608695652174,
-      "unsupported_answer_rate": 0.7222222222222222,
-      "false_abstain_rate": 0.0,
-      "mean_context_tokens": 664.53125,
-      "latency_ms_p50": 3.470899973763153,
-      "latency_ms_p95": 4.478099988773465,
+      "recall_at_5": 0.7694616977225672,
+      "precision_at_5": 0.28731884057971013,
+      "mrr": 0.8442028985507247,
+      "ndcg_at_5": 0.7499151889816232,
+      "evidence_coverage": 0.9565217391304348,
+      "unsupported_answer_rate": 0.7777777777777778,
+      "false_abstain_rate": 0.021739130434782608,
+      "mean_context_tokens": 672.03125,
+      "latency_ms_p50": 6.581399997230619,
+      "latency_ms_p95": 9.102799987886101,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.16666666666666666,
         "dev/changelog": 1.0,
@@ -216,60 +216,60 @@
         "dev/roadmap": 1.0,
         "dev/routing": 1.0,
         "dev/security": 0.6666666666666666,
-        "heldout/absent_topic": 0.5,
+        "heldout/absent_topic": 0.3333333333333333,
         "heldout/decisions": 1.0,
         "heldout/latent": 1.0,
         "heldout/performance": 1.0,
-        "heldout/routing": 0.3333333333333333,
+        "heldout/routing": 0.0,
         "heldout/security": 1.0,
-        "heldout/temporal": 1.0
+        "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 2.6194071429522916,
+      "ingest_ms_per_event": 2.88774444428753,
       "storage_overhead_ratio": 4.759765420462876,
       "pooled_accuracy_ci95": [
-        0.5781,
-        0.7812
+        0.5312,
+        0.75
       ]
     },
     "memoraos": {
       "n": 64,
-      "accuracy": 0.609375,
+      "accuracy": 0.59375,
       "accuracy_ci95": [
-        0.4844,
-        0.7344
+        0.4688,
+        0.7188
       ],
-      "recall_at_5": 0.5019927536231884,
-      "precision_at_5": 0.1927536231884058,
-      "mrr": 0.532608695652174,
-      "ndcg_at_5": 0.48344212877293347,
-      "evidence_coverage": 0.5869565217391305,
-      "unsupported_answer_rate": 0.16666666666666666,
-      "false_abstain_rate": 0.34782608695652173,
-      "mean_context_tokens": 143.953125,
-      "latency_ms_p50": 42.067,
-      "latency_ms_p95": 95.232,
+      "recall_at_5": 0.5382246376811594,
+      "precision_at_5": 0.2036231884057971,
+      "mrr": 0.5634057971014493,
+      "ndcg_at_5": 0.5134979221528873,
+      "evidence_coverage": 0.6304347826086957,
+      "unsupported_answer_rate": 0.2777777777777778,
+      "false_abstain_rate": 0.2608695652173913,
+      "mean_context_tokens": 170.328125,
+      "latency_ms_p50": 30.515,
+      "latency_ms_p95": 73.083,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.75,
+        "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
-        "dev/decisions": 0.5,
+        "dev/decisions": 0.5833333333333334,
         "dev/latent": 0.5,
-        "dev/performance": 0.5,
+        "dev/performance": 1.0,
         "dev/roadmap": 1.0,
         "dev/routing": 1.0,
         "dev/security": 0.5,
-        "heldout/absent_topic": 1.0,
+        "heldout/absent_topic": 0.8333333333333334,
         "heldout/decisions": 0.0,
         "heldout/latent": 0.0,
         "heldout/performance": 0.3333333333333333,
         "heldout/routing": 0.0,
         "heldout/security": 0.75,
-        "heldout/temporal": 0.75
+        "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 9.363225396742882,
-      "storage_overhead_ratio": 23.690986571288175,
+      "ingest_ms_per_event": 14.102107142828153,
+      "storage_overhead_ratio": 23.723982374312254,
       "pooled_accuracy_ci95": [
-        0.4844,
-        0.7344
+        0.4688,
+        0.7188
       ]
     },
     "memoraos_hybrid_only": {
@@ -279,26 +279,26 @@
         0.4688,
         0.7188
       ],
-      "recall_at_5": 0.5119565217391304,
-      "precision_at_5": 0.186231884057971,
-      "mrr": 0.5181159420289855,
-      "ndcg_at_5": 0.4798183620591715,
-      "evidence_coverage": 0.5869565217391305,
-      "unsupported_answer_rate": 0.16666666666666666,
-      "false_abstain_rate": 0.41304347826086957,
-      "mean_context_tokens": 143.203125,
-      "latency_ms_p50": 32.548,
-      "latency_ms_p95": 115.265,
+      "recall_at_5": 0.5626811594202898,
+      "precision_at_5": 0.19818840579710145,
+      "mrr": 0.5706521739130435,
+      "ndcg_at_5": 0.5276667251665741,
+      "evidence_coverage": 0.6521739130434783,
+      "unsupported_answer_rate": 0.2777777777777778,
+      "false_abstain_rate": 0.34782608695652173,
+      "mean_context_tokens": 165.09375,
+      "latency_ms_p50": 26.032,
+      "latency_ms_p95": 90.906,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.75,
+        "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
-        "dev/decisions": 0.4166666666666667,
+        "dev/decisions": 0.5,
         "dev/latent": 0.5,
-        "dev/performance": 0.5,
+        "dev/performance": 1.0,
         "dev/roadmap": 1.0,
         "dev/routing": 1.0,
         "dev/security": 0.5,
-        "heldout/absent_topic": 1.0,
+        "heldout/absent_topic": 0.8333333333333334,
         "heldout/decisions": 0.0,
         "heldout/latent": 0.0,
         "heldout/performance": 0.3333333333333333,
@@ -306,7 +306,7 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 13.408882539748909,
+      "ingest_ms_per_event": 15.135033333319283,
       "storage_overhead_ratio": 23.130057919878844,
       "pooled_accuracy_ci95": [
         0.4688,
@@ -315,125 +315,125 @@
     },
     "memoraos[anchor=0.4]": {
       "n": 64,
-      "accuracy": 0.640625,
+      "accuracy": 0.625,
       "accuracy_ci95": [
         0.5156,
-        0.7656
+        0.7344
       ],
-      "recall_at_5": 0.5672101449275362,
-      "precision_at_5": 0.22101449275362317,
-      "mrr": 0.605072463768116,
-      "ndcg_at_5": 0.5436150820450767,
-      "evidence_coverage": 0.6739130434782609,
-      "unsupported_answer_rate": 0.2777777777777778,
-      "false_abstain_rate": 0.2391304347826087,
-      "mean_context_tokens": 174.8125,
-      "latency_ms_p50": 35.601,
-      "latency_ms_p95": 66.856,
-      "accuracy_by_tag": {
-        "dev/absent_topic": 0.6666666666666666,
-        "dev/changelog": 0.5,
-        "dev/decisions": 0.6666666666666666,
-        "dev/latent": 0.5,
-        "dev/performance": 0.5,
-        "dev/roadmap": 1.0,
-        "dev/routing": 1.0,
-        "dev/security": 0.6666666666666666,
-        "heldout/absent_topic": 0.8333333333333334,
-        "heldout/decisions": 0.0,
-        "heldout/latent": 0.0,
-        "heldout/performance": 0.6666666666666666,
-        "heldout/routing": 0.0,
-        "heldout/security": 0.75,
-        "heldout/temporal": 0.75
-      },
-      "ingest_ms_per_event": 12.606891269873207,
-      "storage_overhead_ratio": 23.690986571288175,
-      "pooled_accuracy_ci95": [
-        0.5156,
-        0.7656
-      ]
-    },
-    "memoraos[anchor=0.25]": {
-      "n": 64,
-      "accuracy": 0.65625,
-      "accuracy_ci95": [
-        0.5469,
-        0.7656
-      ],
-      "recall_at_5": 0.6308747412008282,
-      "precision_at_5": 0.25471014492753624,
-      "mrr": 0.6920289855072463,
-      "ndcg_at_5": 0.6156229518845617,
-      "evidence_coverage": 0.7608695652173914,
-      "unsupported_answer_rate": 0.4444444444444444,
+      "recall_at_5": 0.6070652173913044,
+      "precision_at_5": 0.23514492753623187,
+      "mrr": 0.6503623188405797,
+      "ndcg_at_5": 0.5891923159627376,
+      "evidence_coverage": 0.717391304347826,
+      "unsupported_answer_rate": 0.3888888888888889,
       "false_abstain_rate": 0.15217391304347827,
-      "mean_context_tokens": 201.515625,
-      "latency_ms_p50": 35.825,
-      "latency_ms_p95": 92.505,
+      "mean_context_tokens": 201.921875,
+      "latency_ms_p50": 46.594,
+      "latency_ms_p95": 99.406,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
         "dev/decisions": 0.75,
         "dev/latent": 0.5,
-        "dev/performance": 0.5,
+        "dev/performance": 1.0,
+        "dev/roadmap": 1.0,
+        "dev/routing": 1.0,
+        "dev/security": 0.6666666666666666,
+        "heldout/absent_topic": 0.6666666666666666,
+        "heldout/decisions": 0.0,
+        "heldout/latent": 0.0,
+        "heldout/performance": 0.6666666666666666,
+        "heldout/routing": 0.0,
+        "heldout/security": 0.75,
+        "heldout/temporal": 0.5
+      },
+      "ingest_ms_per_event": 14.463428571443295,
+      "storage_overhead_ratio": 23.723982374312254,
+      "pooled_accuracy_ci95": [
+        0.5156,
+        0.7344
+      ]
+    },
+    "memoraos[anchor=0.25]": {
+      "n": 64,
+      "accuracy": 0.671875,
+      "accuracy_ci95": [
+        0.5469,
+        0.7812
+      ],
+      "recall_at_5": 0.6671066252587992,
+      "precision_at_5": 0.26666666666666666,
+      "mrr": 0.7590579710144927,
+      "ndcg_at_5": 0.6635031786627077,
+      "evidence_coverage": 0.8260869565217391,
+      "unsupported_answer_rate": 0.5,
+      "false_abstain_rate": 0.043478260869565216,
+      "mean_context_tokens": 231.078125,
+      "latency_ms_p50": 39.297,
+      "latency_ms_p95": 104.934,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.5,
+        "dev/changelog": 1.0,
+        "dev/decisions": 0.75,
+        "dev/latent": 0.5,
+        "dev/performance": 1.0,
         "dev/roadmap": 1.0,
         "dev/routing": 1.0,
         "dev/security": 0.8333333333333334,
         "heldout/absent_topic": 0.5,
         "heldout/decisions": 0.0,
-        "heldout/latent": 0.0,
+        "heldout/latent": 1.0,
         "heldout/performance": 1.0,
         "heldout/routing": 0.3333333333333333,
         "heldout/security": 0.75,
-        "heldout/temporal": 0.75
+        "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 13.71476031740063,
-      "storage_overhead_ratio": 23.624994965240017,
+      "ingest_ms_per_event": 13.124076190583837,
+      "storage_overhead_ratio": 23.657990768264096,
       "pooled_accuracy_ci95": [
         0.5469,
-        0.7656
+        0.7812
       ]
     },
     "memoraos[anchor=0.0]": {
       "n": 64,
-      "accuracy": 0.671875,
+      "accuracy": 0.6875,
       "accuracy_ci95": [
-        0.5625,
-        0.7812
+        0.5781,
+        0.7969
       ],
-      "recall_at_5": 0.6526138716356108,
-      "precision_at_5": 0.25905797101449274,
-      "mrr": 0.7028985507246377,
-      "ndcg_at_5": 0.6293388160926369,
-      "evidence_coverage": 0.782608695652174,
-      "unsupported_answer_rate": 0.4444444444444444,
-      "false_abstain_rate": 0.13043478260869565,
-      "mean_context_tokens": 205.390625,
-      "latency_ms_p50": 38.228,
-      "latency_ms_p95": 72.22,
+      "recall_at_5": 0.6888457556935819,
+      "precision_at_5": 0.2710144927536232,
+      "mrr": 0.7663043478260869,
+      "ndcg_at_5": 0.6743727438800989,
+      "evidence_coverage": 0.8478260869565217,
+      "unsupported_answer_rate": 0.5,
+      "false_abstain_rate": 0.021739130434782608,
+      "mean_context_tokens": 234.984375,
+      "latency_ms_p50": 55.829,
+      "latency_ms_p95": 134.533,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.5833333333333334,
-        "dev/changelog": 0.5,
+        "dev/absent_topic": 0.5,
+        "dev/changelog": 1.0,
         "dev/decisions": 0.8333333333333334,
         "dev/latent": 0.5,
-        "dev/performance": 0.5,
+        "dev/performance": 1.0,
         "dev/roadmap": 1.0,
         "dev/routing": 1.0,
         "dev/security": 0.8333333333333334,
         "heldout/absent_topic": 0.5,
         "heldout/decisions": 0.0,
-        "heldout/latent": 0.0,
+        "heldout/latent": 1.0,
         "heldout/performance": 1.0,
         "heldout/routing": 0.3333333333333333,
         "heldout/security": 0.75,
-        "heldout/temporal": 0.75
+        "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 17.10948333331746,
-      "storage_overhead_ratio": 23.624994965240017,
+      "ingest_ms_per_event": 16.812436507842946,
+      "storage_overhead_ratio": 23.657990768264096,
       "pooled_accuracy_ci95": [
-        0.5625,
-        0.7812
+        0.5781,
+        0.7969
       ]
     }
   },
@@ -441,172 +441,172 @@
     "bm25": {
       "dev:answerable": 0.8333333333333334,
       "dev:unanswerable": 0.0,
-      "heldout:answerable": 0.8125,
+      "heldout:answerable": 0.75,
       "heldout:unanswerable": 0.0,
       "split:dev": 0.5952380952380952,
-      "split:heldout": 0.5909090909090909,
+      "split:heldout": 0.5454545454545454,
       "topic:absent_topic": 0.0,
       "topic:changelog": 1.0,
       "topic:decisions": 0.8461538461538461,
-      "topic:latent": 0.6,
+      "topic:latent": 0.8,
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
-      "topic:routing": 0.6666666666666666,
+      "topic:routing": 0.5,
       "topic:security": 0.8,
-      "topic:temporal": 1.0
+      "topic:temporal": 0.75
     },
     "vector": {
-      "dev:answerable": 0.6333333333333333,
+      "dev:answerable": 0.7,
       "dev:unanswerable": 0.0,
-      "heldout:answerable": 0.875,
+      "heldout:answerable": 0.75,
       "heldout:unanswerable": 0.0,
-      "split:dev": 0.4523809523809524,
-      "split:heldout": 0.6363636363636364,
+      "split:dev": 0.5,
+      "split:heldout": 0.5454545454545454,
       "topic:absent_topic": 0.0,
       "topic:changelog": 1.0,
       "topic:decisions": 0.7692307692307693,
-      "topic:latent": 0.6,
+      "topic:latent": 0.8,
       "topic:performance": 1.0,
       "topic:roadmap": 0.0,
-      "topic:routing": 0.8333333333333334,
-      "topic:security": 0.4,
-      "topic:temporal": 1.0
+      "topic:routing": 0.6666666666666666,
+      "topic:security": 0.5,
+      "topic:temporal": 0.75
     },
     "hybrid_rag": {
       "dev:answerable": 0.8333333333333334,
       "dev:unanswerable": 0.0,
-      "heldout:answerable": 0.875,
+      "heldout:answerable": 0.75,
       "heldout:unanswerable": 0.0,
       "split:dev": 0.5952380952380952,
-      "split:heldout": 0.6363636363636364,
+      "split:heldout": 0.5454545454545454,
       "topic:absent_topic": 0.0,
       "topic:changelog": 1.0,
       "topic:decisions": 0.8461538461538461,
       "topic:latent": 0.8,
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
-      "topic:routing": 0.6666666666666666,
+      "topic:routing": 0.5,
       "topic:security": 0.8,
-      "topic:temporal": 1.0
+      "topic:temporal": 0.75
     },
     "hybrid_rag_top1": {
-      "dev:answerable": 0.5333333333333333,
+      "dev:answerable": 0.6,
       "dev:unanswerable": 0.0,
       "heldout:answerable": 0.625,
       "heldout:unanswerable": 0.0,
-      "split:dev": 0.38095238095238093,
+      "split:dev": 0.42857142857142855,
       "split:heldout": 0.45454545454545453,
       "topic:absent_topic": 0.0,
-      "topic:changelog": 0.5,
-      "topic:decisions": 0.46153846153846156,
-      "topic:latent": 0.6,
+      "topic:changelog": 1.0,
+      "topic:decisions": 0.5384615384615384,
+      "topic:latent": 0.8,
       "topic:performance": 0.8,
       "topic:roadmap": 0.0,
-      "topic:routing": 0.3333333333333333,
-      "topic:security": 0.6,
-      "topic:temporal": 1.0
+      "topic:routing": 0.16666666666666666,
+      "topic:security": 0.7,
+      "topic:temporal": 0.75
     },
     "hybrid_rag_gated": {
       "dev:answerable": 0.8333333333333334,
       "dev:unanswerable": 0.16666666666666666,
-      "heldout:answerable": 0.875,
-      "heldout:unanswerable": 0.5,
+      "heldout:answerable": 0.75,
+      "heldout:unanswerable": 0.3333333333333333,
       "split:dev": 0.6428571428571429,
-      "split:heldout": 0.7727272727272727,
-      "topic:absent_topic": 0.2777777777777778,
+      "split:heldout": 0.6363636363636364,
+      "topic:absent_topic": 0.2222222222222222,
       "topic:changelog": 1.0,
       "topic:decisions": 0.8461538461538461,
       "topic:latent": 0.8,
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
-      "topic:routing": 0.6666666666666666,
+      "topic:routing": 0.5,
       "topic:security": 0.8,
-      "topic:temporal": 1.0
+      "topic:temporal": 0.75
     },
     "memoraos": {
-      "dev:answerable": 0.5666666666666667,
-      "dev:unanswerable": 0.75,
-      "heldout:answerable": 0.4375,
-      "heldout:unanswerable": 1.0,
-      "split:dev": 0.6190476190476191,
-      "split:heldout": 0.5909090909090909,
-      "topic:absent_topic": 0.8333333333333334,
+      "dev:answerable": 0.6333333333333333,
+      "dev:unanswerable": 0.6666666666666666,
+      "heldout:answerable": 0.375,
+      "heldout:unanswerable": 0.8333333333333334,
+      "split:dev": 0.6428571428571429,
+      "split:heldout": 0.5,
+      "topic:absent_topic": 0.7222222222222222,
       "topic:changelog": 0.5,
-      "topic:decisions": 0.46153846153846156,
+      "topic:decisions": 0.5384615384615384,
       "topic:latent": 0.4,
-      "topic:performance": 0.4,
+      "topic:performance": 0.6,
       "topic:roadmap": 1.0,
       "topic:routing": 0.5,
       "topic:security": 0.6,
-      "topic:temporal": 0.75
+      "topic:temporal": 0.5
     },
     "memoraos_hybrid_only": {
-      "dev:answerable": 0.5333333333333333,
-      "dev:unanswerable": 0.75,
+      "dev:answerable": 0.6,
+      "dev:unanswerable": 0.6666666666666666,
       "heldout:answerable": 0.4375,
-      "heldout:unanswerable": 1.0,
-      "split:dev": 0.5952380952380952,
-      "split:heldout": 0.5909090909090909,
-      "topic:absent_topic": 0.8333333333333334,
+      "heldout:unanswerable": 0.8333333333333334,
+      "split:dev": 0.6190476190476191,
+      "split:heldout": 0.5454545454545454,
+      "topic:absent_topic": 0.7222222222222222,
       "topic:changelog": 0.5,
-      "topic:decisions": 0.38461538461538464,
+      "topic:decisions": 0.46153846153846156,
       "topic:latent": 0.4,
-      "topic:performance": 0.4,
+      "topic:performance": 0.6,
       "topic:roadmap": 1.0,
       "topic:routing": 0.5,
       "topic:security": 0.6,
       "topic:temporal": 0.75
     },
     "memoraos[anchor=0.4]": {
-      "dev:answerable": 0.6666666666666666,
-      "dev:unanswerable": 0.6666666666666666,
-      "heldout:answerable": 0.5,
-      "heldout:unanswerable": 0.8333333333333334,
-      "split:dev": 0.6666666666666666,
-      "split:heldout": 0.5909090909090909,
-      "topic:absent_topic": 0.7222222222222222,
-      "topic:changelog": 0.5,
-      "topic:decisions": 0.6153846153846154,
-      "topic:latent": 0.4,
-      "topic:performance": 0.6,
-      "topic:roadmap": 1.0,
-      "topic:routing": 0.5,
-      "topic:security": 0.7,
-      "topic:temporal": 0.75
-    },
-    "memoraos[anchor=0.25]": {
       "dev:answerable": 0.7333333333333333,
       "dev:unanswerable": 0.5833333333333334,
-      "heldout:answerable": 0.625,
-      "heldout:unanswerable": 0.5,
+      "heldout:answerable": 0.4375,
+      "heldout:unanswerable": 0.6666666666666666,
       "split:dev": 0.6904761904761905,
-      "split:heldout": 0.5909090909090909,
-      "topic:absent_topic": 0.5555555555555556,
+      "split:heldout": 0.5,
+      "topic:absent_topic": 0.6111111111111112,
       "topic:changelog": 0.5,
       "topic:decisions": 0.6923076923076923,
       "topic:latent": 0.4,
       "topic:performance": 0.8,
       "topic:roadmap": 1.0,
-      "topic:routing": 0.6666666666666666,
-      "topic:security": 0.8,
-      "topic:temporal": 0.75
+      "topic:routing": 0.5,
+      "topic:security": 0.7,
+      "topic:temporal": 0.5
     },
-    "memoraos[anchor=0.0]": {
-      "dev:answerable": 0.7666666666666667,
-      "dev:unanswerable": 0.5833333333333334,
+    "memoraos[anchor=0.25]": {
+      "dev:answerable": 0.8,
+      "dev:unanswerable": 0.5,
       "heldout:answerable": 0.625,
       "heldout:unanswerable": 0.5,
       "split:dev": 0.7142857142857143,
       "split:heldout": 0.5909090909090909,
-      "topic:absent_topic": 0.5555555555555556,
-      "topic:changelog": 0.5,
-      "topic:decisions": 0.7692307692307693,
-      "topic:latent": 0.4,
-      "topic:performance": 0.8,
+      "topic:absent_topic": 0.5,
+      "topic:changelog": 1.0,
+      "topic:decisions": 0.6923076923076923,
+      "topic:latent": 0.6,
+      "topic:performance": 1.0,
       "topic:roadmap": 1.0,
       "topic:routing": 0.6666666666666666,
       "topic:security": 0.8,
-      "topic:temporal": 0.75
+      "topic:temporal": 0.5
+    },
+    "memoraos[anchor=0.0]": {
+      "dev:answerable": 0.8333333333333334,
+      "dev:unanswerable": 0.5,
+      "heldout:answerable": 0.625,
+      "heldout:unanswerable": 0.5,
+      "split:dev": 0.7380952380952381,
+      "split:heldout": 0.5909090909090909,
+      "topic:absent_topic": 0.5,
+      "topic:changelog": 1.0,
+      "topic:decisions": 0.7692307692307693,
+      "topic:latent": 0.6,
+      "topic:performance": 1.0,
+      "topic:roadmap": 1.0,
+      "topic:routing": 0.6666666666666666,
+      "topic:security": 0.8,
+      "topic:temporal": 0.5
     }
   },
   "before_fixes": {
@@ -658,10 +658,10 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "| `events` | Append-only change log with `prev_hash`/`hash` chain (tamper evident) | | Audit logging | API actions go to `audit_log` (actor = key fingerprint, never the key); memory changes go to a hash-chained `events` log; `verify_audit_chain()` detects tampering | `test_audit_chain_detects_tampering` |",
+      "answer": "| `events` | Append-only change log with `prev_hash`/`hash` chain (tamper evident) | SQLite + FTS5; brute-force cosine; NetworkX graph on demand; deterministic routing; extractive answers; bitemporal facts as rows (retract, never overwrite); append-only hash-chained events; API keys hashed with tenant/role binding; hard deletion with a content-free audit stub.",
       "cited": [
         "docs/ARCHITECTURE.md > Database schema (migration 1)",
-        "docs/SECURITY.md > Implemented controls",
+        "docs/IMPLEMENTATION_STATUS.md > Architectural decisions (see ARCHITECTURE.md for rationale)",
         "docs/TEMPORAL_MEMORY.md > Audit trail"
       ],
       "correct": false
@@ -698,7 +698,7 @@
       "cited": [
         "docs/SECURITY.md > Implemented controls",
         "docs/ARCHITECTURE.md > Architecture",
-        "docs/API.md > Public API reference"
+        "docs/IMPLEMENTATION_STATUS.md > Spec checklist (first-release definition of done)"
       ],
       "correct": true
     },
@@ -729,8 +729,8 @@
       "answer": "| Prompt-injection defences | Retrieved memory is *data*: `render_untrusted_context` wraps excerpts in `<memory untrusted=\"true\">` after a policy line, neutralises `<`/`>` so text cannot forge or close tags; injection-like sentences are flagged (`possible_prompt_injection`) and never chosen as answers; nothing in memory is ever executed; LLM phrasing (optional) is accepted only if every number/proper noun appears in the evidence | `test_k_*`, `tests/security/` | | Input validation | Pydantic models with length/enum/range limits; 2 M character cap; strategy and source types are enums | `test_input_validation_and_errors` |",
       "cited": [
         "docs/SECURITY.md > Implemented controls",
-        "docs/RETRIEVAL.md > Real-document findings (what the synthetic suite had hidden)",
-        "docs/V02_ARCHITECTURE.md > Invariants"
+        "docs/V02_ARCHITECTURE.md > Invariants",
+        "docs/EXTRACTION.md > LLM safety rails (`extraction/llm.py`, `extraction/validate.py`)"
       ],
       "correct": true
     },
@@ -758,11 +758,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "**Strategy selection**: every strategy gets a score from the category evidence; among strategies within `cost_tolerance` (default 0.1) of the best, the **cheapest** wins (`STRATEGY_COST`: exact 1 … multistage 10). A challenger can never win by being cheaper while less accurate, so self-optimisation cannot silently reduce accuracy. Low route confidence (< 0.25) promotes `hybrid` and optionally consults a model classifier (`ChatProvider`; output validated against the label set; failures ignored).",
+      "answer": "**Strategy selection**: every strategy gets a score from the category evidence; among strategies within `cost_tolerance` (default 0.1) of the best, the **cheapest** wins (`STRATEGY_COST`: exact 1 … multistage 10). A challenger can never win by being cheaper while less accurate, so self-optimisation cannot silently reduce accuracy. Scores from different retrievers are not comparable, so rank-based fusion is right, but weights and retriever sets must be configurable and entity/identifier retrieval is missing.",
       "cited": [
         "docs/ADAPTIVE_ROUTING.md > Pipeline",
         "docs/ADAPTIVE_ROUTING.md > Adaptive strategy learning",
-        "docs/API.md > Python (`memoraos.MemoryOS`)"
+        "docs/ADR/0005-configurable-rank-fusion.md > ADR-0005: Configurable weighted RRF with entity and exact-value retrievers"
       ],
       "correct": true
     },
@@ -776,11 +776,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "When enabled, a learned override replaces the default strategy only if **all** hold (`routing/learning.py`): - both strategies have ≥ `learning_min_samples` (20) labelled outcomes in that category; - the challenger's Wilson 95% **lower** bound ≥ the default's observed accuracy; Neural-embedder runs on the public sets are ⏳.",
+      "answer": "When enabled, a learned override replaces the default strategy only if **all** hold (`routing/learning.py`): - both strategies have ≥ `learning_min_samples` (20) labelled outcomes in that category; - the challenger's Wilson 95% **lower** bound ≥ the default's observed accuracy; Low route confidence (< 0.25) promotes `hybrid` and optionally consults a model classifier (`ChatProvider`; output validated against the label set; failures ignored).",
       "cited": [
         "docs/ADAPTIVE_ROUTING.md > Adaptive strategy learning",
-        "docs/ROADMAP.md > Next (highest value first)",
-        "docs/BENCHMARK_METHODOLOGY.md > Results snapshot"
+        "docs/ADAPTIVE_ROUTING.md > Pipeline",
+        "docs/ROADMAP.md > Next (highest value first)"
       ],
       "correct": true
     },
@@ -794,11 +794,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "When enabled, a learned override replaces the default strategy only if **all** hold (`routing/learning.py`): - both strategies have ≥ `learning_min_samples` (20) labelled outcomes in that category; - the challenger's Wilson 95% **lower** bound ≥ the default's observed accuracy; **Confidence:** evidence reliability and extraction confidence are the **minimum** over steps (weakest link). The original query is always searched and logged; expansion cannot remove or replace it.",
+      "answer": "When enabled, a learned override replaces the default strategy only if **all** hold (`routing/learning.py`): - both strategies have ≥ `learning_min_samples` (20) labelled outcomes in that category; - the challenger's Wilson 95% **lower** bound ≥ the default's observed accuracy; | Extra sentences may extend an answer but never create its support: the best single sentence must meet `min_anchor_coverage` (default 0.5) on its own. Low route confidence (< 0.25) promotes `hybrid` and optionally consults a model classifier (`ChatProvider`; output validated against the label set; failures ignored).",
       "cited": [
         "docs/ADAPTIVE_ROUTING.md > Adaptive strategy learning",
-        "docs/ADR/0006-evidence-fusion-typed-path-search.md > ADR-0006: Evidence fusion by typed path search with validated steps",
-        "docs/ADR/0005-configurable-rank-fusion.md > ADR-0005: Configurable weighted RRF with entity and exact-value retrievers"
+        "docs/RETRIEVAL.md > Real-document findings (what the synthetic suite had hidden)",
+        "docs/ADAPTIVE_ROUTING.md > Pipeline"
       ],
       "correct": true
     },
@@ -862,7 +862,7 @@
       "cited": [
         "docs/V02_ARCHITECTURE.md > Invariants",
         "docs/ADR/0004-embedding-provider-v2.md > ADR-0004: Embedding provider v2 and a model registry",
-        "docs/BENCHMARK_METHODOLOGY.md > Systems"
+        "docs/ADR/0005-configurable-rank-fusion.md > ADR-0005: Configurable weighted RRF with entity and exact-value retrievers"
       ],
       "correct": true
     },
@@ -880,7 +880,7 @@
       "cited": [
         "docs/ADR/0004-embedding-provider-v2.md > ADR-0004: Embedding provider v2 and a model registry",
         "CHANGELOG.md > Added",
-        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit"
+        "docs/V02_IMPLEMENTATION_PLAN.md > Scope"
       ],
       "correct": true
     },
@@ -928,11 +928,15 @@
       "gold": [
         "compensation"
       ],
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "answer": "The stored memory does not establish an answer to this question.",
-      "cited": [],
-      "correct": false
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "Salary-like periods are annualized (monthly × 12); this is documented and applies only to compensation predicates. Equality needs the same amount, currency and period. - Parse values into `(kind, number, currency, period)` and derive a canonical `value_key` such as `money:INR:annual:3200000`.",
+      "cited": [
+        "docs/ADR/0002-structured-facts-and-value-keys.md > ADR-0002: Structured facts, canonical value keys, and source spans",
+        "docs/EXTRACTION.md > Value normalization",
+        "CHANGELOG.md > Added"
+      ],
+      "correct": true
     },
     {
       "qid": "rd17",
@@ -944,11 +948,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "| Prompt-injection defences | Retrieved memory is *data*: `render_untrusted_context` wraps excerpts in `<memory untrusted=\"true\">` after a policy line, neutralises `<`/`>` so text cannot forge or close tags; injection-like sentences are flagged (`possible_prompt_injection`) and never chosen as answers; nothing in memory is ever executed; LLM phrasing (optional) is accepted only if every number/proper noun appears in the evidence | `test_k_*`, `tests/security/` | ## LLM safety rails (`extraction/llm.py`, `extraction/validate.py`) Sentences matching the injection detector are removed before the call.",
+      "answer": "| Prompt-injection defences | Retrieved memory is *data*: `render_untrusted_context` wraps excerpts in `<memory untrusted=\"true\">` after a policy line, neutralises `<`/`>` so text cannot forge or close tags; injection-like sentences are flagged (`possible_prompt_injection`) and never chosen as answers; nothing in memory is ever executed; LLM phrasing (optional) is accepted only if every number/proper noun appears in the evidence | `test_k_*`, `tests/security/` | # ADR-0003: LLM extraction is a proposal that must be verified against the source Sentences matching the injection detector are removed before the call.",
       "cited": [
         "docs/SECURITY.md > Implemented controls",
-        "docs/EXTRACTION.md > LLM safety rails (`extraction/llm.py`, `extraction/validate.py`)",
-        "docs/ADR/0003-llm-extraction-safety.md > ADR-0003: LLM extraction is a proposal that must be verified against the source"
+        "docs/ADR/0003-llm-extraction-safety.md > ADR-0003: LLM extraction is a proposal that must be verified against the source",
+        "docs/EXTRACTION.md > LLM safety rails (`extraction/llm.py`, `extraction/validate.py`)"
       ],
       "correct": true
     },
@@ -976,11 +980,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "Confidence is the minimum over the steps, and the path is in the evidence and the plan notes.",
+      "answer": "Confidence is the minimum over the steps, and the path is in the evidence and the plan notes. | `rerank` / `rerank_top_n` | `off` / 20 | reorder the fused head; any reranker failure keeps the fused order |",
       "cited": [
         "docs/RETRIEVAL.md > Evidence fusion (`strategy=\"fusion\"`)",
-        "docs/ADR/0006-evidence-fusion-typed-path-search.md > ADR-0006: Evidence fusion by typed path search with validated steps",
-        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit"
+        "docs/RETRIEVAL.md > Configuration",
+        "docs/ADR/0006-evidence-fusion-typed-path-search.md > ADR-0006: Evidence fusion by typed path search with validated steps"
       ],
       "correct": true
     },
@@ -1076,11 +1080,15 @@
       "gold": [
         "250 ms"
       ],
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "answer": "The stored memory does not establish an answer to this question.",
-      "cited": [],
-      "correct": false
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "`tests/regression/test_regression.py` enforces coarse budgets (300 memories ingested < 60 s, per-query < 250 ms) to catch order-of-magnitude regressions. - **Memory CI** (`memoraos ci run|compare`, `memoraos.contracts`): memory contracts in JSON (or YAML with PyYAML) with expected answers, expected refusals, temporal and evidence requirements, tenant-isolation checks and token budgets, plus a regression report against a previous run (broken expectations, abstention that got worse, new unsupported answers, status changes, token/latency deltas).",
+      "cited": [
+        "docs/PERFORMANCE.md > Measured (small synthetic workloads; indicative only)",
+        "CHANGELOG.md > Added",
+        "docs/IMPLEMENTATION_STATUS.md > Phases"
+      ],
+      "correct": true
     },
     {
       "qid": "rd26",
@@ -1110,10 +1118,10 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "🧪 **Standard benchmarks**: LoCoMo and LongMemEval retrieval-only adapters now exist (`benchmarks/public.py`); the answer-accuracy judge is still ⏳ and needs an LLM. - Vector search is exact brute force over an in-memory matrix: fine to roughly 10⁵ memories per scope; beyond that use an ANN adapter (roadmap). Legend: ✅ done · 🧪 experimental · ⏳ planned.",
+      "answer": "Evaluate on (a) the project's synthetic suite **with the same extractive scoring**, and (b) LoCoMo/LongMemEval adapters (roadmap) — reporting information preservation (answer accuracy at fixed token budgets), latency and GPU memory. 🧪 **Standard benchmarks**: LoCoMo and LongMemEval retrieval-only adapters now exist (`benchmarks/public.py`); the answer-accuracy judge is still ⏳ and needs an LLM. Legend: ✅ done · 🧪 experimental · ⏳ planned.",
       "cited": [
+        "docs/LATENT_MEMORY.md > Reproducible plan for a real learned implementation",
         "docs/ROADMAP.md > Next (highest value first)",
-        "docs/PERFORMANCE.md > Known scaling limits",
         "docs/ROADMAP.md > Roadmap"
       ],
       "correct": true
@@ -1158,10 +1166,14 @@
       "gold": [
         "cheapest"
       ],
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "answer": "The stored memory does not establish an answer to this question.",
-      "cited": [],
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "`AdaptiveRouter.route` scores categories, picks a strategy within a cost tolerance, and appends fallbacks. The router decides *which retrieval strategy answers a question*. One terminal value → answer; several, or a contradicted step → `conflict`; none → `insufficient_evidence`.",
+      "cited": [
+        "docs/ARCHITECTURE.md > Request flow for `recall(query)`",
+        "docs/ADAPTIVE_ROUTING.md > Adaptive Memory Routing Engine (AMRE)",
+        "docs/RETRIEVAL.md > Evidence fusion (`strategy=\"fusion\"`)"
+      ],
       "correct": false
     },
     {
@@ -1220,7 +1232,7 @@
       "cited": [
         "docs/PERFORMANCE.md > Performance",
         "CHANGELOG.md > Added",
-        "docs/IMPLEMENTATION_STATUS.md > Commands"
+        "docs/V02_REPOSITORY_AUDIT.md > 3. Component audit"
       ],
       "correct": true
     },
@@ -1273,8 +1285,8 @@
       "answer": "- **Encryption at rest** is opt-in and implemented in code with AES-256-GCM (see [Encryption at rest](#encryption-at-rest)).",
       "cited": [
         "docs/SECURITY.md > Not implemented / limitations",
-        "docs/SECURITY.md > Encryption at rest",
-        "CHANGELOG.md > Added"
+        "CHANGELOG.md > Added",
+        "docs/SECURITY.md > Encryption at rest"
       ],
       "correct": true
     },
@@ -1331,14 +1343,14 @@
         "same date"
       ],
       "status": "answered",
-      "strategy": "hybrid",
-      "answer": "Both explicitly dated: later date → **update**; same date → **conflict**. Facts of one `(subject, slot)` are ordered by effective time (valid_from, else recorded_at), consecutive identical values merge into **runs**, and consecutive different runs are related by these rules: On Windows the clock ticks about every 15 ms, so two facts stored back-to-back share `recorded_at`, and the random id decided which was \"latest\".",
+      "strategy": "temporal",
+      "answer": "- **Value normalization**: `32 LPA`, `32 lakhs annually` and `₹32 lakh per annum` share one canonical key, and monthly pay is annualised (`₹2.5 lakh per month` = `30 LPA`); a different amount, currency or period never merges. Negated facts are stored (inspect them with `MemoryOS.facts()`), never answer a positive question, and end the validity of an earlier affirmation of the same subject/predicate/value that was recorded before them. Timelines sort stably on `(effective time, recorded_at)` and keep insertion order for ties. Relative dates in stored text (\"last month\"), time zones other than UTC, uncertain/approximate dates, and facts whose validity is implied rather than stated.",
       "cited": [
-        "docs/TEMPORAL_MEMORY.md > Timeline construction (`truth/timeline.py`)",
-        "docs/V02_REPOSITORY_AUDIT.md > 2. Findings that change the plan",
+        "CHANGELOG.md > Added",
+        "docs/EXTRACTION.md > Negation semantics",
         "docs/ADR/0007-monotonic-system-time.md > ADR-0007: System time is strictly monotonic"
       ],
-      "correct": true
+      "correct": false
     },
     {
       "qid": "rd42",
@@ -1348,10 +1360,14 @@
       "gold": [
         "Angular 16"
       ],
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "answer": "The stored memory does not establish an answer to this question.",
-      "cited": [],
+      "status": "answered",
+      "strategy": "temporal",
+      "answer": "| Normalizer changes break v0.1 benchmark results | Benchmark guard: any regression blocks the change | | `ruff check src tests benchmarks examples scripts` | clean | - **Schema migration 2** (additive; tested against a real v0.1 database in `tests/fixtures/v01.db`): fact polarity, extraction method/version, source span and normalized value columns; embedding provider/version/status metadata; `embedding_models` and `extraction_attempts` tables.",
+      "cited": [
+        "docs/V02_IMPLEMENTATION_PLAN.md > Risks",
+        "docs/V02_REPOSITORY_AUDIT.md > 1. Actual baseline",
+        "CHANGELOG.md > Added"
+      ],
       "correct": false
     },
     {
@@ -1382,11 +1398,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "SQLite + FTS5; brute-force cosine; NetworkX graph on demand; deterministic routing; extractive answers; bitemporal facts as rows (retract, never overwrite); append-only hash-chained events; API keys hashed with tenant/role binding; hard deletion with a content-free audit stub. Hard deletion removes content from every table but keeps a content-free `memory.forgotten` event. - **Working model:** the decrypted database lives only in process memory.",
+      "answer": "SQLite + FTS5; brute-force cosine; NetworkX graph on demand; deterministic routing; extractive answers; bitemporal facts as rows (retract, never overwrite); append-only hash-chained events; API keys hashed with tenant/role binding; hard deletion with a content-free audit stub. Hard deletion removes content from every table but keeps a content-free `memory.forgotten` event. **Context.** The spec asks to improve v0.1 without unnecessary rewrites and to keep every v0.1 database usable.",
       "cited": [
         "docs/IMPLEMENTATION_STATUS.md > Architectural decisions (see ARCHITECTURE.md for rationale)",
         "docs/TEMPORAL_MEMORY.md > Audit trail",
-        "docs/SECURITY.md > Encryption at rest"
+        "docs/ADR/0001-evolve-modular-monolith.md > ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only"
       ],
       "correct": true
     },
@@ -1424,11 +1440,15 @@
       "tag": "dev/absent_topic",
       "answerable": false,
       "gold": [],
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "answer": "The stored memory does not establish an answer to this question.",
-      "cited": [],
-      "correct": true
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "Metadata the spec requires is not persisted.** No embedding provider/version/status columns, no `extraction_method` or source span on facts, no extraction-attempt log, no configurable fusion. Keep `MEMORAOS_API_KEYS`/`api_keys.json` out of version control (the `.gitignore` excludes `.memoraos/`).",
+      "cited": [
+        "docs/V02_REPOSITORY_AUDIT.md > 2. Findings that change the plan",
+        "docs/SECURITY.md > Operating guidance",
+        "docs/BENCHMARK_METHODOLOGY.md > Scenarios (14 required + 1 robustness)"
+      ],
+      "correct": false
     },
     {
       "qid": "ru2",
@@ -1453,8 +1473,8 @@
       "answer": "Statistics are exposed by `MemoryOS.stats()` / `GET /v1/stats`: counts, recall latency p50/p95, mean evidence tokens, unsupported rate, cache hits/misses, provider token/cost usage, storage bytes.",
       "cited": [
         "docs/PERFORMANCE.md > Optimisations implemented",
-        "docs/ARCHITECTURE.md > Request flow for `recall(query)`",
-        "docs/API.md > Python (`memoraos.MemoryOS`)"
+        "docs/BENCHMARK_METHODOLOGY.md > Scenarios (14 required + 1 robustness)",
+        "docs/ARCHITECTURE.md > Request flow for `recall(query)`"
       ],
       "correct": false
     },
@@ -1558,7 +1578,7 @@
       "cited": [
         "docs/BENCHMARK_METHODOLOGY.md > Scoring (all mechanical, no LLM judge)",
         "docs/API.md > Providers",
-        "docs/ARCHITECTURE.md > Risk register"
+        "docs/PERFORMANCE.md > Measured (small synthetic workloads; indicative only)"
       ],
       "correct": false
     },
@@ -1568,11 +1588,15 @@
       "tag": "heldout/absent_topic",
       "answerable": false,
       "gold": [],
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "answer": "The stored memory does not establish an answer to this question.",
-      "cited": [],
-      "correct": true
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "| Tenant & user isolation | Every read uses `storage.visibility.visibility_clause(scope)`; scope levels user/session/agent/project/org; ownership checks on modify/delete; the API binds the tenant from the API key, never from the request | `test_g_*`, `test_api.py::test_tenant_isolation_*`, `tests/security/` | Out of scope: issues requiring local filesystem access to an unencrypted data directory (see [docs/SECURITY.md](docs/SECURITY.md) on encryption at rest), denial of service by unbounded local usage.",
+      "cited": [
+        "docs/SECURITY.md > Implemented controls",
+        "SECURITY.md > Reporting a vulnerability",
+        "docs/V02_IMPLEMENTATION_PLAN.md > Scope"
+      ],
+      "correct": false
     },
     {
       "qid": "ru13",
@@ -1635,5 +1659,5 @@
       "correct": true
     }
   ],
-  "wall_clock_seconds": 34.2
+  "wall_clock_seconds": 36.4
 }

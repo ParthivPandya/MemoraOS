@@ -86,8 +86,15 @@ def stem(token: str) -> str:
                 return base + "y"
             if suf in ("ing", "ed") and len(base) >= 4 and base[-1] == base[-2] and base[-1] not in "ls":
                 base = base[:-1]
-            return base
-    return t
+            return _drop_silent_e(base)
+    return _drop_silent_e(t)
+
+
+def _drop_silent_e(base: str) -> str:
+    """Make 'rotate' and 'rotates'/'rotating' share one stem ('rotat')."""
+    if len(base) >= 4 and base.endswith("e") and not base.endswith("ee"):
+        return base[:-1]
+    return base
 
 
 def content_terms(text: str) -> list[str]:

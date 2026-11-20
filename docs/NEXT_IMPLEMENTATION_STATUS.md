@@ -1,4 +1,4 @@
-﻿# MemoraOS Next: implementation status
+# MemoraOS Next: implementation status
 
 Statuses (exactly one per feature): COMPLETED_AND_TESTED, IMPLEMENTED_NOT_FULLY_VERIFIED, PARTIALLY_IMPLEMENTED, DEFERRED, BLOCKED. Work is on branch `feature/memoraos-next`; nothing is committed, released or published, and no repository metadata was changed.
 
@@ -34,7 +34,7 @@ Statuses (exactly one per feature): COMPLETED_AND_TESTED, IMPLEMENTED_NOT_FULLY_
 python -m pytest -q                                        # 327 tests
 python -m ruff check src tests benchmarks scripts examples
 python -m bandit -q -r src -ll -c pyproject.toml
-python -m benchmarks.run                                   # synthetic; digest c35859a13f53
+python -m benchmarks.run                                   # synthetic; digest fca60a1fe780
 python -m benchmarks.real_docs && python -m benchmarks.real_temporal
 python -m benchmarks.failures
 python -m benchmarks.answerability --tag hashing

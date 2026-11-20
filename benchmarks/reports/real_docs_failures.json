@@ -171,11 +171,10 @@
       "question": "For which kind of predicate are monthly amounts annualized?",
       "tag": "dev/decisions",
       "answerable": true,
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "correct": false,
-      "cause": "OVERSTRICT_ABSTENTION",
-      "guard": "term coverage below the support threshold"
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
     },
     {
       "qid": "rd17",
@@ -264,11 +263,10 @@
       "question": "What per-query latency budget do the regression tests enforce?",
       "tag": "dev/performance",
       "answerable": true,
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "correct": false,
-      "cause": "OVERSTRICT_ABSTENTION",
-      "guard": "attribute-word guard"
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": true,
+      "cause": null
     },
     {
       "qid": "rd26",
@@ -299,7 +297,7 @@
       "strategy": "vector",
       "correct": false,
       "cause": "OVERSTRICT_ABSTENTION",
-      "guard": "attribute-word guard"
+      "guard": "term coverage below the support threshold"
     },
     {
       "qid": "rd29",
@@ -316,11 +314,10 @@
       "question": "When several strategies score within the tolerance, which one does the router choose?",
       "tag": "heldout/routing",
       "answerable": true,
-      "status": "insufficient_evidence",
-      "strategy": "vector",
+      "status": "answered",
+      "strategy": "hybrid",
       "correct": false,
-      "cause": "OVERSTRICT_ABSTENTION",
-      "guard": "attribute-word guard"
+      "cause": "ANSWER_GENERATION_FAILURE"
     },
     {
       "qid": "rd31",
@@ -414,7 +411,7 @@
       "strategy": "vector",
       "correct": false,
       "cause": "OVERSTRICT_ABSTENTION",
-      "guard": "attribute-word guard"
+      "guard": "term coverage below the support threshold"
     },
     {
       "qid": "rd40",
@@ -433,20 +430,19 @@
       "tag": "heldout/temporal",
       "answerable": true,
       "status": "answered",
-      "strategy": "hybrid",
-      "correct": true,
-      "cause": null
+      "strategy": "temporal",
+      "correct": false,
+      "cause": "ANSWER_GENERATION_FAILURE"
     },
     {
       "qid": "rd42",
       "question": "Which version pair is the example of a possible version change?",
       "tag": "heldout/temporal",
       "answerable": true,
-      "status": "insufficient_evidence",
-      "strategy": "vector",
+      "status": "answered",
+      "strategy": "temporal",
       "correct": false,
-      "cause": "OVERSTRICT_ABSTENTION",
-      "guard": "term coverage below the support threshold"
+      "cause": "ANSWER_GENERATION_FAILURE"
     },
     {
       "qid": "rd43",
@@ -493,10 +489,11 @@
       "question": "Which Kubernetes version does MemoraOS require?",
       "tag": "dev/absent_topic",
       "answerable": false,
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "correct": true,
-      "cause": null
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "FALSE_ACCEPTANCE",
+      "detail": "docs/V02_REPOSITORY_AUDIT.md > 2. Findings that change the plan"
     },
     {
       "qid": "ru2",
@@ -606,10 +603,11 @@
       "question": "What OAuth scopes does the API require?",
       "tag": "heldout/absent_topic",
       "answerable": false,
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "correct": true,
-      "cause": null
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "FALSE_ACCEPTANCE",
+      "detail": "docs/SECURITY.md > Implemented controls"
     },
     {
       "qid": "ru13",
@@ -664,29 +662,30 @@
   ],
   "summary": {
     "questions": 64,
-    "wrong": 25,
+    "wrong": 26,
     "answerable": 46,
-    "answerable_missed": 22,
+    "answerable_missed": 21,
     "by_cause": {
-      "ANSWER_GENERATION_FAILURE": 6,
-      "OVERSTRICT_ABSTENTION": 15,
+      "ANSWER_GENERATION_FAILURE": 9,
+      "OVERSTRICT_ABSTENTION": 11,
       "RETRIEVAL_MISS": 1,
-      "FALSE_ACCEPTANCE": 3
+      "FALSE_ACCEPTANCE": 5
     },
     "overstrict_guards": {
       "term coverage below the support threshold": 10,
-      "attribute-word guard": 5
+      "attribute-word guard": 1
     },
     "by_split": {
       "dev": {
         "ANSWER_GENERATION_FAILURE": 4,
-        "OVERSTRICT_ABSTENTION": 9,
-        "FALSE_ACCEPTANCE": 3
+        "OVERSTRICT_ABSTENTION": 7,
+        "FALSE_ACCEPTANCE": 4
       },
       "heldout": {
-        "OVERSTRICT_ABSTENTION": 6,
+        "ANSWER_GENERATION_FAILURE": 5,
         "RETRIEVAL_MISS": 1,
-        "ANSWER_GENERATION_FAILURE": 2
+        "OVERSTRICT_ABSTENTION": 4,
+        "FALSE_ACCEPTANCE": 1
       }
     }
   }

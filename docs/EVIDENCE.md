@@ -7,7 +7,7 @@ Everything on this page was produced by code in this repository and can be regen
 | Question | Answer |
 |---|---|
 | Is there generated data behind the headline numbers? | **Two of the three benchmarks use real data.** Real documentation (`benchmarks/real_docs.py`) and real dated CPython releases from three PEPs (`benchmarks/real_temporal.py`). The third (`benchmarks/run.py`) is a **synthetic** suite, kept as a regression guard. |
-| Does MemoraOS beat RAG on real prose? | **No.** On real documentation MemoraOS is level with plain RAG and behind a RAG baseline with an abstention gate on how many answerable questions it answers. It refuses unanswerable questions far more often and uses about 4.6x fewer evidence tokens. |
+| Does MemoraOS beat RAG on real prose? | **No.** On real documentation MemoraOS is level with plain RAG and behind a RAG baseline with an abstention gate on how many answerable questions it answers. It refuses unanswerable questions far more often and uses about 4x fewer evidence tokens. |
 | Where does it clearly win? | Questions about **change over time** on real dated data (21 of 21 against 29% for the best RAG baseline, plain vector search at 6 of 21) and **abstention** on unanswerable questions. |
 | Who judged the answers? | A mechanical judge (string containment and ID matching). No LLM anywhere. |
 | What is not measured? | The optional LLM extractor, neural embedders, rerankers and every external system (Mem0, Graphiti, Hindsight, Memorilla). |
@@ -22,22 +22,22 @@ Corpus: this repository's own documentation, 26 Markdown files split by heading 
 
 | System | All 64 [95% CI] | Answerable answered correctly (46) | Unanswerable refused (18) | Held-out (22) | Evidence tokens / question |
 |---|---|---|---|---|---|
-| BM25 RAG | 59.4% [48.4, 70.3] | 82.6% | 0.0% | 59.1% | 745 |
-| Vector RAG | 51.6% [40.6, 64.1] | 71.7% | 0.0% | 63.6% | 705 |
-| Hybrid RAG | 60.9% [50.0, 71.9] | 84.8% | 0.0% | 63.6% | 714 |
-| Hybrid RAG + abstention gate | **68.8%** [57.8, 78.1] | **84.8%** | 27.8% | **77.3%** | 665 |
-| **MemoraOS (default)** | 60.9% [48.4, 73.4] | 52.2% | **83.3%** | 59.1% | **144** |
-| MemoraOS, `min_anchor_coverage=0.4` | 64.1% [51.6, 76.6] | 60.9% | 72.2% | 59.1% | 175 |
-| MemoraOS, `min_anchor_coverage=0.25` | 65.6% [54.7, 76.6] | 69.6% | 55.6% | 59.1% | 202 |
-| MemoraOS, `min_anchor_coverage=0.0` | 67.2% [56.2, 78.1] | 71.7% | 55.6% | 59.1% | 205 |
+| BM25 RAG | 57.8% [45.3, 68.8] | 80.4% | 0.0% | 54.5% | 737 |
+| Vector RAG | 51.6% [39.1, 64.1] | 71.7% | 0.0% | 54.5% | 720 |
+| Hybrid RAG | 57.8% [45.3, 68.8] | 80.4% | 0.0% | 54.5% | 723 |
+| Hybrid RAG + abstention gate | **64.1%** [53.1, 75.0] | **80.4%** | 22.2% | **63.6%** | 672 |
+| **MemoraOS (default)** | 59.4% [46.9, 71.9] | 54.3% | **72.2%** | 50.0% | **170** |
+| MemoraOS, `min_anchor_coverage=0.4` | 62.5% [51.6, 73.4] | 63.0% | 61.1% | 50.0% | 202 |
+| MemoraOS, `min_anchor_coverage=0.25` | 67.2% [54.7, 78.1] | 73.9% | 50.0% | 59.1% | 231 |
+| MemoraOS, `min_anchor_coverage=0.0` | 68.8% [57.8, 79.7] | 76.1% | 50.0% | 59.1% | 235 |
 
 How to read it honestly:
 
 - **Overall accuracy is a tie** within the confidence intervals, and the gated RAG baseline is ahead of MemoraOS. The intervals are wide (64 questions).
-- The two systems fail in opposite ways. RAG answers almost everything, including the 18 unanswerable questions (it refuses 0 to 5 of them). MemoraOS refuses 15 of 18, but it also declines or misses more answerable questions (it answers 24 of 46 against 39 for gated RAG).
+- The two systems fail in opposite ways. RAG answers almost everything, including the 18 unanswerable questions (it refuses 0 to 4 of them). MemoraOS refuses 13 of 18, but it also declines or misses more answerable questions (it answers 25 of 46 against 37 for gated RAG).
 - `min_anchor_coverage` is a published dial between those behaviours. Lowering it recovers answerable questions and gives up refusals. The default (0.5) is the strict end by design; the curve is shown rather than hidden.
 - Answers are **extractive passages**, so MemoraOS returns the sentences it found, not written prose.
-- MemoraOS sends about **4.6x fewer evidence tokens** to the caller than gated RAG (144 against 665) because it returns the supporting sentences, not whole chunks.
+- MemoraOS sends about **4x fewer evidence tokens** to the caller than gated RAG (170 against 672) because it returns the supporting sentences, not whole chunks.
 
 ### Before and after the defects this benchmark found
 
@@ -46,7 +46,7 @@ The first run scored MemoraOS far below RAG. Diagnosing it with `explain()` foun
 | MemoraOS on the real-docs questions | Dev | Held-out | Held-out answerable | Held-out unanswerable refused |
 |---|---|---|---|---|
 | Before the fixes | 35.7% | 50.0% | 31.2% | 100% |
-| After the fixes | 61.9% | 59.1% | 43.8% | 100% |
+| After the fixes | 64.3% | 50.0% | 37.5% | 83.3% |
 
 The corpus grew between those runs (the documents describe the fixes), so read the change as indicative, not exact. The held-out questions were frozen before any fix.
 
@@ -59,14 +59,14 @@ Selected from the full, unfiltered list of 64 in [REAL_DOCS.md](../benchmarks/re
 | ✓ | Is encryption at rest implemented in code? | answered | `- **Encryption at rest** is opt-in and implemented in code with AES-256-GCM (see [Encryption at rest](#encryption-at-rest)).` | `docs/SECURITY.md > Not implemented / limitations` |
 | ✓ | How are API keys stored on disk? | answered | `\| Authentication \| Bearer API keys, stored only as SHA-256 hashes, constant-time comparison; keys bound to a tenant, a role …` | `docs/SECURITY.md > Implemented controls` |
 | ✓ | How many training stages does Memorilla need? | answered | `It needs three training stages, a GPU, and a specific decoder. Learned latent memory: a frozen encoder embeds documents once; …` | `docs/LATENT_MEMORY.md > What Memorilla is` |
-| ✓ | Which Kubernetes version does MemoraOS require? | `insufficient_evidence` | `The stored memory does not establish an answer to this question.` | none |
 | ✓ | What is the monthly price of the hosted MemoraOS plan? | `insufficient_evidence` | `The stored memory does not establish an answer to this question.` | none |
 | ✗ | What placeholder replaces a detected secret before it is stored? | `insufficient_evidence` | refused, although the documents say it (a **missed answer**) | none |
+| ✗ | Which Kubernetes version does MemoraOS require? | answered | a sentence about metadata the spec requires but the code does not persist | `docs/V02_REPOSITORY_AUDIT.md` |
 | ✗ | Which GraphQL endpoint exposes recall? | answered | `Statistics are exposed by MemoryOS.stats() / GET /v1/stats: counts, recall latency p50/p95, …` | `docs/PERFORMANCE.md` |
 | ✗ | How many GitHub stars does the repository have? | answered | a table row about the CI pipeline | `docs/IMPLEMENTATION_STATUS.md` |
 | ✗ | Which Prometheus metric tracks recall latency? | answered | a sentence listing benchmark metrics | `docs/BENCHMARK_METHODOLOGY.md` |
 
-The last three are the 3 unanswerable questions (of 18) that MemoraOS wrongly answered: a passage that shares words with the question is returned for something the documentation never says. That is the failure the abstention machinery exists to prevent, and it is not fully prevented.
+The last four are among the 5 unanswerable questions (of 18) that MemoraOS wrongly answered (the fifth, about OAuth scopes, is in [REAL_DOCS_FAILURES.md](../benchmarks/reports/REAL_DOCS_FAILURES.md)): a passage that shares words with the question is returned for something the documentation never says. That is the failure the abstention machinery exists to prevent, and it is not fully prevented.
 
 ## 2. Real temporal data (21 questions)
 
@@ -108,7 +108,7 @@ Window queries such as "in 2024" return the latest value overlapping the window;
 
 ## 3. The synthetic suite is saturated
 
-`python -m benchmarks.run` generates deterministic datasets for 19 scenarios and runs every system on them (3 seeds, about 320 questions per seed, digest `c35859a13f53`).
+`python -m benchmarks.run` generates deterministic datasets for 19 scenarios and runs every system on them (3 seeds, about 320 questions per seed, digest `fca60a1fe780`).
 
 | System | Pooled accuracy [95% CI] | Unanswerable questions that received an answer |
 |---|---|---|

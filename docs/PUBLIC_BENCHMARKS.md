@@ -27,26 +27,26 @@ LoCoMo, 1,532 questions ([full report](../benchmarks/reports/PUBLIC_LOCOMO.md)):
 
 | system | any-hit@5 | any-hit@10 | all-hit@5 |
 |---|---:|---:|---:|
-| bm25 | 58.6% | 66.7% | 48.1% |
-| vector | 45.0% | 53.0% | 36.7% |
-| hybrid_rag | 53.3% | 61.8% | 43.3% |
-| memoraos_retriever | 56.1% | 63.9% | 44.8% |
-| memoraos_recall | 41.8% | 45.8% | 34.4% |
+| bm25 | 60.3% | 67.7% | 49.1% |
+| vector | 45.5% | 53.1% | 37.2% |
+| hybrid_rag | 54.0% | 62.3% | 43.7% |
+| memoraos_retriever | 55.4% | 63.6% | 44.9% |
+| memoraos_recall | 43.3% | 47.3% | 35.2% |
 
 LongMemEval-S, 60 questions ([full report](../benchmarks/reports/PUBLIC_LONGMEMEVAL.md)):
 
 | system | session hit@5 | session hit@10 |
 |---|---:|---:|
 | bm25 | 91.7% | 96.7% |
-| vector | 85.0% | 90.0% |
-| hybrid_rag | 90.0% | 95.0% |
-| memoraos_retriever | 88.3% | 93.3% |
+| vector | 85.0% | 85.0% |
+| hybrid_rag | 88.3% | 91.7% |
+| memoraos_retriever | 86.7% | 93.3% |
 | memoraos_recall | 50.0% | 51.7% |
 
 ## Honest reading
 
-- **MemoraOS does not beat plain BM25 on either set** with the hashing embedder. On LoCoMo, BM25 leads `memoraos_retriever` by about 2.5 points at k=5 (intervals overlap).
-- On LoCoMo the MemoraOS retriever is **better than the fixed hybrid baseline**: at k=5, 51 questions are hit only by `memoraos_retriever` and 8 only by `hybrid_rag` (exact sign test p = 9e-9). On the LongMemEval sample the two are within one question.
+- **MemoraOS does not beat plain BM25 on either set** with the hashing embedder. On LoCoMo, BM25 leads `memoraos_retriever` by about 5 points at k=5 (intervals overlap).
+- On LoCoMo the MemoraOS retriever is **better than the fixed hybrid baseline**: at k=5, 35 questions are hit only by `memoraos_retriever` and 13 only by `hybrid_rag` (exact sign test p = 0.002). On the LongMemEval sample the two are within one question (1 vs 2 paired).
 - `memoraos_recall` scores low here by construction. `recall()` returns a short, answer-oriented evidence list trimmed to a token budget, not a ranked list of k items, so a top-k hit rate understates what it is for. Its value is verifiable answers, abstention and temporal handling, which these retrieval-only metrics do not measure.
 - The hashing embedder is weak for paraphrase (see [PERFORMANCE.md](PERFORMANCE.md)); a neural embedder would raise the vector and hybrid rows. That run has not been done on these datasets.
 - Not done: LLM-judged answer accuracy, abstention scoring, temporal-reasoning categories of LongMemEval scored on answers, and the full 500-question LongMemEval set.
