@@ -63,6 +63,12 @@ Vector search over chat history and documents fails in predictable ways: it retu
 ## Quick start
 
 ```bash
+pip install memoraos            # from PyPI; extras: memoraos[api], memoraos[encryption]
+```
+
+To run the benchmarks and tests, install from a checkout instead:
+
+```bash
 git clone https://github.com/ParthivPandya/MemoraOS.git && cd MemoraOS
 python -m venv .venv && .venv\Scripts\activate          # Linux/macOS: source .venv/bin/activate
 pip install -e ".[dev,api]"
@@ -283,7 +289,7 @@ Tested with an injected regression (disabling evidence fusion on a multi-hop con
 
 ### Encryption at rest
 
-Opt-in (install from source with `pip install -e ".[encryption]"`; MemoraOS is not published on PyPI): `MemoryOS.local(settings=Settings(encryption_passphrase="..."))`, or set `MEMORAOS_ENCRYPTION_KEY` (the only way the CLI takes it). The database is stored as an AES-256-GCM file (scrypt-derived key; layout `MOSENC01 | salt | nonce | ciphertext`). The working copy lives in memory and every commit atomically rewrites the encrypted file, so **write cost grows with database size**. Wrong keys and tampered files are rejected. `memoraos encrypt` / `decrypt` convert an existing database; they do **not** touch old plaintext `sources/` or `.bak` files, and there is no key recovery. Needs Python 3.11+. Tests: [`tests/unit/test_encryption.py`](tests/unit/test_encryption.py). Details: [docs/SECURITY.md](docs/SECURITY.md#encryption-at-rest).
+Opt-in (install with `pip install "memoraos[encryption]"`): `MemoryOS.local(settings=Settings(encryption_passphrase="..."))`, or set `MEMORAOS_ENCRYPTION_KEY` (the only way the CLI takes it). The database is stored as an AES-256-GCM file (scrypt-derived key; layout `MOSENC01 | salt | nonce | ciphertext`). The working copy lives in memory and every commit atomically rewrites the encrypted file, so **write cost grows with database size**. Wrong keys and tampered files are rejected. `memoraos encrypt` / `decrypt` convert an existing database; they do **not** touch old plaintext `sources/` or `.bak` files, and there is no key recovery. Needs Python 3.11+. Tests: [`tests/unit/test_encryption.py`](tests/unit/test_encryption.py). Details: [docs/SECURITY.md](docs/SECURITY.md#encryption-at-rest).
 
 ### Docker (optional)
 

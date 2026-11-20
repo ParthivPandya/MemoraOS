@@ -16,7 +16,7 @@ The unit and integration tests, and the synthetic benchmark generators, use cont
 
 ## 1. Real documentation (46 answerable + 18 unanswerable questions)
 
-Corpus: this repository's own documentation, 26 Markdown files split by heading into 126 sections (123,607 characters, SHA-256 `c6a5fa5cadfe…`), used exactly as written. Questions were written by the project. 30 + 12 are a **dev set** used to find defects; 16 + 6 are a **held-out set** written before any fix. The run aborts if a gold string is missing from the corpus, if an "unanswerable" term does occur in it, or if a question is quoted verbatim in the corpus.
+Corpus: this repository's own documentation, 26 Markdown files split by heading into 126 sections (123,552 characters, SHA-256 `0129e552bb6b…`), used exactly as written. Questions were written by the project. 30 + 12 are a **dev set** used to find defects; 16 + 6 are a **held-out set** written before any fix. The run aborts if a gold string is missing from the corpus, if an "unanswerable" term does occur in it, or if a question is quoted verbatim in the corpus.
 
 <p align="center"><img src="assets/benchmark_real_docs.png" alt="Answerable questions answered correctly versus unanswerable questions refused, for every system" width="92%" /></p>
 

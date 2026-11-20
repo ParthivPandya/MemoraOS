@@ -8,11 +8,10 @@ A scripted JSON-RPC session against `memoraos mcp` (Python 3.14, Windows) comple
 
 ## Install
 
-MemoraOS is not on PyPI, so install from a checkout and make sure `memoraos` is on the `PATH` of the client:
+Install from PyPI and make sure `memoraos` is on the `PATH` of the client:
 
 ```bash
-git clone https://github.com/ParthivPandya/MemoraOS.git && cd MemoraOS
-pip install -e .
+pip install memoraos
 memoraos --version
 ```
 
