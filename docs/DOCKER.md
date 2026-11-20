@@ -25,7 +25,7 @@ A new database is then created encrypted (AES-256-GCM, see [SECURITY.md](SECURIT
 
 ## What was verified
 
-Run on Docker Desktop with the image built from this repository:
+Run on Docker Desktop with the image built from this repository (the same checks run in CI as `scripts/docker_smoke.sh`, from 0.2.1):
 
 - the container reports `healthy`;
 - an unauthenticated request returns 401;

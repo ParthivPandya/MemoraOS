@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real-document benchmark",
   "command": "python -m benchmarks.real_docs",
-  "generated_at": "2026-11-20T05:59:37+00:00",
+  "generated_at": "2026-11-20T06:52:45+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -14,9 +14,9 @@
   },
   "corpus": {
     "files": 26,
-    "sections": 126,
-    "characters": 123552,
-    "sha256": "0129e552bb6bd733de88dc867a3992b86a73d92b336ac095e62937556e9be0ba"
+    "sections": 128,
+    "characters": 124722,
+    "sha256": "49b52b3c0aaa7fbbaab5a284cfb5b44e5a71d48b2acdfff261a48cc7950eef5f"
   },
   "questions": {
     "answerable": 46,
@@ -33,16 +33,16 @@
         0.4531,
         0.6875
       ],
-      "recall_at_5": 0.7939182194616976,
+      "recall_at_5": 0.7933253340862036,
       "precision_at_5": 0.3050724637681159,
-      "mrr": 0.8532608695652174,
-      "ndcg_at_5": 0.777431082227292,
+      "mrr": 0.842391304347826,
+      "ndcg_at_5": 0.7736659340738813,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 737.109375,
-      "latency_ms_p50": 6.893400015542284,
-      "latency_ms_p95": 9.603599988622591,
+      "mean_context_tokens": 736.984375,
+      "latency_ms_p50": 11.267399997450411,
+      "latency_ms_p95": 16.229900007601827,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -60,8 +60,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.460550000050312,
-      "storage_overhead_ratio": 4.759765420462876,
+      "ingest_ms_per_event": 6.146351562165364,
+      "storage_overhead_ratio": 4.7737440644826625,
       "pooled_accuracy_ci95": [
         0.4531,
         0.6875
@@ -74,16 +74,16 @@
         0.3906,
         0.6406
       ],
-      "recall_at_5": 0.6820565907522429,
+      "recall_at_5": 0.6816613338352469,
       "precision_at_5": 0.2583333333333333,
       "mrr": 0.7554347826086957,
-      "ndcg_at_5": 0.659166035794181,
+      "ndcg_at_5": 0.6584588180439455,
       "evidence_coverage": 0.9130434782608695,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 720.09375,
-      "latency_ms_p50": 6.135899981018156,
-      "latency_ms_p95": 13.04700001492165,
+      "mean_context_tokens": 717.0,
+      "latency_ms_p50": 7.983999967109412,
+      "latency_ms_p95": 10.684899985790253,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -101,8 +101,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.734415079446672,
-      "storage_overhead_ratio": 4.759765420462876,
+      "ingest_ms_per_event": 6.173209374992439,
+      "storage_overhead_ratio": 4.7737440644826625,
       "pooled_accuracy_ci95": [
         0.3906,
         0.6406
@@ -115,16 +115,16 @@
         0.4531,
         0.6875
       ],
-      "recall_at_5": 0.7694616977225672,
+      "recall_at_5": 0.7688688123470733,
       "precision_at_5": 0.28731884057971013,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7499151889816232,
+      "ndcg_at_5": 0.7510694839919282,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 723.046875,
-      "latency_ms_p50": 5.788299982668832,
-      "latency_ms_p95": 8.051499986322597,
+      "mean_context_tokens": 718.34375,
+      "latency_ms_p50": 6.78590004099533,
+      "latency_ms_p95": 9.966200042981654,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -142,8 +142,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.582993650858823,
-      "storage_overhead_ratio": 4.759765420462876,
+      "ingest_ms_per_event": 4.428908593581582,
+      "storage_overhead_ratio": 4.7737440644826625,
       "pooled_accuracy_ci95": [
         0.4531,
         0.6875
@@ -151,21 +151,21 @@
     },
     "hybrid_rag_top1": {
       "n": 64,
-      "accuracy": 0.4375,
+      "accuracy": 0.421875,
       "accuracy_ci95": [
-        0.3125,
-        0.5625
+        0.2969,
+        0.5469
       ],
-      "recall_at_5": 0.7694616977225672,
+      "recall_at_5": 0.7688688123470733,
       "precision_at_5": 0.28731884057971013,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7499151889816232,
+      "ndcg_at_5": 0.7510694839919282,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 723.046875,
-      "latency_ms_p50": 4.460500000277534,
-      "latency_ms_p95": 7.504700013669208,
+      "mean_context_tokens": 718.34375,
+      "latency_ms_p50": 5.991299985907972,
+      "latency_ms_p95": 8.295900013763458,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -177,38 +177,38 @@
         "dev/security": 0.5,
         "heldout/absent_topic": 0.0,
         "heldout/decisions": 0.0,
-        "heldout/latent": 1.0,
+        "heldout/latent": 0.0,
         "heldout/performance": 0.6666666666666666,
         "heldout/routing": 0.0,
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.031666666768225,
-      "storage_overhead_ratio": 4.759765420462876,
+      "ingest_ms_per_event": 4.186412499620928,
+      "storage_overhead_ratio": 4.7737440644826625,
       "pooled_accuracy_ci95": [
-        0.3125,
-        0.5625
+        0.2969,
+        0.5469
       ]
     },
     "hybrid_rag_gated": {
       "n": 64,
-      "accuracy": 0.640625,
+      "accuracy": 0.65625,
       "accuracy_ci95": [
-        0.5312,
-        0.75
+        0.5469,
+        0.7656
       ],
-      "recall_at_5": 0.7694616977225672,
+      "recall_at_5": 0.7688688123470733,
       "precision_at_5": 0.28731884057971013,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7499151889816232,
+      "ndcg_at_5": 0.7510694839919282,
       "evidence_coverage": 0.9565217391304348,
-      "unsupported_answer_rate": 0.7777777777777778,
+      "unsupported_answer_rate": 0.7222222222222222,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 672.03125,
-      "latency_ms_p50": 6.581399997230619,
-      "latency_ms_p95": 9.102799987886101,
+      "mean_context_tokens": 658.96875,
+      "latency_ms_p50": 11.646099970676005,
+      "latency_ms_p95": 27.1043999819085,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.16666666666666666,
+        "dev/absent_topic": 0.25,
         "dev/changelog": 1.0,
         "dev/decisions": 0.8333333333333334,
         "dev/latent": 0.75,
@@ -224,11 +224,11 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 2.88774444428753,
-      "storage_overhead_ratio": 4.759765420462876,
+      "ingest_ms_per_event": 3.7468328123395622,
+      "storage_overhead_ratio": 4.7737440644826625,
       "pooled_accuracy_ci95": [
-        0.5312,
-        0.75
+        0.5469,
+        0.7656
       ]
     },
     "memoraos": {
@@ -238,16 +238,16 @@
         0.4688,
         0.7188
       ],
-      "recall_at_5": 0.5382246376811594,
+      "recall_at_5": 0.5376317523056653,
       "precision_at_5": 0.2036231884057971,
       "mrr": 0.5634057971014493,
       "ndcg_at_5": 0.5134979221528873,
       "evidence_coverage": 0.6304347826086957,
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.2608695652173913,
-      "mean_context_tokens": 170.328125,
-      "latency_ms_p50": 30.515,
-      "latency_ms_p95": 73.083,
+      "mean_context_tokens": 169.078125,
+      "latency_ms_p50": 42.914,
+      "latency_ms_p95": 87.856,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -265,8 +265,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 14.102107142828153,
-      "storage_overhead_ratio": 23.723982374312254,
+      "ingest_ms_per_event": 24.300892968767585,
+      "storage_overhead_ratio": 23.56822153944376,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -279,16 +279,16 @@
         0.4688,
         0.7188
       ],
-      "recall_at_5": 0.5626811594202898,
+      "recall_at_5": 0.5620882740447958,
       "precision_at_5": 0.19818840579710145,
       "mrr": 0.5706521739130435,
       "ndcg_at_5": 0.5276667251665741,
       "evidence_coverage": 0.6521739130434783,
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.34782608695652173,
-      "mean_context_tokens": 165.09375,
-      "latency_ms_p50": 26.032,
-      "latency_ms_p95": 90.906,
+      "mean_context_tokens": 165.0,
+      "latency_ms_p50": 28.992,
+      "latency_ms_p95": 91.878,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -306,8 +306,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 15.135033333319283,
-      "storage_overhead_ratio": 23.130057919878844,
+      "ingest_ms_per_event": 15.818152343854308,
+      "storage_overhead_ratio": 22.97983320697498,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -320,16 +320,16 @@
         0.5156,
         0.7344
       ],
-      "recall_at_5": 0.6070652173913044,
+      "recall_at_5": 0.6064723320158103,
       "precision_at_5": 0.23514492753623187,
       "mrr": 0.6503623188405797,
       "ndcg_at_5": 0.5891923159627376,
       "evidence_coverage": 0.717391304347826,
       "unsupported_answer_rate": 0.3888888888888889,
       "false_abstain_rate": 0.15217391304347827,
-      "mean_context_tokens": 201.921875,
-      "latency_ms_p50": 46.594,
-      "latency_ms_p95": 99.406,
+      "mean_context_tokens": 200.625,
+      "latency_ms_p50": 45.106,
+      "latency_ms_p95": 122.293,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
@@ -347,8 +347,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 14.463428571443295,
-      "storage_overhead_ratio": 23.723982374312254,
+      "ingest_ms_per_event": 13.65573437533385,
+      "storage_overhead_ratio": 23.56822153944376,
       "pooled_accuracy_ci95": [
         0.5156,
         0.7344
@@ -361,16 +361,16 @@
         0.5469,
         0.7812
       ],
-      "recall_at_5": 0.6671066252587992,
+      "recall_at_5": 0.6665137398833051,
       "precision_at_5": 0.26666666666666666,
       "mrr": 0.7590579710144927,
       "ndcg_at_5": 0.6635031786627077,
       "evidence_coverage": 0.8260869565217391,
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.043478260869565216,
-      "mean_context_tokens": 231.078125,
-      "latency_ms_p50": 39.297,
-      "latency_ms_p95": 104.934,
+      "mean_context_tokens": 229.78125,
+      "latency_ms_p50": 33.057,
+      "latency_ms_p95": 78.35,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -388,8 +388,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 13.124076190583837,
-      "storage_overhead_ratio": 23.657990768264096,
+      "ingest_ms_per_event": 12.347360937837948,
+      "storage_overhead_ratio": 23.502845058058337,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7812
@@ -402,16 +402,16 @@
         0.5781,
         0.7969
       ],
-      "recall_at_5": 0.6888457556935819,
+      "recall_at_5": 0.6882528703180878,
       "precision_at_5": 0.2710144927536232,
       "mrr": 0.7663043478260869,
       "ndcg_at_5": 0.6743727438800989,
       "evidence_coverage": 0.8478260869565217,
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 234.984375,
-      "latency_ms_p50": 55.829,
-      "latency_ms_p95": 134.533,
+      "mean_context_tokens": 233.671875,
+      "latency_ms_p50": 29.005,
+      "latency_ms_p95": 96.431,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -429,8 +429,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 16.812436507842946,
-      "storage_overhead_ratio": 23.657990768264096,
+      "ingest_ms_per_event": 13.648024999838526,
+      "storage_overhead_ratio": 23.502845058058337,
       "pooled_accuracy_ci95": [
         0.5781,
         0.7969
@@ -492,14 +492,14 @@
     "hybrid_rag_top1": {
       "dev:answerable": 0.6,
       "dev:unanswerable": 0.0,
-      "heldout:answerable": 0.625,
+      "heldout:answerable": 0.5625,
       "heldout:unanswerable": 0.0,
       "split:dev": 0.42857142857142855,
-      "split:heldout": 0.45454545454545453,
+      "split:heldout": 0.4090909090909091,
       "topic:absent_topic": 0.0,
       "topic:changelog": 1.0,
       "topic:decisions": 0.5384615384615384,
-      "topic:latent": 0.8,
+      "topic:latent": 0.6,
       "topic:performance": 0.8,
       "topic:roadmap": 0.0,
       "topic:routing": 0.16666666666666666,
@@ -508,12 +508,12 @@
     },
     "hybrid_rag_gated": {
       "dev:answerable": 0.8333333333333334,
-      "dev:unanswerable": 0.16666666666666666,
+      "dev:unanswerable": 0.25,
       "heldout:answerable": 0.75,
       "heldout:unanswerable": 0.3333333333333333,
-      "split:dev": 0.6428571428571429,
+      "split:dev": 0.6666666666666666,
       "split:heldout": 0.6363636363636364,
-      "topic:absent_topic": 0.2222222222222222,
+      "topic:absent_topic": 0.2777777777777778,
       "topic:changelog": 1.0,
       "topic:decisions": 0.8461538461538461,
       "topic:latent": 0.8,
@@ -1398,11 +1398,11 @@
       ],
       "status": "answered",
       "strategy": "hybrid",
-      "answer": "SQLite + FTS5; brute-force cosine; NetworkX graph on demand; deterministic routing; extractive answers; bitemporal facts as rows (retract, never overwrite); append-only hash-chained events; API keys hashed with tenant/role binding; hard deletion with a content-free audit stub. Hard deletion removes content from every table but keeps a content-free `memory.forgotten` event. **Context.** The spec asks to improve v0.1 without unnecessary rewrites and to keep every v0.1 database usable.",
+      "answer": "SQLite + FTS5; brute-force cosine; NetworkX graph on demand; deterministic routing; extractive answers; bitemporal facts as rows (retract, never overwrite); append-only hash-chained events; API keys hashed with tenant/role binding; hard deletion with a content-free audit stub. Hard deletion removes content from every table but keeps a content-free `memory.forgotten` event. - Databases created with 0.2.0 store hashing-embedding vectors built with the old stems.",
       "cited": [
         "docs/IMPLEMENTATION_STATUS.md > Architectural decisions (see ARCHITECTURE.md for rationale)",
         "docs/TEMPORAL_MEMORY.md > Audit trail",
-        "docs/ADR/0001-evolve-modular-monolith.md > ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only"
+        "CHANGELOG.md > Fixed"
       ],
       "correct": true
     },
@@ -1659,5 +1659,5 @@
       "correct": true
     }
   ],
-  "wall_clock_seconds": 36.4
+  "wall_clock_seconds": 38.7
 }

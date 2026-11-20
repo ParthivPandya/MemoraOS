@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real temporal benchmark",
   "command": "python -m benchmarks.real_temporal",
-  "generated_at": "2026-11-20T05:59:46+00:00",
+  "generated_at": "2026-11-20T06:52:51+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -44,15 +44,15 @@
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
       "mean_context_tokens": 79.0,
-      "latency_ms_p50": 2.0376999746076763,
-      "latency_ms_p95": 3.6198000016156584,
+      "latency_ms_p50": 1.8062999588437378,
+      "latency_ms_p95": 2.3829000419937074,
       "accuracy_by_tag": {
         "absent": 0.0,
         "as_of": 0.07142857142857142,
         "current": 0.0,
         "previous": 0.0
       },
-      "ingest_ms_per_event": 0.5027857135116521,
+      "ingest_ms_per_event": 0.39602142974867355,
       "storage_overhead_ratio": 33.99424626006905,
       "pooled_accuracy_ci95": [
         0.0,
@@ -74,15 +74,15 @@
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
       "mean_context_tokens": 79.0,
-      "latency_ms_p50": 2.749999985098839,
-      "latency_ms_p95": 3.454400022746995,
+      "latency_ms_p50": 2.0218000281602144,
+      "latency_ms_p95": 2.5676999939605594,
       "accuracy_by_tag": {
         "absent": 0.0,
         "as_of": 0.42857142857142855,
         "current": 0.0,
         "previous": 0.0
       },
-      "ingest_ms_per_event": 0.550699998192223,
+      "ingest_ms_per_event": 0.4125785697916789,
       "storage_overhead_ratio": 33.99424626006905,
       "pooled_accuracy_ci95": [
         0.0952,
@@ -104,15 +104,15 @@
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
       "mean_context_tokens": 79.0,
-      "latency_ms_p50": 3.0149999947752804,
-      "latency_ms_p95": 5.6105999974533916,
+      "latency_ms_p50": 1.3353999820537865,
+      "latency_ms_p95": 2.049200003966689,
       "accuracy_by_tag": {
         "absent": 0.0,
         "as_of": 0.2857142857142857,
         "current": 0.0,
         "previous": 0.0
       },
-      "ingest_ms_per_event": 0.7923642863586012,
+      "ingest_ms_per_event": 0.3264714281872979,
       "storage_overhead_ratio": 33.99424626006905,
       "pooled_accuracy_ci95": [
         0.0476,
@@ -134,15 +134,15 @@
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
       "mean_context_tokens": 79.0,
-      "latency_ms_p50": 3.6044000007677823,
-      "latency_ms_p95": 4.662999999709427,
+      "latency_ms_p50": 1.7246000352315605,
+      "latency_ms_p95": 2.131699991878122,
       "accuracy_by_tag": {
         "absent": 0.0,
         "as_of": 0.2857142857142857,
         "current": 0.0,
         "previous": 0.0
       },
-      "ingest_ms_per_event": 0.7839499989391437,
+      "ingest_ms_per_event": 0.2526857175066003,
       "storage_overhead_ratio": 33.99424626006905,
       "pooled_accuracy_ci95": [
         0.0476,
@@ -164,15 +164,15 @@
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
       "mean_context_tokens": 79.0,
-      "latency_ms_p50": 3.3845999860204756,
-      "latency_ms_p95": 7.366400008322671,
+      "latency_ms_p50": 1.9039000035263598,
+      "latency_ms_p95": 2.382799983024597,
       "accuracy_by_tag": {
         "absent": 0.0,
         "as_of": 0.2857142857142857,
         "current": 0.0,
         "previous": 0.0
       },
-      "ingest_ms_per_event": 0.6833857145725882,
+      "ingest_ms_per_event": 0.3523142866989864,
       "storage_overhead_ratio": 33.99424626006905,
       "pooled_accuracy_ci95": [
         0.0476,
@@ -194,15 +194,15 @@
       "unsupported_answer_rate": 0.0,
       "false_abstain_rate": 0.0,
       "mean_context_tokens": 13.714285714285714,
-      "latency_ms_p50": 8.093,
-      "latency_ms_p95": 17.11,
+      "latency_ms_p50": 3.756,
+      "latency_ms_p95": 9.909,
       "accuracy_by_tag": {
         "absent": 1.0,
         "as_of": 1.0,
         "current": 1.0,
         "previous": 1.0
       },
-      "ingest_ms_per_event": 7.48012142971025,
+      "ingest_ms_per_event": 3.9329857141378204,
       "storage_overhead_ratio": 476.0598388952819,
       "pooled_accuracy_ci95": [
         1.0,
@@ -224,15 +224,15 @@
       "unsupported_answer_rate": 0.0,
       "false_abstain_rate": 0.0,
       "mean_context_tokens": 67.71428571428571,
-      "latency_ms_p50": 11.922,
-      "latency_ms_p95": 16.591,
+      "latency_ms_p50": 5.865,
+      "latency_ms_p95": 8.113,
       "accuracy_by_tag": {
         "absent": 1.0,
         "as_of": 0.2857142857142857,
         "current": 0.5,
         "previous": 0.0
       },
-      "ingest_ms_per_event": 6.005600001247201,
+      "ingest_ms_per_event": 3.79484285700268,
       "storage_overhead_ratio": 419.4982738780207,
       "pooled_accuracy_ci95": [
         0.1905,
@@ -284,5 +284,5 @@
       "previous": 0.0
     }
   },
-  "wall_clock_seconds": 2.1
+  "wall_clock_seconds": 1.1
 }

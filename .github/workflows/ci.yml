@@ -43,6 +43,12 @@ jobs:
       - run: bandit -q -r src -ll -c pyproject.toml
       - run: pip-audit
 
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/docker_smoke.sh
+
   typescript:
     runs-on: ubuntu-latest
     steps:

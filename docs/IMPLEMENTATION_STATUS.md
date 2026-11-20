@@ -1,6 +1,6 @@
-﻿# Implementation Status
+# Implementation Status
 
-_Last updated for v0.2.0 (unreleased). This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
+_Last updated for v0.2.1. This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
 
 ## v0.2 status
 
@@ -16,7 +16,7 @@ _Last updated for v0.2.0 (unreleased). This file lists what works, what is parti
 
 ## Test results (v0.2)
 
-`python -m pytest` → **327 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
+`python -m pytest` → **328 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
 
 ## Test results (v0.1)
 

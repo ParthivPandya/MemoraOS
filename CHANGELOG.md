@@ -24,7 +24,16 @@ Status of each item: see `docs/NEXT_IMPLEMENTATION_STATUS.md`. Nothing here chan
 - `docs/SECURITY.md`, the roadmap and the status docs no longer say encryption at rest is missing.
 - `plan` and `tier` are single-valued attributes, so "the current plan" no longer returns the old and the new plan together (found while writing a Memory CI contract).
 
-## [0.2.0] - unreleased
+## [0.2.1] - 2026-11-20
+
+### Fixed
+- **Verb forms with a silent "e" now share a stem** (`rotate`/`rotates`/`rotating`/`rotated`, `release`/`releases`). Found by installing 0.2.0 from PyPI: storing "The deploy key rotates every 90 days" and asking "how often does the deploy key rotate" was refused. It is answered with evidence now.
+- Measured effect on the real-document benchmark (regenerated): two answerable questions are now correct and one is wrong (net +1), but two unanswerable questions are now wrongly answered because "require" matches "required"; overall 59.4% for MemoraOS against 64.1% for gated RAG, within noise. Public LoCoMo/LongMemEval retrieval numbers were re-run and the docs updated; the MemoraOS retriever's paired lead over hybrid RAG on LoCoMo is 35 vs 13 questions (it was 51 vs 8).
+- Databases created with 0.2.0 store hashing-embedding vectors built with the old stems. Their effect after upgrading has not been measured; re-ingesting rebuilds them.
+
+### Added
+- **Docker smoke test in CI** (`scripts/docker_smoke.sh`, job `docker`): builds the image, checks health, 401 without a key, remember and recall through the API, persistence across restart, and an encrypted database file.
+## [0.2.0] - 2026-11-19
 
 Scope: Phase Zero audit, semantic extraction, embeddings and retrieval, and evidence fusion. The specification supplied for this release was truncated after Part 8.1 step 7, so anything after that point is **not** implemented. See `docs/V02_REPOSITORY_AUDIT.md`, `docs/V02_IMPLEMENTATION_PLAN.md` and `docs/ADR/`.
 

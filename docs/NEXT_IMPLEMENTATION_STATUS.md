@@ -17,7 +17,7 @@ Statuses (exactly one per feature): COMPLETED_AND_TESTED, IMPLEMENTED_NOT_FULLY_
 | ANN index (#2) | IMPLEMENTED_NOT_FULLY_VERIFIED | `tests/unit/test_ann.py` (3), `python -m benchmarks.scaling`, [SCALING.md](SCALING.md) | Opt-in numpy IVF (`vector_index="ivf"`). Measured recall@10 0.52-0.93 on real text with the hashing embedder, so it is not recommended and exact search stays the default (3.5 ms at 20k, 25 ms at 100k, 139 ms at 500k vectors). Not measured with a neural embedder. |
 | LoCoMo and LongMemEval retrieval adapters (#3) | COMPLETED_AND_TESTED | `python -m benchmarks.public`, `tests/unit/test_public_bench.py` (3), [PUBLIC_BENCHMARKS.md](PUBLIC_BENCHMARKS.md) | Retrieval only, hashing embedder, LongMemEval sample of 60. Plain BM25 is at least as good as MemoraOS. No LLM-judged answer accuracy (BLOCKED: needs an LLM). |
 | Encryption at rest (#4) | COMPLETED_AND_TESTED | `tests/unit/test_encryption.py` (9), CLI `encrypt`/`decrypt`, Docker smoke test | AES-256-GCM, scrypt, opt-in; every commit rewrites the encrypted file (O(database size)). Not independently audited. Key rotation not implemented. |
-| Docker (#5) | COMPLETED_AND_TESTED | Image built and run on Docker Desktop: healthy, 401 without a key, remember+recall through the API, survives restart, encrypted volume; [DOCKER.md](DOCKER.md) | Other runtimes and architectures not tried. |
+| Docker (#5) | COMPLETED_AND_TESTED | Image built and run on Docker Desktop: healthy, 401 without a key, remember+recall through the API, survives restart, encrypted volume; [DOCKER.md](DOCKER.md) | Other runtimes and architectures not tried. A CI job (`scripts/docker_smoke.sh`) runs the same checks from 0.2.1. |
 | Documents-only fallback returned the older statement | COMPLETED_AND_TESTED | 3 tests in `tests/unit/test_real_text_regressions.py` | Recency rule for near-identical statements; skipped for timed questions. It changes the forced-hybrid ablation (synthetic 62.8% to 76.9%; real temporal 33.3% to 38.1%), not the full engine. |
 | `memoraos ci run --set KEY=VALUE`, `--embedder` | COMPLETED_AND_TESTED | `tests/unit/test_memory_ci.py` | |
 | Entity resolution v2, lifecycle states, memory controls | DEFERRED | | Need a schema migration; designed in the gap analysis only. Not started in this pass. |
@@ -31,7 +31,7 @@ Statuses (exactly one per feature): COMPLETED_AND_TESTED, IMPLEMENTED_NOT_FULLY_
 ## Commands
 
 ```bash
-python -m pytest -q                                        # 327 tests
+python -m pytest -q                                        # 328 tests
 python -m ruff check src tests benchmarks scripts examples
 python -m bandit -q -r src -ll -c pyproject.toml
 python -m benchmarks.run                                   # synthetic; digest fca60a1fe780
