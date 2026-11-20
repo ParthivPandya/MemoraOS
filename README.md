@@ -342,6 +342,10 @@ Documented capabilities only; "not documented" means we did not find it in the p
 
 Those projects are mature and often stronger at semantic extraction. MemoraOS's niche is local, inspectable, temporally correct memory that abstains. **MemoraOS is not Memorilla**: its latent-memory module is an interface plus a CPU k-means baseline, with no trained module and no claimed benefit ([docs/LATENT_MEMORY.md](docs/LATENT_MEMORY.md)).
 
+### Verifiable citations
+
+Every `Evidence` carries `span_start`, `span_end` and `quote_sha256`; `mem.verify_citations(res.evidence, user_id=...)` (or `POST /v1/verify-citations`) re-checks each quote against the stored memory and the retained source and flags anything edited, missing or never verbatim. On the project's own docs, all 34 answered questions had citations that verified (3 of them also had an excerpt that was not a verbatim span), and 28 of 34 had a cited quote containing the gold string. This proves the quote exists unchanged in what MemoraOS stored; it does not prove the quote supports the answer and it does not change accuracy. See [docs/CITATIONS.md](docs/CITATIONS.md).
+
 ## Limitations
 
 Read these before relying on MemoraOS.
@@ -360,10 +364,6 @@ Read these before relying on MemoraOS.
 - **Not delivered:** the real-LLM extractor is unmeasured (no model was available), and lifecycle controls, change sets, connectors and the Memorilla adapter remain deferred ([status](docs/NEXT_IMPLEMENTATION_STATUS.md)).
 - **Test data.** Unit and integration tests and the synthetic benchmark generators use controlled inputs by necessity. They are fixtures, not evidence.
 - **CI status.** The workflow in `.github/workflows` runs on ubuntu and windows with Python 3.10, 3.12 and 3.13, plus a security job and a TypeScript job. The run for the commit that added encryption, Docker and the public benchmarks failed on Python 3.10 because one new test compared a float to exactly `0.0`; commit `226975b` fixed that and made CI install the `encryption` extra, and all 8 jobs passed on it. Encryption needs Python 3.11+, so its tests skip on 3.10. A `docker` job builds the image on an ubuntu runner and runs `scripts/docker_smoke.sh` (health, 401 without a key, remember and recall, restart persistence, encrypted file); it passed on commit `e6a792d` together with the other 8 jobs. Check the Actions tab for the current state; nothing here is a live status.
-
-### Verifiable citations
-
-Every `Evidence` carries `span_start`, `span_end` and `quote_sha256`; `mem.verify_citations(res.evidence, user_id=...)` (or `POST /v1/verify-citations`) re-checks each quote against the stored memory and the retained source and flags anything edited, missing or never verbatim. On the project's own docs, all 34 answered questions had citations that verified (3 of them also had an excerpt that was not a verbatim span), and 28 of 34 had a cited quote containing the gold string. This proves the quote exists unchanged in what MemoraOS stored; it does not prove the quote supports the answer and it does not change accuracy. See [docs/CITATIONS.md](docs/CITATIONS.md).
 
 ## Documentation
 
