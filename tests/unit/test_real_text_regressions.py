@@ -163,3 +163,21 @@ def test_verb_forms_with_silent_e_share_a_stem_and_recall_answers(mem):
     mem.remember("The deploy key rotates every 90 days", user_id=U)
     r = mem.recall("how often does the deploy key rotate", user_id=U, use_cache=False)
     assert r.status == "answered" and "90 days" in r.answer
+
+
+def test_citations_verify_and_detect_tampering(mem):
+    mem.remember(SECTION, user_id=U, source_type="document")
+    r = mem.recall("Which address does the API bind to by default?", user_id=U, use_cache=False)
+    cited = [e for e in r.evidence if e.span_start is not None]
+    assert cited and all(e.quote_sha256 for e in cited)
+    ok = mem.verify_citations(r.evidence, user_id=U)
+    assert ok["results"][0]["status"] == "verified" or ok["verified"] >= 1
+    assert all(x["status"] in ("verified", "unlocated") for x in ok["results"])
+    mem.db.execute("UPDATE memories SET original_content = replace(original_content, '127.0.0.1', '0.0.0.0') WHERE id=?", (cited[0].memory_id,))
+    bad = mem.verify_citations([cited[0]], user_id=U)
+    assert not bad["valid"] and bad["results"][0]["status"] == "quote_changed"
+
+
+def test_citation_for_unknown_memory_is_reported_missing(mem):
+    out = mem.verify_citations([{"memory_id": "nope", "span_start": 0, "span_end": 3, "quote_sha256": "x"}], user_id=U)
+    assert not out["valid"] and out["results"][0]["status"] == "memory_missing"

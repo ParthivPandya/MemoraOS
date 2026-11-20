@@ -37,6 +37,7 @@ from .retrieval.vector import VectorIndex, top_k_cosine
 from .routing.router import AdaptiveRouter, QueryFeatures, RouterHints, analyze_query
 from .security import INJECTION_FLAG, detect_prompt_injection, render_untrusted_context
 from .storage.db import Database
+from .util import sha256
 from .storage.visibility import visibility_clause
 from .store import Store
 from .truth.answer import compose_passage_answer, covered_terms, resolve_facts
@@ -378,10 +379,15 @@ class Recaller:
             flags.append(INJECTION_FLAG)
         if row.derived:
             flags.append("derived")
+        excerpt = excerpt[: EXCERPT_CHARS * 2]
+        quote = excerpt[:-3] if excerpt.endswith("...") else excerpt
+        start = row.content.find(quote) if quote else -1
+        span = (start, start + len(quote)) if start >= 0 else (None, None)
         return Evidence(
-            memory_id=row.id, source_id=row.source_id, excerpt=excerpt[: EXCERPT_CHARS * 2], kind=kind, score=round(score, 4),
+            memory_id=row.id, source_id=row.source_id, excerpt=excerpt, kind=kind, score=round(score, 4),
             source_type=row.source_type, source_reliability=row.reliability, verification=row.verification,
             effective_at=row.effective_at, recorded_at=row.created_at, flags=flags,
+            span_start=span[0], span_end=span[1], quote_sha256=sha256(quote) if span[0] is not None else None,
         )
 
     @staticmethod

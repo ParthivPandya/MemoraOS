@@ -79,6 +79,10 @@ class Evidence(BaseModel):
     effective_at: str | None = None
     recorded_at: str | None = None
     flags: list[str] = Field(default_factory=list)
+    # Citation: where the quote sits in the memory's stored text, and its hash. Check with `MemoryOS.verify_citations`.
+    span_start: int | None = None
+    span_end: int | None = None
+    quote_sha256: str | None = None
 
 
 class Confidence(BaseModel):

@@ -1,0 +1,9 @@
+{
+  "corpus_sha256": "49b52b3c0aaa7fbbaab5a284cfb5b44e5a71d48b2acdfff261a48cc7950eef5f",
+  "answerable_questions": 46,
+  "answered": 34,
+  "answers_with_verified_citation": 34,
+  "answers_with_unlocated_citation": 3,
+  "answers_whose_quote_contains_gold": 28,
+  "correct_and_quote_contains_gold": 25
+}

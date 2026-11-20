@@ -663,6 +663,36 @@ class MemoryOS:
             out.append(item)
         return out
 
+    def verify_citations(self, evidence: list[Any], *, user_id: str, tenant_id: str = "default") -> dict:
+        """Re-check, against the stored data, that every cited quote is still there unchanged.
+
+        ``evidence`` is ``RecallResult.evidence`` (models or dicts). Each item gets one status:
+        ``verified`` (quote found at the cited offsets, hash matches, and it also occurs in the retained original
+        source, compared with whitespace collapsed because the chunker re-flows line breaks), ``unlocated`` (the excerpt was never a verbatim span, e.g. a rewritten summary), ``memory_missing``,
+        ``quote_changed`` (memory text edited or corrupted since the answer), or ``source_mismatch``.
+        """
+        from .util import sha256
+
+        results = []
+        for ev in evidence:
+            d = ev if isinstance(ev, dict) else ev.model_dump()
+            mid, s, e, h = d.get("memory_id"), d.get("span_start"), d.get("span_end"), d.get("quote_sha256")
+            row = self.db.one("SELECT original_content, source_id FROM memories WHERE id=? AND tenant_id=? AND user_id=?", (mid, tenant_id, user_id))
+            if not row:
+                status = "memory_missing"
+            elif s is None or e is None or not h:
+                status = "unlocated"
+            else:
+                quote = row["original_content"][s:e]
+                if not quote or sha256(quote) != h:
+                    status = "quote_changed"
+                else:
+                    src = self.db.one("SELECT content FROM sources WHERE id=?", (row["source_id"],))
+                    status = "verified" if src and " ".join(quote.split()) in " ".join(src["content"].split()) else "source_mismatch"
+            results.append({"memory_id": mid, "source_id": d.get("source_id"), "status": status})
+        return {"valid": bool(results) and all(r["status"] == "verified" for r in results),
+                "verified": sum(r["status"] == "verified" for r in results), "total": len(results), "results": results}
+
     def verify_audit_chain(self) -> bool:
         """Recompute the tamper-evident event hash chain."""
         from .util import sha256

@@ -61,6 +61,11 @@ class CorrectBody(BaseModel):
     reason: str | None = Field(default=None, max_length=500)
 
 
+class CitationsBody(BaseModel):
+    user_id: str = UserId
+    evidence: list[dict]
+
+
 class VerifyBody(BaseModel):
     user_id: str = UserId
     status: Literal["unverified", "verified", "disputed"]
@@ -259,6 +264,10 @@ def create_app(
     def value_history(subject: str, predicate: str, s: dict = Depends(scope_q), p: Principal = Depends(need("read"))) -> dict:
         act_as(p, s["user_id"])
         return engine.history(subject=subject, predicate=predicate, tenant_id=p.tenant_id, **s)
+
+    @app.post("/v1/verify-citations")
+    def verify_citations(b: CitationsBody, p: Principal = Depends(need("read"))) -> dict:
+        return engine.verify_citations(b.evidence, user_id=b.user_id, tenant_id=p.tenant_id)
 
     @app.get("/v1/explain/{recall_id}")
     def explain(recall_id: str, user_id: str = Query(min_length=1), p: Principal = Depends(need("read"))) -> dict:
