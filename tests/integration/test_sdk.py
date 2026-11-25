@@ -31,3 +31,18 @@ def test_sdk_raises_with_status(sdk):
         sdk.recall("")
     assert e.value.status == 422
     assert isinstance(httpx.Client, type)
+
+
+def test_sdk_covers_verification_outcomes_links_and_replay(sdk):
+    cause = sdk.remember("The release was blocked by a failing test.", verification="hypothesis")["memory_ids"][0]
+    effect = sdk.remember("Fixing the test unblocked the release.")["memory_ids"][0]
+    assert sdk.verify(cause, "verified") == {"memory_id": cause, "verification": "verified"}
+    sdk.link(effect, cause, "solves")
+    assert {n["memory_id"] for n in sdk.lineage(cause, direction="up")["nodes"]} == {cause, effect}
+    res = sdk.recall("What blocked the release?")
+    checked = sdk.verify_citations(res["evidence"])
+    assert checked["results"] and all(c["status"] == "verified" for c in checked["results"] if c["memory_id"] in (cause, effect))
+    assert sdk.replay(res["recall_id"], leave_one_out=True)["runs"]
+    sdk.remember_outcome("upgrade the requests library to 3.0", "failed", reason="breaks the retry adapter")
+    warnings = sdk.outcome_warnings("upgrade requests library")
+    assert len(warnings) == 1 and warnings[0]["reason"] == "breaks the retry adapter"

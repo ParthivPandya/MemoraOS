@@ -1,6 +1,6 @@
 # Implementation Status
 
-_Last updated for v0.2.1. This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
+_Last updated for v0.6.0 (the v0.2 table and later sections are kept as written; the v0.3-v0.6 table below is current). This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
 
 ## v0.2 status
 
@@ -14,9 +14,21 @@ _Last updated for v0.2.1. This file lists what works, what is partial, and what 
 | Spec after Part 8.1 step 7 | ❌ not implemented | The supplied specification was truncated there |
 | `audit_probe.py` | 22 / 23 | The remaining probe ("You can reach Priya in Pune these days") requires the LLM extractor; it is not claimed as solved |
 
+## v0.3 - v0.6 status
+
+| Area | Status | Notes |
+|---|---|---|
+| Verifiable citations (v0.3) | ✅ | Span offsets and quote hash on every `Evidence`; `verify_citations` ([CITATIONS.md](CITATIONS.md)). Proves a quote exists in the source, not that the answer is right |
+| Hypothesis tier, outcome memory (v0.4) | ✅ tests | Python, REST (`hypothesis` accepted since 0.6; `/v1/outcomes`, `/v1/outcome-warnings`), MCP, both SDKs. Warnings are lexical overlap; not benchmarked |
+| Capture hooks (v0.4, v0.6) | 🧪 tested on payloads | Claude Code, Cursor, Codex CLI. None run in a live session; Windsurf not supported |
+| Vault sync, LangChain retriever, Mem0-shaped adapter, causal links, replay, `sleep` (v0.5) | 🧪 tests | Synthetic fixtures only; no real Obsidian vault, Mem0 or LangChain agent run ([VAULT_SYNC.md](VAULT_SYNC.md), [INTEGRATIONS.md](INTEGRATIONS.md), [CAUSAL_AND_REPLAY.md](CAUSAL_AND_REPLAY.md)) |
+| REST / Python client / TypeScript SDK parity (v0.6) | ✅ tests | verify, verify-citations, outcomes, links, lineage, replay in all three |
+| Dashboard "Answer trace" page (v0.6) | ✅ built, 🧪 checked once | Citation check, outcome warnings, lineage, leave-one-out replay. `next build` passes and the page was loaded against a real seeded store; no automated UI test |
+| Not delivered | ❌ | CrewAI/LlamaIndex/AutoGen/PydanticAI adapters, Windsurf hook, portable memory bundle, automatic causal-link extraction, demo GIF, hosted playground |
+
 ## Test results (v0.2)
 
-`python -m pytest` → **358 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
+`python -m pytest` → **363 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
 
 ## Test results (v0.1)
 

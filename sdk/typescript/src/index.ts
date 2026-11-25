@@ -12,6 +12,9 @@ export interface Evidence {
   effective_at: string | null;
   recorded_at: string | null;
   flags: string[];
+  span_start: number | null;
+  span_end: number | null;
+  quote_sha256: string | null;
 }
 
 export interface Confidence {
@@ -61,6 +64,53 @@ export interface RememberResult {
   facts_recorded: number;
   conflicts: Contradiction[];
   redactions: number;
+}
+
+export type Verification = "unverified" | "verified" | "disputed" | "hypothesis";
+export type CausalKind = "causes" | "solves" | "supersedes" | "blocked_by";
+
+export interface CitationCheck {
+  valid: boolean;
+  verified: number;
+  total: number;
+  results: { memory_id: string; source_id: string | null; status: "verified" | "unlocated" | "quote_changed" | "source_mismatch" | "memory_missing" }[];
+}
+
+export interface OutcomeWarning {
+  memory_id: string;
+  action: string;
+  reason: string | null;
+  recorded_at: string;
+  evidence_ref: string | null;
+  verified: boolean;
+}
+
+export interface LineageResult {
+  memory_id: string;
+  direction: "up" | "down" | "both";
+  nodes: { memory_id: string; depth: number; excerpt: string; content_sha256: string; version: number; effective_at: string | null }[];
+  edges: { src: string; dst: string; kind: CausalKind }[];
+}
+
+export interface ReplayRun {
+  excluded: string[];
+  answer: string;
+  status: string;
+  strategy: string;
+  evidence_memory_ids: string[];
+  answer_changed: boolean;
+  status_changed: boolean;
+}
+
+export interface ReplayResult {
+  recall_id: string;
+  query: string;
+  as_of: string | null;
+  logged: { answer: string; status: string; evidence_memory_ids: string[] };
+  baseline: { answer: string; status: string; strategy: string; evidence_memory_ids: string[] };
+  baseline_matches_logged: boolean;
+  runs: ReplayRun[];
+  note: string;
 }
 
 export class MemoraError extends Error {
@@ -118,6 +168,35 @@ export class MemoraClient {
 
   explain(recallId: string): Promise<Record<string, unknown>> {
     return this.req("GET", `/v1/explain/${encodeURIComponent(recallId)}`, undefined, { user_id: this.opts.userId });
+  }
+
+  verify(memoryId: string, status: Verification): Promise<{ memory_id: string; verification: Verification }> {
+    return this.req("POST", `/v1/memories/${encodeURIComponent(memoryId)}/verify`, { user_id: this.opts.userId, status });
+  }
+
+  verifyCitations(evidence: Evidence[]): Promise<CitationCheck> {
+    return this.req("POST", "/v1/verify-citations", { user_id: this.opts.userId, evidence });
+  }
+
+  rememberOutcome(action: string, outcome: "failed" | "succeeded", extra: { reason?: string; evidence_ref?: string } = {}): Promise<RememberResult> {
+    return this.req("POST", "/v1/outcomes", { user_id: this.opts.userId, action, outcome, ...extra });
+  }
+
+  outcomeWarnings(query: string, limit = 5): Promise<OutcomeWarning[]> {
+    return this.req("GET", "/v1/outcome-warnings", undefined, { query, user_id: this.opts.userId, limit: String(limit) });
+  }
+
+  link(srcId: string, dstId: string, kind: CausalKind): Promise<{ src: string; dst: string; kind: CausalKind }> {
+    return this.req("POST", "/v1/links", { user_id: this.opts.userId, src_id: srcId, dst_id: dstId, kind });
+  }
+
+  lineage(memoryId: string, opts: { direction?: "up" | "down" | "both"; maxDepth?: number } = {}): Promise<LineageResult> {
+    const query: Record<string, string> = { user_id: this.opts.userId, direction: opts.direction ?? "both", max_depth: String(opts.maxDepth ?? 5) };
+    return this.req("GET", `/v1/lineage/${encodeURIComponent(memoryId)}`, undefined, query);
+  }
+
+  replay(recallId: string, opts: { exclude?: string[]; leaveOneOut?: boolean } = {}): Promise<ReplayResult> {
+    return this.req("POST", "/v1/replay", { user_id: this.opts.userId, recall_id: recallId, exclude: opts.exclude ?? [], leave_one_out: opts.leaveOneOut ?? false });
   }
 
   consolidate(mode: "manual" | "incremental" | "dry_run" = "manual"): Promise<Record<string, unknown>> {

@@ -24,6 +24,17 @@ Status of each item: see `docs/NEXT_IMPLEMENTATION_STATUS.md`. Nothing here chan
 - `docs/SECURITY.md`, the roadmap and the status docs no longer say encryption at rest is missing.
 - `plan` and `tier` are single-valued attributes, so "the current plan" no longer returns the old and the new plan together (found while writing a Memory CI contract).
 
+## [0.6.0]
+
+### Added
+- **REST and SDK parity.** `POST /v1/outcomes` and `GET /v1/outcome-warnings`; the REST API now accepts `"hypothesis"` for `verification` and `status` (it returned HTTP 422 before). The Python `MemoraClient` and the TypeScript SDK gained `verify`, `verify_citations`, `remember_outcome`, `outcome_warnings`, `link`, `lineage` and `replay`; the TypeScript `Evidence` type gained `span_start`, `span_end` and `quote_sha256`.
+- **Cursor and Codex CLI capture hooks** (`memoraos hook install cursor|codex`, `hook capture --agent`), alongside Claude Code. Idempotent install, other hooks preserved, secrets redacted, failures never break the agent. Tested against the documented payload shapes only; not run in a live Cursor or Codex session. Codex needs the hook trusted in `/hooks`.
+- **Dashboard "Answer trace" page**: one recall, then its citation check, recorded failed attempts, causal lineage and leave-one-out replay; hypothesis badge on the memory explorer. Loaded once against a real seeded store; no automated UI test.
+- Tests: 363 (was 358).
+
+### Not done
+- Windsurf hook, other framework adapters, a demo GIF and a hosted playground.
+
 ## [0.5.0] - 2026-11-25
 
 ### Added

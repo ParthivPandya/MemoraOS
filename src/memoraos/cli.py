@@ -134,17 +134,18 @@ def main(argv: list[str] | None = None) -> int:
     sv.add_argument("--port", type=int, default=8000)
     sv.add_argument("--insecure-no-auth", action="store_true", help="development only: disable authentication")
     sub.add_parser("mcp", help="start the MCP stdio server (set MEMORAOS_USER_ID)")
-    hk = sub.add_parser("hook", help="Claude Code hook: install/uninstall a Stop hook, or capture a hook payload from stdin")
+    hk = sub.add_parser("hook", help="coding-agent hooks (claude-code, cursor, codex): install/uninstall, or capture a hook payload from stdin")
     hks = hk.add_subparsers(dest="hook_cmd", required=True)
-    hi = hks.add_parser("install", help="add the hook to Claude Code settings")
-    hi.add_argument("target", choices=["claude-code"])
+    hi = hks.add_parser("install", help="add the hook to the agent's config (claude-code: settings.json, cursor: hooks.json, codex: hooks.json)")
+    hi.add_argument("target", choices=["claude-code", "cursor", "codex"])
     hi.add_argument("--user", required=True)
-    hi.add_argument("--project", action="store_true", help="write ./.claude/settings.json instead of ~/.claude/settings.json")
+    hi.add_argument("--project", action="store_true", help="write the project-level config in the current directory instead of the user-level one")
     hu = hks.add_parser("uninstall", help="remove the hook")
-    hu.add_argument("target", choices=["claude-code"])
+    hu.add_argument("target", choices=["claude-code", "cursor", "codex"])
     hu.add_argument("--project", action="store_true")
-    hc = hks.add_parser("capture", help="read a Claude Code hook payload (JSON) on stdin and store the last exchange as hypotheses")
+    hc = hks.add_parser("capture", help="read a hook payload (JSON) on stdin and store the text as hypotheses")
     hc.add_argument("--user", required=True)
+    hc.add_argument("--agent", choices=["claude-code", "cursor", "codex"], default="claude-code")
 
     b = sub.add_parser("bench", help="run the benchmark suite")
     b.add_argument("--seed", type=int, default=7)
@@ -208,24 +209,34 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "hook":
         from . import hooks
 
-        settings = (Path.cwd() / ".claude" if getattr(args, "project", False) else Path.home() / ".claude") / "settings.json"
         if args.hook_cmd == "install":
+            settings = hooks.config_path(args.target, project=args.project)
             data_dir = Path(args.data_dir or ".memoraos").resolve()
-            cmd = f'memoraos --data-dir "{data_dir}" hook capture --user {args.user}'
-            print(f"installed in {settings}" if hooks.install_claude_code(settings, cmd) else f"already installed in {settings}")
+            suffix = "" if args.target == "claude-code" else f" --agent {args.target}"
+            cmd = f'memoraos --data-dir "{data_dir}" hook capture --user {args.user}{suffix}'
+            print(f"installed in {settings}" if hooks.install(args.target, settings, cmd) else f"already installed in {settings}")
+            if args.target == "codex":
+                print("Codex runs a new hook only after you review and trust it: open /hooks in the Codex CLI.")
             return 0
         if args.hook_cmd == "uninstall":
-            print(f"removed from {settings}" if hooks.uninstall_claude_code(settings) else f"no memoraos hook in {settings}")
+            settings = hooks.config_path(args.target, project=args.project)
+            print(f"removed from {settings}" if hooks.uninstall(args.target, settings) else f"no memoraos hook in {settings}")
             return 0
         try:
             payload = json.loads(sys.stdin.read() or "{}")
         except ValueError:
             return 0
-        eng = _engine(args)
         try:
-            hooks.capture(eng, payload, args.user)
-        finally:
-            eng.close()
+            eng = _engine(args)
+            try:
+                hooks.capture(eng, payload, args.user, args.agent)
+            finally:
+                eng.close()
+        except Exception as exc:  # noqa: BLE001 - a hook must never break the agent; the error goes to stderr
+            print(f"memoraos hook: {type(exc).__name__}: {exc}", file=sys.stderr)
+        out = hooks.reply(args.agent, payload)
+        if out:
+            print(out)
         return 0
     if args.cmd == "mcp":
         from .mcp.server import main as mcp_main

@@ -16,28 +16,28 @@ The unit and integration tests, and the synthetic benchmark generators, use cont
 
 ## 1. Real documentation (46 answerable + 18 unanswerable questions)
 
-Corpus: this repository's own documentation, 26 Markdown files split by heading into 131 sections (126,836 characters, SHA-256 `961e1bc2dbf5871d…`), used exactly as written. Questions were written by the project. 30 + 12 are a **dev set** used to find defects; 16 + 6 are a **held-out set** written before any fix. The run aborts if a gold string is missing from the corpus, if an "unanswerable" term does occur in it, or if a question is quoted verbatim in the corpus.
+Corpus: this repository's own documentation, 26 Markdown files split by heading into 134 sections (131,875 characters, SHA-256 `430d72e399852277…`), used exactly as written. Questions were written by the project. 30 + 12 are a **dev set** used to find defects; 16 + 6 are a **held-out set** written before any fix. The run aborts if a gold string is missing from the corpus, if an "unanswerable" term does occur in it, or if a question is quoted verbatim in the corpus.
 
 <p align="center"><img src="assets/benchmark_real_docs.png" alt="Answerable questions answered correctly versus unanswerable questions refused, for every system" width="92%" /></p>
 
 | System | All 64 [95% CI] | Answerable answered correctly (46) | Unanswerable refused (18) | Held-out (22) | Evidence tokens / question |
 |---|---|---|---|---|---|
-| BM25 RAG | 57.8% [45.3, 68.8] | 80.4% | 0.0% | 54.5% | 737 |
-| Vector RAG | 51.6% [39.1, 64.1] | 71.7% | 0.0% | 54.5% | 717 |
-| Hybrid RAG | 57.8% [45.3, 68.8] | 80.4% | 0.0% | 54.5% | 718 |
-| Hybrid RAG + abstention gate | **65.6%** [54.7, 76.6] | **80.4%** | 27.8% | **63.6%** | 659 |
-| **MemoraOS (default)** | 59.4% [46.9, 71.9] | 54.3% | **72.2%** | 50.0% | **169** |
-| MemoraOS, `min_anchor_coverage=0.4` | 62.5% [51.6, 73.4] | 63.0% | 61.1% | 50.0% | 201 |
-| MemoraOS, `min_anchor_coverage=0.25` | 67.2% [54.7, 78.1] | 73.9% | 50.0% | 59.1% | 230 |
-| MemoraOS, `min_anchor_coverage=0.0` | 68.8% [57.8, 79.7] | 76.1% | 50.0% | 59.1% | 234 |
+| BM25 RAG | 60.9% [50.0, 71.9] | 84.8% | 0.0% | 59.1% | 741 |
+| Vector RAG | 51.6% [39.1, 64.1] | 71.7% | 0.0% | 54.5% | 721 |
+| Hybrid RAG | 59.4% [48.4, 71.9] | 82.6% | 0.0% | 54.5% | 717 |
+| Hybrid RAG + abstention gate | **67.2%** [56.2, 78.1] | **82.6%** | 27.8% | **63.6%** | 657 |
+| **MemoraOS (default)** | 57.8% [45.3, 70.3] | 52.2% | **72.2%** | 50.0% | **164** |
+| MemoraOS, `min_anchor_coverage=0.4` | 60.9% [48.4, 73.4] | 60.9% | 61.1% | 50.0% | 196 |
+| MemoraOS, `min_anchor_coverage=0.25` | 65.6% [53.1, 78.1] | 71.7% | 50.0% | 59.1% | 224 |
+| MemoraOS, `min_anchor_coverage=0.0` | 67.2% [54.7, 78.1] | 73.9% | 50.0% | 59.1% | 228 |
 
 How to read it honestly:
 
-- **Overall accuracy is a tie** within the confidence intervals, and the gated RAG baseline is ahead of MemoraOS. The intervals are wide (64 questions).
-- The two systems fail in opposite ways. RAG answers almost everything, including the 18 unanswerable questions (it refuses 0 to 5 of them). MemoraOS refuses 13 of 18, but it also declines or misses more answerable questions (it answers 25 of 46 against 37 for gated RAG).
+- **The gated RAG baseline is ahead of MemoraOS** by 9.4 points of overall accuracy (67.2% against 57.8%); the 95% intervals still overlap, so with 64 questions this is not a significant difference, but nothing here shows MemoraOS ahead. Plain BM25 (60.9%) also scores above MemoraOS's default.
+- The two systems fail in opposite ways. RAG answers almost everything, including the 18 unanswerable questions (it refuses 0 to 5 of them). MemoraOS refuses 13 of 18, but it also declines or misses more answerable questions (it answers 24 of 46 correctly against 38 for gated RAG).
 - `min_anchor_coverage` is a published dial between those behaviours. Lowering it recovers answerable questions and gives up refusals. The default (0.5) is the strict end by design; the curve is shown rather than hidden.
 - Answers are **extractive passages**, so MemoraOS returns the sentences it found, not written prose.
-- MemoraOS sends about **4x fewer evidence tokens** to the caller than gated RAG (169 against 659) because it returns the supporting sentences, not whole chunks.
+- MemoraOS sends about **4x fewer evidence tokens** to the caller than gated RAG (164 against 657) because it returns the supporting sentences, not whole chunks.
 
 ### Before and after the defects this benchmark found
 
@@ -46,9 +46,9 @@ The first run scored MemoraOS far below RAG. Diagnosing it with `explain()` foun
 | MemoraOS on the real-docs questions | Dev | Held-out | Held-out answerable | Held-out unanswerable refused |
 |---|---|---|---|---|
 | Before the fixes | 35.7% | 50.0% | 31.2% | 100% |
-| After the fixes | 64.3% | 50.0% | 37.5% | 83.3% |
+| After the fixes | 61.9% | 50.0% | 37.5% | 83.3% |
 
-The corpus grew between those runs (the documents describe the fixes), so read the change as indicative, not exact. The held-out questions were frozen before any fix.
+The corpus grew between those runs (the documents describe the fixes; the dev score was 64.3% before the 0.6.0 documentation was added and 61.9% after), so read the change as indicative, not exact. The held-out questions were frozen before any fix.
 
 ### What MemoraOS actually returned
 
@@ -129,7 +129,7 @@ The knowledge-graph page on the real documentation: entities are extracted from 
 
 ## 5. Why MemoraOS misses answerable questions, and a fix that did not hold up
 
-[`benchmarks/failures.py`](../benchmarks/failures.py) classifies every wrong answer from the engine's own trace: of 26 wrong answers, **11 were retrieved correctly and then refused** by the support check, 9 were answered from the right section with the wrong sentences, 5 were unanswerable questions that got an answer, and 1 was a retrieval miss. Opt-in policies that relax the support check helped on the design set and **did not reliably help on a separate validation set** (for the neural `balanced` policy: dev 20/30 to 22/30 answerable recall, validation 13/25 to 12/25). The default is unchanged and no improvement is claimed. Everything, with Wilson intervals and calibration (ECE about 0.23 to 0.27): [NEXT_ANSWERABILITY.md](NEXT_ANSWERABILITY.md).
+[`benchmarks/failures.py`](../benchmarks/failures.py) classifies every wrong answer from the engine's own trace: of 27 wrong answers, **12 were retrieved correctly and then refused** by the support check, 9 were answered from the right section with the wrong sentences, 5 were unanswerable questions that got an answer, and 1 was a retrieval miss. Opt-in policies that relax the support check helped on the design set and **did not reliably help on a separate validation set** (for the neural `balanced` policy: dev 20/30 to 22/30 answerable recall, validation 13/25 to 12/25). The default is unchanged and no improvement is claimed. Everything, with Wilson intervals and calibration (ECE about 0.24 to 0.29): [NEXT_ANSWERABILITY.md](NEXT_ANSWERABILITY.md).
 
 ## Limits that apply to everything above
 

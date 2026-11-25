@@ -33,7 +33,7 @@ class RememberBody(ScopeBody):
     category: Literal["episodic", "semantic", "procedural"] | None = None
     effective_at: str | None = None
     reliability: float | None = Field(default=None, ge=0, le=1)
-    verification: Literal["unverified", "verified", "disputed"] = "unverified"
+    verification: Literal["unverified", "verified", "disputed", "hypothesis"] = "unverified"
     metadata: dict[str, Any] | None = None
     facts: list[dict[str, Any]] | None = Field(default=None, max_length=500)
 
@@ -68,7 +68,7 @@ class CitationsBody(BaseModel):
 
 class VerifyBody(BaseModel):
     user_id: str = UserId
-    status: Literal["unverified", "verified", "disputed"]
+    status: Literal["unverified", "verified", "disputed", "hypothesis"]
 
 
 class FeedbackBody(BaseModel):
@@ -87,6 +87,13 @@ class LinkBody(BaseModel):
     src_id: str
     dst_id: str
     kind: Literal["causes", "solves", "supersedes", "blocked_by"]
+
+
+class OutcomeBody(ScopeBody):
+    action: str = Field(min_length=1, max_length=2000)
+    outcome: Literal["failed", "succeeded"]
+    reason: str | None = Field(default=None, max_length=2000)
+    evidence_ref: str | None = Field(default=None, max_length=500)
 
 
 class ReplayBody(BaseModel):
@@ -297,6 +304,18 @@ def create_app(
     def lineage(memory_id: str, user_id: str = Query(min_length=1), direction: Literal["up", "down", "both"] = "both", max_depth: int = Query(5, ge=1, le=20), p: Principal = Depends(need("read"))) -> dict:
         act_as(p, user_id)
         return engine.lineage(memory_id, user_id=user_id, tenant_id=p.tenant_id, direction=direction, max_depth=max_depth)
+
+    @app.post("/v1/outcomes", status_code=201)
+    def remember_outcome(b: OutcomeBody, p: Principal = Depends(need("write"))) -> dict:
+        act_as(p, b.user_id)
+        r = engine.remember_outcome(b.action, b.outcome, user_id=b.user_id, reason=b.reason, evidence_ref=b.evidence_ref, tenant_id=p.tenant_id, **scope_kw(b))
+        audit(p, "remember_outcome", r.memory_ids[0])
+        return r.model_dump()
+
+    @app.get("/v1/outcome-warnings")
+    def outcome_warnings(query: str = Query(min_length=1, max_length=2000), user_id: str = Query(min_length=1, max_length=200), limit: int = Query(5, ge=1, le=50), p: Principal = Depends(need("read"))) -> list[dict]:
+        act_as(p, user_id)
+        return engine.outcome_warnings(query, user_id=user_id, tenant_id=p.tenant_id, limit=limit)
 
     @app.post("/v1/replay")
     def replay(b: ReplayBody, p: Principal = Depends(need("write"))) -> dict:

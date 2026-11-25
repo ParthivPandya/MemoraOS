@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real-document benchmark",
   "command": "python -m benchmarks.real_docs",
-  "generated_at": "2026-11-25T05:17:48+00:00",
+  "generated_at": "2026-11-25T06:48:57+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -14,9 +14,9 @@
   },
   "corpus": {
     "files": 26,
-    "sections": 131,
-    "characters": 126836,
-    "sha256": "961e1bc2dbf5871d0a268e5525f2c17d5620aec6753cb2ffe16f3014a67b3470"
+    "sections": 134,
+    "characters": 131875,
+    "sha256": "430d72e39985227767c903e3b2f42e49c0ee81afaee164665585944d1143c69b"
   },
   "questions": {
     "answerable": 46,
@@ -28,21 +28,21 @@
   "metrics": {
     "bm25": {
       "n": 64,
-      "accuracy": 0.578125,
+      "accuracy": 0.609375,
       "accuracy_ci95": [
-        0.4531,
-        0.6875
+        0.5,
+        0.7188
       ],
-      "recall_at_5": 0.7797383775644645,
-      "precision_at_5": 0.3007246376811594,
-      "mrr": 0.842391304347826,
-      "ndcg_at_5": 0.7624038061446012,
+      "recall_at_5": 0.7724920007528703,
+      "precision_at_5": 0.2956521739130435,
+      "mrr": 0.8586956521739131,
+      "ndcg_at_5": 0.7678059233213232,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 736.796875,
-      "latency_ms_p50": 4.686899948865175,
-      "latency_ms_p95": 7.5104000279679894,
+      "mean_context_tokens": 740.53125,
+      "latency_ms_p50": 4.894400015473366,
+      "latency_ms_p95": 8.349500014446676,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -51,20 +51,20 @@
         "dev/performance": 1.0,
         "dev/roadmap": 1.0,
         "dev/routing": 1.0,
-        "dev/security": 0.6666666666666666,
+        "dev/security": 0.8333333333333334,
         "heldout/absent_topic": 0.0,
         "heldout/decisions": 1.0,
         "heldout/latent": 1.0,
         "heldout/performance": 1.0,
         "heldout/routing": 0.0,
         "heldout/security": 1.0,
-        "heldout/temporal": 0.75
+        "heldout/temporal": 1.0
       },
-      "ingest_ms_per_event": 4.302875572488508,
-      "storage_overhead_ratio": 4.775637856206688,
+      "ingest_ms_per_event": 3.5634723886388784,
+      "storage_overhead_ratio": 4.7558291377631505,
       "pooled_accuracy_ci95": [
-        0.4531,
-        0.6875
+        0.5,
+        0.7188
       ]
     },
     "vector": {
@@ -74,16 +74,16 @@
         0.3906,
         0.6406
       ],
-      "recall_at_5": 0.6707917686178556,
-      "precision_at_5": 0.25615942028985506,
-      "mrr": 0.746376811594203,
-      "ndcg_at_5": 0.6463127583941414,
+      "recall_at_5": 0.6635453918062614,
+      "precision_at_5": 0.25072463768115943,
+      "mrr": 0.7445652173913043,
+      "ndcg_at_5": 0.6391755444439268,
       "evidence_coverage": 0.9130434782608695,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 716.78125,
-      "latency_ms_p50": 4.949199967086315,
-      "latency_ms_p95": 6.887599942274392,
+      "mean_context_tokens": 720.75,
+      "latency_ms_p50": 3.552700043655932,
+      "latency_ms_p95": 4.686200059950352,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -101,8 +101,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.328241984615856,
-      "storage_overhead_ratio": 4.775637856206688,
+      "ingest_ms_per_event": 2.7975731341640895,
+      "storage_overhead_ratio": 4.7558291377631505,
       "pooled_accuracy_ci95": [
         0.3906,
         0.6406
@@ -110,21 +110,21 @@
     },
     "hybrid_rag": {
       "n": 64,
-      "accuracy": 0.578125,
+      "accuracy": 0.59375,
       "accuracy_ci95": [
-        0.4531,
-        0.6875
+        0.4844,
+        0.7188
       ],
-      "recall_at_5": 0.7579992471296819,
+      "recall_at_5": 0.7543760587238849,
       "precision_at_5": 0.2851449275362319,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7426596403563946,
+      "ndcg_at_5": 0.7419896588236597,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 723.03125,
-      "latency_ms_p50": 6.831399980001152,
-      "latency_ms_p95": 11.881600017659366,
+      "mean_context_tokens": 717.484375,
+      "latency_ms_p50": 5.990199977532029,
+      "latency_ms_p95": 8.835599990561604,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -133,7 +133,7 @@
         "dev/performance": 1.0,
         "dev/roadmap": 1.0,
         "dev/routing": 1.0,
-        "dev/security": 0.6666666666666666,
+        "dev/security": 0.8333333333333334,
         "heldout/absent_topic": 0.0,
         "heldout/decisions": 1.0,
         "heldout/latent": 1.0,
@@ -142,39 +142,39 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.5661908394465125,
-      "storage_overhead_ratio": 4.775637856206688,
+      "ingest_ms_per_event": 2.7088141798583876,
+      "storage_overhead_ratio": 4.7558291377631505,
       "pooled_accuracy_ci95": [
-        0.4531,
-        0.6875
+        0.4844,
+        0.7188
       ]
     },
     "hybrid_rag_top1": {
       "n": 64,
-      "accuracy": 0.421875,
+      "accuracy": 0.453125,
       "accuracy_ci95": [
-        0.2969,
-        0.5469
+        0.3281,
+        0.5781
       ],
-      "recall_at_5": 0.7579992471296819,
+      "recall_at_5": 0.7543760587238849,
       "precision_at_5": 0.2851449275362319,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7426596403563946,
+      "ndcg_at_5": 0.7419896588236597,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 723.03125,
-      "latency_ms_p50": 4.366700071841478,
-      "latency_ms_p95": 6.521699950098991,
+      "mean_context_tokens": 717.484375,
+      "latency_ms_p50": 4.561099922284484,
+      "latency_ms_p95": 7.360299932770431,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
         "dev/decisions": 0.5833333333333334,
         "dev/latent": 0.75,
         "dev/performance": 1.0,
-        "dev/roadmap": 0.0,
+        "dev/roadmap": 1.0,
         "dev/routing": 0.3333333333333333,
-        "dev/security": 0.5,
+        "dev/security": 0.6666666666666666,
         "heldout/absent_topic": 0.0,
         "heldout/decisions": 0.0,
         "heldout/latent": 0.0,
@@ -183,30 +183,30 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.2540877857991983,
-      "storage_overhead_ratio": 4.775637856206688,
+      "ingest_ms_per_event": 4.505351492474829,
+      "storage_overhead_ratio": 4.7558291377631505,
       "pooled_accuracy_ci95": [
-        0.2969,
-        0.5469
+        0.3281,
+        0.5781
       ]
     },
     "hybrid_rag_gated": {
       "n": 64,
-      "accuracy": 0.65625,
+      "accuracy": 0.671875,
       "accuracy_ci95": [
-        0.5469,
-        0.7656
+        0.5625,
+        0.7812
       ],
-      "recall_at_5": 0.7579992471296819,
+      "recall_at_5": 0.7543760587238849,
       "precision_at_5": 0.2851449275362319,
       "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7426596403563946,
+      "ndcg_at_5": 0.7419896588236597,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 0.7222222222222222,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 663.234375,
-      "latency_ms_p50": 9.435799904167652,
-      "latency_ms_p95": 12.849299935624003,
+      "mean_context_tokens": 657.46875,
+      "latency_ms_p50": 6.019599968567491,
+      "latency_ms_p95": 9.487600065767765,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.25,
         "dev/changelog": 1.0,
@@ -215,7 +215,7 @@
         "dev/performance": 1.0,
         "dev/roadmap": 1.0,
         "dev/routing": 1.0,
-        "dev/security": 0.6666666666666666,
+        "dev/security": 0.8333333333333334,
         "heldout/absent_topic": 0.3333333333333333,
         "heldout/decisions": 1.0,
         "heldout/latent": 1.0,
@@ -224,34 +224,34 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 5.047101526563802,
-      "storage_overhead_ratio": 4.775637856206688,
+      "ingest_ms_per_event": 2.5783216419157142,
+      "storage_overhead_ratio": 4.7558291377631505,
       "pooled_accuracy_ci95": [
-        0.5469,
-        0.7656
+        0.5625,
+        0.7812
       ]
     },
     "memoraos": {
       "n": 64,
-      "accuracy": 0.59375,
+      "accuracy": 0.578125,
       "accuracy_ci95": [
-        0.4688,
-        0.7188
+        0.4531,
+        0.7031
       ],
-      "recall_at_5": 0.526762187088274,
-      "precision_at_5": 0.2036231884057971,
-      "mrr": 0.5634057971014493,
-      "ndcg_at_5": 0.5092930003351205,
-      "evidence_coverage": 0.6304347826086957,
+      "recall_at_5": 0.5149868247694335,
+      "precision_at_5": 0.188768115942029,
+      "mrr": 0.5416666666666667,
+      "ndcg_at_5": 0.4934942418324143,
+      "evidence_coverage": 0.6086956521739131,
       "unsupported_answer_rate": 0.2777777777777778,
-      "false_abstain_rate": 0.2608695652173913,
-      "mean_context_tokens": 168.140625,
-      "latency_ms_p50": 41.136,
-      "latency_ms_p95": 105.164,
+      "false_abstain_rate": 0.2826086956521739,
+      "mean_context_tokens": 164.109375,
+      "latency_ms_p50": 31.935,
+      "latency_ms_p95": 68.456,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
-        "dev/decisions": 0.5833333333333334,
+        "dev/decisions": 0.5,
         "dev/latent": 0.5,
         "dev/performance": 1.0,
         "dev/roadmap": 1.0,
@@ -265,11 +265,11 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 15.841099999681513,
-      "storage_overhead_ratio": 23.49866189500781,
+      "ingest_ms_per_event": 11.546578358184657,
+      "storage_overhead_ratio": 23.373736611287658,
       "pooled_accuracy_ci95": [
-        0.4688,
-        0.7188
+        0.4531,
+        0.7031
       ]
     },
     "memoraos_hybrid_only": {
@@ -279,16 +279,16 @@
         0.4688,
         0.7188
       ],
-      "recall_at_5": 0.5512187088274044,
-      "precision_at_5": 0.19818840579710145,
+      "recall_at_5": 0.5475955204216073,
+      "precision_at_5": 0.1963768115942029,
       "mrr": 0.5706521739130435,
-      "ndcg_at_5": 0.5234618033488073,
+      "ndcg_at_5": 0.5218980156668215,
       "evidence_coverage": 0.6521739130434783,
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.34782608695652173,
-      "mean_context_tokens": 164.96875,
-      "latency_ms_p50": 29.976,
-      "latency_ms_p95": 94.683,
+      "mean_context_tokens": 165.609375,
+      "latency_ms_p50": 27.506,
+      "latency_ms_p95": 48.747,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -306,8 +306,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 22.175012213241963,
-      "storage_overhead_ratio": 22.92003547351651,
+      "ingest_ms_per_event": 10.890165671407342,
+      "storage_overhead_ratio": 22.817219072923663,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -315,25 +315,25 @@
     },
     "memoraos[anchor=0.4]": {
       "n": 64,
-      "accuracy": 0.625,
+      "accuracy": 0.609375,
       "accuracy_ci95": [
-        0.5156,
+        0.4844,
         0.7344
       ],
-      "recall_at_5": 0.595602766798419,
-      "precision_at_5": 0.23514492753623187,
-      "mrr": 0.6503623188405797,
-      "ndcg_at_5": 0.5849873941449708,
-      "evidence_coverage": 0.717391304347826,
+      "recall_at_5": 0.5838274044795784,
+      "precision_at_5": 0.22137681159420292,
+      "mrr": 0.6286231884057971,
+      "ndcg_at_5": 0.5683543959656459,
+      "evidence_coverage": 0.6956521739130435,
       "unsupported_answer_rate": 0.3888888888888889,
-      "false_abstain_rate": 0.15217391304347827,
-      "mean_context_tokens": 199.6875,
-      "latency_ms_p50": 54.964,
-      "latency_ms_p95": 135.599,
+      "false_abstain_rate": 0.17391304347826086,
+      "mean_context_tokens": 196.125,
+      "latency_ms_p50": 30.698,
+      "latency_ms_p95": 46.571,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
-        "dev/decisions": 0.75,
+        "dev/decisions": 0.6666666666666666,
         "dev/latent": 0.5,
         "dev/performance": 1.0,
         "dev/roadmap": 1.0,
@@ -347,30 +347,71 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 27.149222137136313,
-      "storage_overhead_ratio": 23.49866189500781,
+      "ingest_ms_per_event": 9.971700746864915,
+      "storage_overhead_ratio": 23.373736611287658,
       "pooled_accuracy_ci95": [
-        0.5156,
+        0.4844,
         0.7344
       ]
     },
     "memoraos[anchor=0.25]": {
+      "n": 64,
+      "accuracy": 0.65625,
+      "accuracy_ci95": [
+        0.5312,
+        0.7812
+      ],
+      "recall_at_5": 0.6438688123470733,
+      "precision_at_5": 0.2528985507246377,
+      "mrr": 0.7373188405797101,
+      "ndcg_at_5": 0.642665258665616,
+      "evidence_coverage": 0.8043478260869565,
+      "unsupported_answer_rate": 0.5,
+      "false_abstain_rate": 0.06521739130434782,
+      "mean_context_tokens": 223.9375,
+      "latency_ms_p50": 26.589,
+      "latency_ms_p95": 69.325,
+      "accuracy_by_tag": {
+        "dev/absent_topic": 0.5,
+        "dev/changelog": 1.0,
+        "dev/decisions": 0.6666666666666666,
+        "dev/latent": 0.5,
+        "dev/performance": 1.0,
+        "dev/roadmap": 1.0,
+        "dev/routing": 1.0,
+        "dev/security": 0.8333333333333334,
+        "heldout/absent_topic": 0.5,
+        "heldout/decisions": 0.0,
+        "heldout/latent": 1.0,
+        "heldout/performance": 1.0,
+        "heldout/routing": 0.3333333333333333,
+        "heldout/security": 0.75,
+        "heldout/temporal": 0.5
+      },
+      "ingest_ms_per_event": 12.326191791069151,
+      "storage_overhead_ratio": 23.311901329247213,
+      "pooled_accuracy_ci95": [
+        0.5312,
+        0.7812
+      ]
+    },
+    "memoraos[anchor=0.0]": {
       "n": 64,
       "accuracy": 0.671875,
       "accuracy_ci95": [
         0.5469,
         0.7812
       ],
-      "recall_at_5": 0.6556441746659138,
-      "precision_at_5": 0.26666666666666666,
-      "mrr": 0.7590579710144927,
-      "ndcg_at_5": 0.6592982568449409,
+      "recall_at_5": 0.6656079427818559,
+      "precision_at_5": 0.25724637681159424,
+      "mrr": 0.7445652173913043,
+      "ndcg_at_5": 0.6535348238830072,
       "evidence_coverage": 0.8260869565217391,
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.043478260869565216,
-      "mean_context_tokens": 228.84375,
-      "latency_ms_p50": 50.089,
-      "latency_ms_p95": 105.082,
+      "mean_context_tokens": 227.8125,
+      "latency_ms_p50": 33.251,
+      "latency_ms_p95": 97.816,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -388,63 +429,22 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 26.054061831949095,
-      "storage_overhead_ratio": 23.434370070397666,
+      "ingest_ms_per_event": 10.798451493306558,
+      "storage_overhead_ratio": 23.311901329247213,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7812
-      ]
-    },
-    "memoraos[anchor=0.0]": {
-      "n": 64,
-      "accuracy": 0.6875,
-      "accuracy_ci95": [
-        0.5781,
-        0.7969
-      ],
-      "recall_at_5": 0.6773833051006964,
-      "precision_at_5": 0.2710144927536232,
-      "mrr": 0.7663043478260869,
-      "ndcg_at_5": 0.6701678220623323,
-      "evidence_coverage": 0.8478260869565217,
-      "unsupported_answer_rate": 0.5,
-      "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 232.734375,
-      "latency_ms_p50": 42.86,
-      "latency_ms_p95": 111.398,
-      "accuracy_by_tag": {
-        "dev/absent_topic": 0.5,
-        "dev/changelog": 1.0,
-        "dev/decisions": 0.8333333333333334,
-        "dev/latent": 0.5,
-        "dev/performance": 1.0,
-        "dev/roadmap": 1.0,
-        "dev/routing": 1.0,
-        "dev/security": 0.8333333333333334,
-        "heldout/absent_topic": 0.5,
-        "heldout/decisions": 0.0,
-        "heldout/latent": 1.0,
-        "heldout/performance": 1.0,
-        "heldout/routing": 0.3333333333333333,
-        "heldout/security": 0.75,
-        "heldout/temporal": 0.5
-      },
-      "ingest_ms_per_event": 22.195548091958212,
-      "storage_overhead_ratio": 23.434370070397666,
-      "pooled_accuracy_ci95": [
-        0.5781,
-        0.7969
       ]
     }
   },
   "by_kind": {
     "bm25": {
-      "dev:answerable": 0.8333333333333334,
+      "dev:answerable": 0.8666666666666667,
       "dev:unanswerable": 0.0,
-      "heldout:answerable": 0.75,
+      "heldout:answerable": 0.8125,
       "heldout:unanswerable": 0.0,
-      "split:dev": 0.5952380952380952,
-      "split:heldout": 0.5454545454545454,
+      "split:dev": 0.6190476190476191,
+      "split:heldout": 0.5909090909090909,
       "topic:absent_topic": 0.0,
       "topic:changelog": 1.0,
       "topic:decisions": 0.8461538461538461,
@@ -452,8 +452,8 @@
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
       "topic:routing": 0.5,
-      "topic:security": 0.8,
-      "topic:temporal": 0.75
+      "topic:security": 0.9,
+      "topic:temporal": 1.0
     },
     "vector": {
       "dev:answerable": 0.7,
@@ -473,11 +473,11 @@
       "topic:temporal": 0.75
     },
     "hybrid_rag": {
-      "dev:answerable": 0.8333333333333334,
+      "dev:answerable": 0.8666666666666667,
       "dev:unanswerable": 0.0,
       "heldout:answerable": 0.75,
       "heldout:unanswerable": 0.0,
-      "split:dev": 0.5952380952380952,
+      "split:dev": 0.6190476190476191,
       "split:heldout": 0.5454545454545454,
       "topic:absent_topic": 0.0,
       "topic:changelog": 1.0,
@@ -486,32 +486,32 @@
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
       "topic:routing": 0.5,
-      "topic:security": 0.8,
+      "topic:security": 0.9,
       "topic:temporal": 0.75
     },
     "hybrid_rag_top1": {
-      "dev:answerable": 0.6,
+      "dev:answerable": 0.6666666666666666,
       "dev:unanswerable": 0.0,
       "heldout:answerable": 0.5625,
       "heldout:unanswerable": 0.0,
-      "split:dev": 0.42857142857142855,
+      "split:dev": 0.47619047619047616,
       "split:heldout": 0.4090909090909091,
       "topic:absent_topic": 0.0,
       "topic:changelog": 1.0,
       "topic:decisions": 0.5384615384615384,
       "topic:latent": 0.6,
       "topic:performance": 0.8,
-      "topic:roadmap": 0.0,
+      "topic:roadmap": 1.0,
       "topic:routing": 0.16666666666666666,
-      "topic:security": 0.7,
+      "topic:security": 0.8,
       "topic:temporal": 0.75
     },
     "hybrid_rag_gated": {
-      "dev:answerable": 0.8333333333333334,
+      "dev:answerable": 0.8666666666666667,
       "dev:unanswerable": 0.25,
       "heldout:answerable": 0.75,
       "heldout:unanswerable": 0.3333333333333333,
-      "split:dev": 0.6666666666666666,
+      "split:dev": 0.6904761904761905,
       "split:heldout": 0.6363636363636364,
       "topic:absent_topic": 0.2777777777777778,
       "topic:changelog": 1.0,
@@ -520,19 +520,19 @@
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
       "topic:routing": 0.5,
-      "topic:security": 0.8,
+      "topic:security": 0.9,
       "topic:temporal": 0.75
     },
     "memoraos": {
-      "dev:answerable": 0.6333333333333333,
+      "dev:answerable": 0.6,
       "dev:unanswerable": 0.6666666666666666,
       "heldout:answerable": 0.375,
       "heldout:unanswerable": 0.8333333333333334,
-      "split:dev": 0.6428571428571429,
+      "split:dev": 0.6190476190476191,
       "split:heldout": 0.5,
       "topic:absent_topic": 0.7222222222222222,
       "topic:changelog": 0.5,
-      "topic:decisions": 0.5384615384615384,
+      "topic:decisions": 0.46153846153846156,
       "topic:latent": 0.4,
       "topic:performance": 0.6,
       "topic:roadmap": 1.0,
@@ -558,15 +558,15 @@
       "topic:temporal": 0.75
     },
     "memoraos[anchor=0.4]": {
-      "dev:answerable": 0.7333333333333333,
+      "dev:answerable": 0.7,
       "dev:unanswerable": 0.5833333333333334,
       "heldout:answerable": 0.4375,
       "heldout:unanswerable": 0.6666666666666666,
-      "split:dev": 0.6904761904761905,
+      "split:dev": 0.6666666666666666,
       "split:heldout": 0.5,
       "topic:absent_topic": 0.6111111111111112,
       "topic:changelog": 0.5,
-      "topic:decisions": 0.6923076923076923,
+      "topic:decisions": 0.6153846153846154,
       "topic:latent": 0.4,
       "topic:performance": 0.8,
       "topic:roadmap": 1.0,
@@ -575,6 +575,23 @@
       "topic:temporal": 0.5
     },
     "memoraos[anchor=0.25]": {
+      "dev:answerable": 0.7666666666666667,
+      "dev:unanswerable": 0.5,
+      "heldout:answerable": 0.625,
+      "heldout:unanswerable": 0.5,
+      "split:dev": 0.6904761904761905,
+      "split:heldout": 0.5909090909090909,
+      "topic:absent_topic": 0.5,
+      "topic:changelog": 1.0,
+      "topic:decisions": 0.6153846153846154,
+      "topic:latent": 0.6,
+      "topic:performance": 1.0,
+      "topic:roadmap": 1.0,
+      "topic:routing": 0.6666666666666666,
+      "topic:security": 0.8,
+      "topic:temporal": 0.5
+    },
+    "memoraos[anchor=0.0]": {
       "dev:answerable": 0.8,
       "dev:unanswerable": 0.5,
       "heldout:answerable": 0.625,
@@ -584,23 +601,6 @@
       "topic:absent_topic": 0.5,
       "topic:changelog": 1.0,
       "topic:decisions": 0.6923076923076923,
-      "topic:latent": 0.6,
-      "topic:performance": 1.0,
-      "topic:roadmap": 1.0,
-      "topic:routing": 0.6666666666666666,
-      "topic:security": 0.8,
-      "topic:temporal": 0.5
-    },
-    "memoraos[anchor=0.0]": {
-      "dev:answerable": 0.8333333333333334,
-      "dev:unanswerable": 0.5,
-      "heldout:answerable": 0.625,
-      "heldout:unanswerable": 0.5,
-      "split:dev": 0.7380952380952381,
-      "split:heldout": 0.5909090909090909,
-      "topic:absent_topic": 0.5,
-      "topic:changelog": 1.0,
-      "topic:decisions": 0.7692307692307693,
       "topic:latent": 0.6,
       "topic:performance": 1.0,
       "topic:roadmap": 1.0,
@@ -996,15 +996,11 @@
       "gold": [
         "additive"
       ],
-      "status": "answered",
-      "strategy": "bm25",
-      "answer": "# ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only - **Explicit causal links** (`link`, `unlink`, `lineage`, `why`; kinds `causes`, `solves`, `supersedes`, `blocked_by`), **counterfactual replay** (`replay`, on a temporary copy of the database) and **`memoraos sleep`** (consolidation, audit-chain check, optional hypothesis expiry).",
-      "cited": [
-        "docs/ADR/0001-evolve-modular-monolith.md > ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only",
-        "CHANGELOG.md > Added",
-        "docs/V02_ARCHITECTURE.md > Storage changes (migration 2, additive)"
-      ],
-      "correct": true
+      "status": "insufficient_evidence",
+      "strategy": "hybrid",
+      "answer": "The stored memory does not establish an answer to this question.",
+      "cited": [],
+      "correct": false
     },
     {
       "qid": "rd21",
@@ -1659,5 +1655,5 @@
       "correct": true
     }
   ],
-  "wall_clock_seconds": 47.1
+  "wall_clock_seconds": 28.1
 }

@@ -36,14 +36,14 @@ Statuses: `verified` (quote found at the cited offsets, hash matches, and it occ
 
 ## Measured on the real-document benchmark
 
-`python -m benchmarks.citations` (46 answerable questions, corpus sha `961e1bc2dbf5871d...`). Mechanical checks only:
+`python -m benchmarks.citations` (46 answerable questions, corpus sha `430d72e399852277...`). Mechanical checks only:
 
 | Measure | Result |
 |---|---|
-| Answerable questions answered | 34 / 46 |
-| Answers whose citations all verify (none failing) | 34 / 34 |
+| Answerable questions answered | 33 / 46 |
+| Answers whose citations all verify (none failing) | 33 / 33 |
 | Answers with at least one `unlocated` citation | 3 |
-| Answers where a cited quote contains the gold string | 28 / 34 |
-| Correct answers where a cited quote contains the gold string | 25 |
+| Answers where a cited quote contains the gold string | 27 / 33 |
+| Correct answers where a cited quote contains the gold string | 24 |
 
 Verification success is a check of storage integrity, not of answer accuracy; this feature does not change accuracy.

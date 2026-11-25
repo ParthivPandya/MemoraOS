@@ -38,3 +38,28 @@ test("ids are URL encoded and user is a query param", async () => {
   assert.equal(url.pathname, "/v1/memories/a%2Fb");
   assert.equal(url.searchParams.get("user_id"), "u 1");
 });
+
+test("lineage, replay and outcome calls use the documented routes and bodies", async () => {
+  const seen: { path: string; method?: string; body?: unknown; q: Record<string, string> }[] = [];
+  const c = new MemoraClient({
+    userId: "u1",
+    fetch: fakeFetch((url, init) => {
+      seen.push({ path: url.pathname, method: init.method, body: init.body ? JSON.parse(String(init.body)) : undefined, q: Object.fromEntries(url.searchParams) });
+      return { status: 200, body: {} };
+    }),
+  });
+  await c.lineage("m/1", { direction: "up", maxDepth: 3 });
+  await c.replay("rec_1", { leaveOneOut: true });
+  await c.link("a", "b", "solves");
+  await c.rememberOutcome("deploy", "failed", { reason: "timeout" });
+  await c.outcomeWarnings("deploy now", 2);
+  await c.verify("m1", "hypothesis");
+  await c.verifyCitations([]);
+  assert.deepEqual(seen[0], { path: "/v1/lineage/m%2F1", method: "GET", body: undefined, q: { user_id: "u1", direction: "up", max_depth: "3" } });
+  assert.deepEqual(seen[1].body, { user_id: "u1", recall_id: "rec_1", exclude: [], leave_one_out: true });
+  assert.deepEqual(seen[2].body, { user_id: "u1", src_id: "a", dst_id: "b", kind: "solves" });
+  assert.deepEqual(seen[3].body, { user_id: "u1", action: "deploy", outcome: "failed", reason: "timeout" });
+  assert.deepEqual(seen[4].q, { query: "deploy now", user_id: "u1", limit: "2" });
+  assert.deepEqual(seen[5].body, { user_id: "u1", status: "hypothesis" });
+  assert.equal(seen[6].path, "/v1/verify-citations");
+});

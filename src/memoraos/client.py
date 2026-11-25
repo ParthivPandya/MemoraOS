@@ -53,6 +53,32 @@ class MemoraClient:
     def explain(self, recall_id: str) -> dict:
         return self._req("GET", f"/v1/explain/{recall_id}", params={"user_id": self.user_id})
 
+    def verify(self, memory_id: str, status: str) -> dict:
+        """Set a memory's verification: unverified, verified, disputed or hypothesis."""
+        return self._req("POST", f"/v1/memories/{memory_id}/verify", json={"user_id": self.user_id, "status": status})
+
+    def verify_citations(self, evidence: list[dict]) -> dict:
+        """Re-check that each cited quote (``recall(...)["evidence"]``) is still present unchanged."""
+        return self._req("POST", "/v1/verify-citations", json={"user_id": self.user_id, "evidence": evidence})
+
+    def remember_outcome(self, action: str, outcome: str, *, reason: str | None = None, evidence_ref: str | None = None) -> dict:
+        """Record that ``action`` ``failed`` or ``succeeded``. Without ``evidence_ref`` it is stored as a hypothesis."""
+        return self._req("POST", "/v1/outcomes", json={"user_id": self.user_id, "action": action, "outcome": outcome, "reason": reason, "evidence_ref": evidence_ref})
+
+    def outcome_warnings(self, query: str, limit: int = 5) -> list[dict]:
+        return self._req("GET", "/v1/outcome-warnings", params={"query": query, "user_id": self.user_id, "limit": limit})
+
+    def link(self, src_id: str, dst_id: str, kind: str) -> dict:
+        """Record an explicit causal edge (kind: causes, solves, supersedes, blocked_by)."""
+        return self._req("POST", "/v1/links", json={"user_id": self.user_id, "src_id": src_id, "dst_id": dst_id, "kind": kind})
+
+    def lineage(self, memory_id: str, direction: str = "both", max_depth: int = 5) -> dict:
+        return self._req("GET", f"/v1/lineage/{memory_id}", params={"user_id": self.user_id, "direction": direction, "max_depth": max_depth})
+
+    def replay(self, recall_id: str, *, exclude: list[str] | None = None, leave_one_out: bool = False) -> dict:
+        """Re-run a past recall without chosen memories, on a temporary copy of the database."""
+        return self._req("POST", "/v1/replay", json={"user_id": self.user_id, "recall_id": recall_id, "exclude": exclude or [], "leave_one_out": leave_one_out})
+
     def consolidate(self, mode: str = "manual") -> dict:
         return self._req("POST", "/v1/consolidate", json={"user_id": self.user_id, "mode": mode})
 

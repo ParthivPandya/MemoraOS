@@ -8,6 +8,7 @@ const LINKS: [string, string][] = [
   ["/", "Overview"],
   ["/memories", "Memory explorer"],
   ["/playground", "Search playground"],
+  ["/trace", "Answer trace"],
   ["/graph", "Knowledge graph"],
   ["/history", "Temporal history"],
   ["/contradictions", "Contradictions"],

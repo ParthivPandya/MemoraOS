@@ -65,4 +65,4 @@ Retrieved memory is returned as data. A client should still treat it as untruste
 
 ## Not provided
 
-No automatic capture: the agent has to call `memora_remember` itself, or you instruct it to in the project's agent instructions. There is a Claude Code Stop hook (`memoraos hook install claude-code`, see [AGENT_WORKFLOW.md](AGENT_WORKFLOW.md), not yet run in a real session) but none for Codex or Cursor. A LangChain retriever and a Mem0-shaped class exist ([INTEGRATIONS.md](INTEGRATIONS.md)); there is no LlamaIndex or CrewAI adapter.
+No automatic capture: the agent has to call `memora_remember` itself, or you instruct it to in the project's agent instructions. There are capture hooks for Claude Code, Cursor and Codex CLI (`memoraos hook install <agent>`, see [AGENT_WORKFLOW.md](AGENT_WORKFLOW.md); none has been run in a real session) but none for Windsurf. A LangChain retriever and a Mem0-shaped class exist ([INTEGRATIONS.md](INTEGRATIONS.md)); there is no LlamaIndex or CrewAI adapter.

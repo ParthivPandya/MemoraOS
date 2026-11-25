@@ -1,4 +1,4 @@
-# Agent workflow: outcomes, hypotheses and Claude Code capture
+# Agent workflow: outcomes, hypotheses and coding-agent capture hooks
 
 Three small features for coding agents. All are opt-in, none changes a benchmark default, and none has been measured
 for accuracy. They are covered by unit tests with synthetic fixtures (`tests/unit/test_agent_workflow.py`).
@@ -22,22 +22,36 @@ mem.outcome_warnings("should I upgrade the requests library?", user_id="u1")
 - A warning appears when at least half of the recorded action's content words occur in the query (stemmed). This is
   lexical overlap, not understanding, so a paraphrase can be missed.
 - A later `succeeded` outcome for a similar action clears the warning.
-- MCP tools: `memora_outcome`, `memora_warnings`; `memora_recall` also returns `warnings`. There is no REST route yet.
+- MCP tools: `memora_outcome`, `memora_warnings`; `memora_recall` also returns `warnings`. REST: `POST /v1/outcomes`, `GET /v1/outcome-warnings`; both SDKs wrap them.
 - There is no automatic expiry when a library version changes; record a new outcome instead.
 
-## Claude Code Stop hook
+## Capture hooks (Claude Code, Cursor, Codex CLI)
 
 ```bash
 memoraos --data-dir ~/.memoraos hook install claude-code --user me      # ~/.claude/settings.json
-memoraos hook install claude-code --user me --project                   # ./.claude/settings.json
-memoraos hook uninstall claude-code
+memoraos --data-dir ~/.memoraos hook install cursor --user me           # ~/.cursor/hooks.json
+memoraos --data-dir ~/.memoraos hook install codex --user me            # ~/.codex/hooks.json ($CODEX_HOME)
+memoraos hook install <agent> --user me --project                       # project-level config in the current directory
+memoraos hook uninstall <agent>
 ```
 
-After each response the hook runs `memoraos hook capture`, which reads the hook payload from stdin and stores the
-**last user message and last assistant text** from the transcript as hypotheses (secrets are redacted by the normal
-ingestion path, each message is cut at 2,000 characters, and `stop_hook_active` payloads are ignored).
+Each hook runs `memoraos hook capture --agent <agent>`, which reads the hook payload from stdin and stores the text
+as hypotheses (`verification="hypothesis"`, origin `<agent>-hook`; secrets are redacted by the normal ingestion path,
+each message is cut at 2,000 characters, `stop_hook_active` payloads are ignored, and a failure is written to stderr
+instead of breaking the agent). Install is idempotent per event and leaves other hooks in the file alone.
 
-What is verified: the install/uninstall merge, the capture logic and redaction, and a CLI run against a hand-written
-transcript. What is **not**: it has not been run inside a real Claude Code session, and the payload and transcript
-formats are taken from Claude Code's documented hook interface and may change. Captured exchanges are raw text, so
-expect noise. Cursor, Codex and Windsurf are not supported; use the MCP server ([MCP.md](MCP.md)) for those.
+| Agent | Events used | What is stored |
+|---|---|---|
+| Claude Code | `Stop` | last user message and last assistant text, read from the transcript file |
+| Cursor | `beforeSubmitPrompt`, `afterAgentResponse` | the prompt and the agent response text from the payload |
+| Codex CLI | `UserPromptSubmit`, `Stop` | the prompt and `last_assistant_message` from the payload |
+
+Codex only runs a new hook after you review and trust it in `/hooks`; the installer prints that reminder. The Codex
+`Stop` hook prints `{}` and Cursor's `beforeSubmitPrompt` hook prints `{"continue": true}`, as their contracts require.
+
+What is verified: the install/uninstall merge for all three layouts, the capture logic and redaction, the stdout
+replies, and a CLI run against hand-written payloads (`tests/unit/test_agent_workflow.py`). What is **not**: none of
+the three has been run inside a real Claude Code, Cursor or Codex session. The config layouts and payload fields
+follow each tool's published hook documentation and may change. Cursor's and Codex's other events are ignored.
+Captured exchanges are raw text, so expect noise. Windsurf is not supported; use the MCP server ([MCP.md](MCP.md))
+for it.

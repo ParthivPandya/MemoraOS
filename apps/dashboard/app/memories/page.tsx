@@ -22,7 +22,7 @@ export default async function Memories({ searchParams }: { searchParams: Promise
               <tr key={m.id}>
                 <td>{m.original_content.slice(0, 240)}{m.derived && <> <Badge>derived</Badge></>}<div className="mono">{m.id}</div></td>
                 <td>{m.category}<div className="mono">{m.scope_level}</div></td>
-                <td>{m.source_type}<div><Badge tone={m.verification === "verified" ? "ok" : m.verification === "disputed" ? "bad" : undefined}>{m.verification}</Badge></div></td>
+                <td>{m.source_type}<div><Badge tone={m.verification === "verified" ? "ok" : m.verification === "disputed" ? "bad" : m.verification === "hypothesis" ? "warn" : undefined}>{m.verification}</Badge></div></td>
                 <td>{m.source_reliability.toFixed(2)}</td>
                 <td className="mono">{m.effective_at ? `eff ${m.effective_at.slice(0, 10)}` : m.created_at.slice(0, 19)}</td>
                 <td>{m.version}</td>

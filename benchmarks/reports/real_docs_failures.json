@@ -1,5 +1,5 @@
 {
-  "corpus_sha256": "961e1bc2dbf5871d0a268e5525f2c17d5620aec6753cb2ffe16f3014a67b3470",
+  "corpus_sha256": "430d72e39985227767c903e3b2f42e49c0ee81afaee164665585944d1143c69b",
   "anchor": null,
   "rows": [
     {
@@ -212,10 +212,11 @@
       "question": "What kind of storage changes does ADR-0001 allow?",
       "tag": "dev/decisions",
       "answerable": true,
-      "status": "answered",
-      "strategy": "bm25",
-      "correct": true,
-      "cause": null
+      "status": "insufficient_evidence",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "OVERSTRICT_ABSTENTION",
+      "guard": "attribute-word guard"
     },
     {
       "qid": "rd21",
@@ -662,23 +663,23 @@
   ],
   "summary": {
     "questions": 64,
-    "wrong": 26,
+    "wrong": 27,
     "answerable": 46,
-    "answerable_missed": 21,
+    "answerable_missed": 22,
     "by_cause": {
       "ANSWER_GENERATION_FAILURE": 9,
-      "OVERSTRICT_ABSTENTION": 11,
+      "OVERSTRICT_ABSTENTION": 12,
       "RETRIEVAL_MISS": 1,
       "FALSE_ACCEPTANCE": 5
     },
     "overstrict_guards": {
       "term coverage below the support threshold": 10,
-      "attribute-word guard": 1
+      "attribute-word guard": 2
     },
     "by_split": {
       "dev": {
         "ANSWER_GENERATION_FAILURE": 4,
-        "OVERSTRICT_ABSTENTION": 7,
+        "OVERSTRICT_ABSTENTION": 8,
         "FALSE_ACCEPTANCE": 4
       },
       "heldout": {

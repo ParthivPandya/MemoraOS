@@ -125,3 +125,19 @@ def test_benchmarks_endpoint_serves_report_files(mem, tmp_path):
     (tmp_path / "benchmark_results.json").write_text(json.dumps({"benchmark": "x"}))
     c = TestClient(create_app(mem, ApiKeyStore.from_plain({"k": {"tenant": "t", "role": "read"}}), reports_dir=tmp_path))
     assert c.get("/v1/benchmarks", headers=h("k")).json() == [{"benchmark": "x"}]
+
+
+def test_hypothesis_verification_and_outcome_routes(client):
+    r = client.post("/v1/memories", json={"text": "The cache layer uses Redis.", "user_id": "u1", "verification": "hypothesis"}, headers=h(WRITER))
+    assert r.status_code == 201
+    mid = r.json()["memory_ids"][0]
+    assert client.post(f"/v1/memories/{mid}/verify", json={"user_id": "u1", "status": "verified"}, headers=h(WRITER)).status_code == 200
+    assert client.post(f"/v1/memories/{mid}/verify", json={"user_id": "u1", "status": "hypothesis"}, headers=h(WRITER)).json()["verification"] == "hypothesis"
+    body = {"user_id": "u1", "action": "upgrade the requests library to 3.0", "outcome": "failed", "reason": "breaks the retry adapter"}
+    assert client.post("/v1/outcomes", json=body, headers=h(READER)).status_code == 403
+    assert client.post("/v1/outcomes", json=body, headers=h(WRITER)).status_code == 201
+    params = {"query": "should I upgrade requests library?", "user_id": "u1"}
+    warn = client.get("/v1/outcome-warnings", params=params, headers=h(READER)).json()
+    assert len(warn) == 1 and warn[0]["reason"] == "breaks the retry adapter" and warn[0]["verified"] is False
+    assert client.get("/v1/outcome-warnings", params=params, headers=h(OTHER)).json() == []
+    assert client.post("/v1/outcomes", json={**body, "outcome": "maybe"}, headers=h(WRITER)).status_code == 422
