@@ -53,6 +53,21 @@ TOOLS: list[dict[str, Any]] = [
         "inputSchema": {"type": "object", "properties": {"subject": {"type": "string"}, "predicate": {"type": "string"}}, "required": ["subject", "predicate"]},
     },
     {
+        "name": "memora_link",
+        "description": "Record an explicit causal link between two memories: src <kind> dst. Only links you create exist; nothing is inferred.",
+        "inputSchema": {"type": "object", "properties": {"src_id": {"type": "string"}, "dst_id": {"type": "string"}, "kind": {"type": "string", "enum": ["causes", "solves", "supersedes", "blocked_by"]}}, "required": ["src_id", "dst_id", "kind"]},
+    },
+    {
+        "name": "memora_lineage",
+        "description": "The explicit causal chain around a memory, with excerpts and content hashes.",
+        "inputSchema": {"type": "object", "properties": {"memory_id": {"type": "string"}, "direction": {"type": "string", "enum": ["up", "down", "both"]}}, "required": ["memory_id"]},
+    },
+    {
+        "name": "memora_replay",
+        "description": "Re-run a past recall with chosen memories removed (on a temporary copy; the store is not changed) to see whether the answer depends on them. Use leave_one_out to test each cited memory.",
+        "inputSchema": {"type": "object", "properties": {"recall_id": {"type": "string"}, "exclude": {"type": "array", "items": {"type": "string"}}, "leave_one_out": {"type": "boolean"}}, "required": ["recall_id"]},
+    },
+    {
         "name": "memora_explain",
         "description": "Explain how a previous recall was answered (strategy, attempts, evidence).",
         "inputSchema": {"type": "object", "properties": {"recall_id": {"type": "string"}}, "required": ["recall_id"]},
@@ -82,6 +97,12 @@ class McpServer:
             return {"deleted": e.forget(str(args["memory_id"]), **kw)}
         if name == "memora_history":
             return e.history(subject=str(args["subject"]), predicate=str(args["predicate"]), **kw)
+        if name == "memora_link":
+            return e.link(str(args["src_id"]), str(args["dst_id"]), str(args["kind"]), **kw)
+        if name == "memora_lineage":
+            return e.lineage(str(args["memory_id"]), direction=str(args.get("direction", "both")), **kw)
+        if name == "memora_replay":
+            return e.replay(str(args["recall_id"]), exclude=args.get("exclude") or None, leave_one_out=bool(args.get("leave_one_out")), **kw)
         if name == "memora_explain":
             return e.explain(str(args["recall_id"]), **kw)
         raise KeyError(name)

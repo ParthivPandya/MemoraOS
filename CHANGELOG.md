@@ -24,6 +24,13 @@ Status of each item: see `docs/NEXT_IMPLEMENTATION_STATUS.md`. Nothing here chan
 - `docs/SECURITY.md`, the roadmap and the status docs no longer say encryption at rest is missing.
 - `plan` and `tier` are single-valued attributes, so "the current plan" no longer returns the old and the new plan together (found while writing a Memory CI contract).
 
+## [0.5.0] - 2026-11-25
+
+### Added
+- **Markdown vault sync**: `memoraos sync <vault> --user ID` (`--direction`, `--prune`, `--dry-run`). Imports notes, exports memories to `_memoraos/`, reports conflicts instead of overwriting. Tested on synthetic notes only, never on a real Obsidian vault. See `docs/VAULT_SYNC.md`.
+- **LangChain retriever** (`memoraos[langchain]`, `MemoraOSRetriever`) that returns nothing when there is no supporting evidence, and a **Mem0-shaped `Memory` class** (`memoraos.compat.mem0`) that follows `mem0ai` 2.2.1 source shapes; real Mem0 was not run against it. **No CrewAI adapter**: its current storage protocol takes precomputed embeddings. See `docs/INTEGRATIONS.md`.
+- **Explicit causal links** (`link`, `unlink`, `lineage`, `why`; kinds `causes`, `solves`, `supersedes`, `blocked_by`), **counterfactual replay** (`replay`, on a temporary copy of the database) and **`memoraos sleep`** (consolidation, audit-chain check, optional hypothesis expiry). Surfaces: CLI, `POST /v1/links`, `GET /v1/lineage/{id}`, `POST /v1/replay`, MCP tools `memora_link`, `memora_lineage`, `memora_replay`. No automatic causal extraction, no dashboard view, nothing benchmarked. See `docs/CAUSAL_AND_REPLAY.md`.
+
 ## [0.4.0] - 2026-11-25
 
 ### Added

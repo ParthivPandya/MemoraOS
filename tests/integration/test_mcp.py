@@ -38,6 +38,17 @@ def test_tools_round_trip(server):
     assert call(server, "memora_forget", {"memory_id": mid}) == {"deleted": 1}
 
 
+def test_causal_link_lineage_and_replay_tools(server):
+    a = call(server, "memora_remember", {"text": "The build failed because the cache was stale."})["memory_ids"][0]
+    b = call(server, "memora_remember", {"text": "Clearing the cache fixed the build."})["memory_ids"][0]
+    assert call(server, "memora_link", {"src_id": b, "dst_id": a, "kind": "solves"})["kind"] == "solves"
+    assert {n["memory_id"] for n in call(server, "memora_lineage", {"memory_id": a, "direction": "up"})["nodes"]} == {a, b}
+    out = call(server, "memora_recall", {"query": "Why did the build fail?"})
+    rep = call(server, "memora_replay", {"recall_id": out["recall_id"], "leave_one_out": True})
+    assert rep["runs"] and "baseline" in rep
+    assert "error" in call(server, "memora_replay", {"recall_id": out["recall_id"]})  # nothing to exclude
+
+
 def test_errors_are_tool_errors_and_user_cannot_be_overridden(server, mem):
     assert "error" in call(server, "memora_recall", {})  # missing argument
     assert "error" in call(server, "memora_forget", {"memory_id": "mem_nope"})

@@ -50,6 +50,7 @@ from .truth.timeline import build_timeline
 from .util import Clock, IdFactory, new_id, to_ts, utcnow
 
 MAX_TEXT_CHARS = 2_000_000
+CAUSAL_KINDS = ("causes", "solves", "supersedes", "blocked_by")
 
 
 class NotFoundError(KeyError):
@@ -737,6 +738,203 @@ class MemoryOS:
             results.append({"memory_id": mid, "source_id": d.get("source_id"), "status": status})
         return {"valid": bool(results) and all(r["status"] == "verified" for r in results),
                 "verified": sum(r["status"] == "verified" for r in results), "total": len(results), "results": results}
+
+    # ------------------------------------------------------------------ explicit causal links
+    def link(self, src_id: str, dst_id: str, kind: str, *, user_id: str, tenant_id: str = "default", **scope_kw: Any) -> dict:
+        """Record that memory ``src_id`` ``kind`` memory ``dst_id`` (causes, solves, supersedes or blocked_by).
+
+        Edges are only ever created by this call; nothing infers causality from text.
+        """
+        if kind not in CAUSAL_KINDS:
+            raise ValueError(f"kind must be one of {', '.join(CAUSAL_KINDS)}")
+        if src_id == dst_id:
+            raise ValueError("a memory cannot be linked to itself")
+        scope = self.scope_for(user_id, tenant_id, **scope_kw)
+        self._owned(scope, src_id)
+        self._owned(scope, dst_id)
+        with self.db.tx() as conn:
+            conn.execute(
+                "INSERT OR IGNORE INTO memory_links(src_id,dst_id,type,run_id,tenant_id,created_at) VALUES(?,?,?,?,?,?)",
+                (src_id, dst_id, f"causal:{kind}", None, tenant_id, self.store.now()),
+            )
+            self.store.append_event(conn, tenant_id, user_id, "memory.linked", src_id, {"dst": dst_id, "kind": kind})
+        return {"src": src_id, "dst": dst_id, "kind": kind}
+
+    def unlink(self, src_id: str, dst_id: str, kind: str, *, user_id: str, tenant_id: str = "default", **scope_kw: Any) -> bool:
+        scope = self.scope_for(user_id, tenant_id, **scope_kw)
+        self._owned(scope, src_id)
+        with self.db.tx() as conn:
+            n = conn.execute("DELETE FROM memory_links WHERE src_id=? AND dst_id=? AND type=? AND tenant_id=?", (src_id, dst_id, f"causal:{kind}", tenant_id)).rowcount
+            if n:
+                self.store.append_event(conn, tenant_id, user_id, "memory.unlinked", src_id, {"dst": dst_id, "kind": kind})
+        return bool(n)
+
+    def lineage(
+        self, memory_id: str, *, user_id: str, tenant_id: str = "default", direction: str = "both", max_depth: int = 5, **scope_kw: Any,
+    ) -> dict:
+        """Walk explicit causal links from a memory. ``upstream`` follows edges into it, ``downstream`` edges out of it.
+
+        Each node carries the memory's excerpt and a SHA-256 of its full stored text, so the chain can be checked
+        against the evidence. Memories the caller cannot see are skipped, not revealed.
+        """
+        from .util import sha256
+
+        if direction not in ("up", "down", "both"):
+            raise ValueError("direction must be up, down or both")
+        scope = self.scope_for(user_id, tenant_id, **scope_kw)
+
+        def node(row: Any, depth: int) -> dict:
+            return {
+                "memory_id": row["id"], "depth": depth, "excerpt": row["original_content"][:240],
+                "content_sha256": sha256(row["original_content"]), "version": row["version"],
+                "effective_at": row["effective_at"],
+            }
+
+        root = self._owned(scope, memory_id)
+        nodes, edges, seen = [node(root, 0)], [], {memory_id}
+        edge_keys: set[tuple[str, str, str]] = set()
+        frontier = [memory_id]
+        for depth in range(1, max(1, max_depth) + 1):
+            nxt: list[str] = []
+            for cur in frontier:
+                found: list[tuple[str, str, str, str]] = []
+                if direction in ("up", "both"):
+                    found += [(r["src_id"], r["dst_id"], r["type"], r["src_id"]) for r in self.db.query("SELECT src_id,dst_id,type FROM memory_links WHERE dst_id=? AND tenant_id=? AND type LIKE 'causal:%'", (cur, tenant_id))]
+                if direction in ("down", "both"):
+                    found += [(r["src_id"], r["dst_id"], r["type"], r["dst_id"]) for r in self.db.query("SELECT src_id,dst_id,type FROM memory_links WHERE src_id=? AND tenant_id=? AND type LIKE 'causal:%'", (cur, tenant_id))]
+                for src, dst, typ, other in found:
+                    try:
+                        row = self._owned(scope, other)
+                    except NotFoundError:
+                        continue
+                    key = (src, dst, typ)
+                    if key not in edge_keys:
+                        edge_keys.add(key)
+                        edges.append({"src": src, "dst": dst, "kind": typ.split(":", 1)[1]})
+                    if other not in seen:
+                        seen.add(other)
+                        nodes.append(node(row, depth))
+                        nxt.append(other)
+            frontier = nxt
+            if not frontier:
+                break
+        return {"memory_id": memory_id, "direction": direction, "nodes": nodes, "edges": edges}
+
+    def why(self, recall_id: str, *, user_id: str, tenant_id: str = "default") -> dict:
+        """``explain`` plus the explicit causal lineage of each memory the recall used (memories since forgotten are skipped)."""
+        exp = self.explain(recall_id, user_id=user_id, tenant_id=tenant_id)
+        chains = {}
+        for mid in exp["evidence_memory_ids"]:
+            try:
+                chains[mid] = self.lineage(mid, user_id=user_id, tenant_id=tenant_id)
+            except NotFoundError:
+                continue
+        return {"explanation": exp, "lineage": chains}
+
+    # ------------------------------------------------------------------ counterfactual replay
+    def replay(
+        self, recall_id: str, *, user_id: str, tenant_id: str = "default", exclude: Sequence[str] | None = None,
+        leave_one_out: bool = False, max_runs: int = 8,
+    ) -> dict:
+        """Re-run a logged recall with memories removed, to see whether the answer depends on them.
+
+        Works on a temporary copy of the database (the live store is never changed). The query is re-run at user
+        scope against the *current* data, once as-is (``baseline``) and once with the excluded memories hard-deleted
+        from the copy, so a difference is caused by the exclusion and not by data added since the recall.
+        ``leave_one_out`` repeats this for each memory the original recall cited. Cost grows with database size.
+        """
+        import tempfile
+
+        row = self.db.one("SELECT * FROM retrieval_log WHERE id=? AND tenant_id=? AND user_id=?", (recall_id, tenant_id, user_id))
+        if not row:
+            raise NotFoundError(recall_id)
+        logged_ids = json.loads(row["evidence_ids"])
+        if leave_one_out:
+            groups = [[i] for i in dict.fromkeys(logged_ids)][: max(1, max_runs)]
+            if not groups:
+                raise ValueError("the logged recall cited no memories, so there is nothing to leave out")
+        else:
+            if not exclude:
+                raise ValueError("pass exclude=[memory ids] or leave_one_out=True")
+            groups = [list(dict.fromkeys(exclude))]
+        scope = self.scope_for(user_id, tenant_id)
+        for g in groups:
+            for mid in g:
+                self._owned(scope, mid, write=True)
+
+        def summary(res: Any) -> dict:
+            return {"answer": res.answer, "status": res.status, "strategy": res.strategy, "evidence_memory_ids": [e.memory_id for e in res.evidence]}
+
+        baseline: dict | None = None
+        runs: list[dict] = []
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
+            for n, group in enumerate(groups):
+                update: dict[str, Any] = {"data_dir": Path(tmp) / f"copy{n}", "db_filename": "memoraos.db"}
+                if self.db.path == ":memory:":
+                    update["encryption_passphrase"] = None
+                settings = self.settings.model_copy(update=update)
+                self.backup(settings.db_path)
+                cp = MemoryOS(
+                    settings, embedder=self.embedder, chat=self.chat, reranker=self.reranker,
+                    entity_extractor=self.entity_extractor, clock=self.clock, extractor=self.extractor,
+                )
+                try:
+                    if baseline is None:
+                        baseline = summary(cp.recall(row["query"], user_id=user_id, tenant_id=tenant_id, as_of=row["as_of"], use_cache=False))
+                    for mid in group:
+                        cp.forget(mid, user_id=user_id, tenant_id=tenant_id)
+                    alt = summary(cp.recall(row["query"], user_id=user_id, tenant_id=tenant_id, as_of=row["as_of"], use_cache=False))
+                finally:
+                    cp.close()
+                runs.append({
+                    "excluded": group, **alt,
+                    "answer_changed": alt["answer"] != baseline["answer"], "status_changed": alt["status"] != baseline["status"],
+                })
+        assert baseline is not None
+        return {
+            "recall_id": recall_id, "query": row["query"], "as_of": row["as_of"],
+            "logged": {"answer": row["answer"], "status": row["status"], "evidence_memory_ids": logged_ids},
+            "baseline": baseline,
+            "baseline_matches_logged": baseline["answer"] == row["answer"] and baseline["status"] == row["status"],
+            "runs": runs,
+            "note": "Computed on a temporary copy of the current data at user scope; the live store was not modified.",
+        }
+
+    # ------------------------------------------------------------------ maintenance
+    def sleep(
+        self, *, user_id: str, tenant_id: str = "default", expire_hypotheses_days: int | None = None, dry_run: bool = False,
+        consolidate: bool = True,
+    ) -> dict:
+        """One maintenance pass: consolidate, check the audit chain, and optionally expire stale hypotheses.
+
+        Expiring marks unconfirmed hypotheses older than N days ``disputed`` (they stay readable and in history). No
+        learning or scoring happens here; it only runs existing, deterministic steps.
+        """
+        from datetime import timedelta
+
+        out: dict[str, Any] = {"dry_run": dry_run}
+        out["consolidation"] = self.consolidate(user_id=user_id, tenant_id=tenant_id, mode="manual", dry_run=dry_run) if consolidate else None
+        out["audit_chain_ok"] = self.verify_audit_chain()
+        out["open_contradictions"] = len(self.contradictions(user_id=user_id, tenant_id=tenant_id, include_resolved=False))
+        expired: list[str] = []
+        if expire_hypotheses_days is not None:
+            if expire_hypotheses_days <= 0:
+                raise ValueError("expire_hypotheses_days must be positive")
+            cutoff = to_ts(self.clock() - timedelta(days=expire_hypotheses_days))
+            rows = self.db.query(
+                "SELECT m.id FROM memories m JOIN sources s ON s.id=m.source_id WHERE m.tenant_id=? AND m.user_id=? "
+                "AND m.status='active' AND s.verification='hypothesis' AND m.created_at < ?",
+                (tenant_id, user_id, cutoff),
+            )
+            for r in rows:
+                if not dry_run:
+                    try:
+                        self.verify(r["id"], "disputed", user_id=user_id, tenant_id=tenant_id)
+                    except NotFoundError:  # not visible at user scope (for example session-level)
+                        continue
+                expired.append(r["id"])
+        out["expired_hypotheses"] = expired
+        return out
 
     def verify_audit_chain(self) -> bool:
         """Recompute the tamper-evident event hash chain."""

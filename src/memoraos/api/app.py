@@ -82,6 +82,20 @@ class ConsolidateBody(ScopeBody):
     mode: Literal["manual", "incremental", "dry_run"] = "manual"
 
 
+class LinkBody(BaseModel):
+    user_id: str = UserId
+    src_id: str
+    dst_id: str
+    kind: Literal["causes", "solves", "supersedes", "blocked_by"]
+
+
+class ReplayBody(BaseModel):
+    user_id: str = UserId
+    recall_id: str
+    exclude: list[str] = Field(default_factory=list, max_length=50)
+    leave_one_out: bool = False
+
+
 def create_app(
     engine: MemoryOS,
     keys: ApiKeyStore | None = None,
@@ -273,6 +287,21 @@ def create_app(
     def explain(recall_id: str, user_id: str = Query(min_length=1), p: Principal = Depends(need("read"))) -> dict:
         act_as(p, user_id)
         return engine.explain(recall_id, user_id=user_id, tenant_id=p.tenant_id)
+
+    @app.post("/v1/links", status_code=201)
+    def link_memories(b: LinkBody, p: Principal = Depends(need("write"))) -> dict:
+        act_as(p, b.user_id)
+        return engine.link(b.src_id, b.dst_id, b.kind, user_id=b.user_id, tenant_id=p.tenant_id)
+
+    @app.get("/v1/lineage/{memory_id}")
+    def lineage(memory_id: str, user_id: str = Query(min_length=1), direction: Literal["up", "down", "both"] = "both", max_depth: int = Query(5, ge=1, le=20), p: Principal = Depends(need("read"))) -> dict:
+        act_as(p, user_id)
+        return engine.lineage(memory_id, user_id=user_id, tenant_id=p.tenant_id, direction=direction, max_depth=max_depth)
+
+    @app.post("/v1/replay")
+    def replay(b: ReplayBody, p: Principal = Depends(need("write"))) -> dict:
+        act_as(p, b.user_id)
+        return engine.replay(b.recall_id, user_id=b.user_id, tenant_id=p.tenant_id, exclude=b.exclude, leave_one_out=b.leave_one_out)
 
     @app.get("/v1/facts")
     def facts(s: dict = Depends(scope_q), as_of: str | None = None, p: Principal = Depends(need("read"))) -> list[dict]:

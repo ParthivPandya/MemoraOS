@@ -92,6 +92,33 @@ def main(argv: list[str] | None = None) -> int:
     e = sub.add_parser("export")
     e.add_argument("--user", required=True)
     sub.add_parser("backup").add_argument("dest")
+    sy = sub.add_parser("sync", help="two-way sync between a Markdown folder and the memory store")
+    sy.add_argument("vault")
+    sy.add_argument("--user", required=True)
+    sy.add_argument("--tenant", default="default")
+    sy.add_argument("--direction", default="both", choices=["both", "import", "export"])
+    sy.add_argument("--prune", action="store_true", help="propagate deletions (a deleted note forgets its memories; hard delete)")
+    sy.add_argument("--dry-run", action="store_true")
+    sl = sub.add_parser("sleep", help="maintenance pass: consolidate, check the audit chain, optionally expire stale hypotheses")
+    sl.add_argument("--user", required=True)
+    sl.add_argument("--expire-hypotheses-days", type=int, default=None)
+    sl.add_argument("--no-consolidate", action="store_true")
+    sl.add_argument("--dry-run", action="store_true")
+    ln = sub.add_parser("link", help="record an explicit causal link: SRC <kind> DST")
+    ln.add_argument("src")
+    ln.add_argument("kind", choices=["causes", "solves", "supersedes", "blocked_by"])
+    ln.add_argument("dst")
+    ln.add_argument("--user", required=True)
+    lg = sub.add_parser("lineage", help="show the explicit causal chain around a memory")
+    lg.add_argument("memory_id")
+    lg.add_argument("--user", required=True)
+    lg.add_argument("--direction", default="both", choices=["both", "up", "down"])
+    lg.add_argument("--max-depth", type=int, default=5)
+    rp = sub.add_parser("replay", help="re-run a logged recall with memories removed (on a temporary copy)")
+    rp.add_argument("recall_id")
+    rp.add_argument("--user", required=True)
+    rp.add_argument("--exclude", nargs="*", default=[], help="memory ids to remove")
+    rp.add_argument("--leave-one-out", action="store_true", help="remove each cited memory in turn")
     sub.add_parser("encrypt", help=f"encrypt the database file in place (passphrase from {ENV_KEY})")
     sub.add_parser("decrypt", help=f"decrypt the database file in place (passphrase from {ENV_KEY})")
 
@@ -230,6 +257,25 @@ def main(argv: list[str] | None = None) -> int:
             _print(eng.export(user_id=args.user))
         elif args.cmd == "backup":
             print(eng.backup(args.dest))
+        elif args.cmd in ("sync", "sleep", "link", "lineage", "replay"):
+            try:
+                if args.cmd == "sync":
+                    from .vault import sync_vault
+
+                    report = sync_vault(eng, args.vault, user_id=args.user, tenant_id=args.tenant, direction=args.direction, prune=args.prune, dry_run=args.dry_run)
+                    _print(report)
+                    return 1 if report["conflicts"] else 0
+                if args.cmd == "sleep":
+                    _print(eng.sleep(user_id=args.user, expire_hypotheses_days=args.expire_hypotheses_days, dry_run=args.dry_run, consolidate=not args.no_consolidate))
+                elif args.cmd == "link":
+                    _print(eng.link(args.src, args.dst, args.kind, user_id=args.user))
+                elif args.cmd == "lineage":
+                    _print(eng.lineage(args.memory_id, user_id=args.user, direction=args.direction, max_depth=args.max_depth))
+                else:
+                    _print(eng.replay(args.recall_id, user_id=args.user, exclude=args.exclude, leave_one_out=args.leave_one_out))
+            except (ValueError, KeyError, PermissionError) as exc:
+                print(f"memoraos {args.cmd}: {exc}", file=sys.stderr)
+                return 2
     finally:
         eng.close()
     return 0

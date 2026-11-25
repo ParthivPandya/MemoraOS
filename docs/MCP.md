@@ -57,9 +57,12 @@ claude mcp add memoraos --env MEMORAOS_USER_ID=me -- memoraos --data-dir /absolu
 | `memora_outcome` | Record that an action failed or succeeded (with reason and optional evidence reference). |
 | `memora_warnings` | Recorded failures that match a planned action. |
 | `memora_explain` | Show how an earlier recall was answered. |
+| `memora_link` | Record an explicit causal link between two memories (`causes`, `solves`, `supersedes`, `blocked_by`). |
+| `memora_lineage` | The explicit causal chain around a memory, with excerpts and content hashes. |
+| `memora_replay` | Re-run an earlier recall with chosen memories removed (on a temporary copy) to see whether the answer depends on them. See [CAUSAL_AND_REPLAY.md](CAUSAL_AND_REPLAY.md). |
 
 Retrieved memory is returned as data. A client should still treat it as untrusted text.
 
 ## Not provided
 
-No automatic capture: the agent has to call `memora_remember` itself, or you instruct it to in the project's agent instructions. There is a Claude Code Stop hook (`memoraos hook install claude-code`, see [AGENT_WORKFLOW.md](AGENT_WORKFLOW.md), not yet run in a real session) but none for Codex or Cursor, and no LangChain or LlamaIndex adapters.
+No automatic capture: the agent has to call `memora_remember` itself, or you instruct it to in the project's agent instructions. There is a Claude Code Stop hook (`memoraos hook install claude-code`, see [AGENT_WORKFLOW.md](AGENT_WORKFLOW.md), not yet run in a real session) but none for Codex or Cursor. A LangChain retriever and a Mem0-shaped class exist ([INTEGRATIONS.md](INTEGRATIONS.md)); there is no LlamaIndex or CrewAI adapter.

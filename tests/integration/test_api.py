@@ -63,6 +63,21 @@ def test_full_lifecycle_over_http(client):
     assert client.get(f"/v1/memories/{mid}", params={"user_id": "u1"}, headers=h(READER)).status_code == 404
 
 
+def test_links_lineage_and_replay_over_http(client):
+    mk = lambda t: client.post("/v1/memories", json={"text": t, "user_id": "u1"}, headers=h(WRITER)).json()["memory_ids"][0]  # noqa: E731
+    cause, effect = mk("The release was blocked by a failing test."), mk("Fixing the test unblocked the release.")
+    body = {"user_id": "u1", "src_id": effect, "dst_id": cause, "kind": "solves"}
+    assert client.post("/v1/links", json=body, headers=h(READER)).status_code == 403
+    assert client.post("/v1/links", json=body, headers=h(WRITER)).status_code == 201
+    lin = client.get(f"/v1/lineage/{cause}", params={"user_id": "u1", "direction": "up"}, headers=h(READER)).json()
+    assert {n["memory_id"] for n in lin["nodes"]} == {cause, effect}
+    assert client.get(f"/v1/lineage/{cause}", params={"user_id": "u1"}, headers=h(OTHER)).status_code == 404
+    rec = client.post("/v1/recall", json={"query": "What blocked the release?", "user_id": "u1"}, headers=h(READER)).json()
+    rep = client.post("/v1/replay", json={"user_id": "u1", "recall_id": rec["recall_id"], "leave_one_out": True}, headers=h(WRITER))
+    assert rep.status_code == 200 and rep.json()["runs"]
+    assert client.post("/v1/replay", json={"user_id": "u1", "recall_id": rec["recall_id"]}, headers=h(READER)).status_code == 403
+
+
 def test_tenant_isolation_through_api_keys(client):
     client.post("/v1/memories", json={"text": "Parth's salary is ₹32 LPA.", "user_id": "u1"}, headers=h(WRITER))
     leak = client.post("/v1/recall", json={"query": "What is Parth's salary?", "user_id": "u1"}, headers=h(OTHER)).json()

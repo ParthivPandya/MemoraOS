@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real-document benchmark",
   "command": "python -m benchmarks.real_docs",
-  "generated_at": "2026-11-25T04:14:27+00:00",
+  "generated_at": "2026-11-25T05:17:48+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -14,9 +14,9 @@
   },
   "corpus": {
     "files": 26,
-    "sections": 130,
-    "characters": 125641,
-    "sha256": "0800835967584df12f856982df09116d5139a23df252a49feaf6841f1f7d32f6"
+    "sections": 131,
+    "characters": 126836,
+    "sha256": "961e1bc2dbf5871d0a268e5525f2c17d5620aec6753cb2ffe16f3014a67b3470"
   },
   "questions": {
     "answerable": 46,
@@ -33,16 +33,16 @@
         0.4531,
         0.6875
       ],
-      "recall_at_5": 0.7824557688688124,
-      "precision_at_5": 0.3050724637681159,
+      "recall_at_5": 0.7797383775644645,
+      "precision_at_5": 0.3007246376811594,
       "mrr": 0.842391304347826,
-      "ndcg_at_5": 0.7652560904383477,
+      "ndcg_at_5": 0.7624038061446012,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 736.34375,
-      "latency_ms_p50": 8.114199968986213,
-      "latency_ms_p95": 10.32390003092587,
+      "mean_context_tokens": 736.796875,
+      "latency_ms_p50": 4.686899948865175,
+      "latency_ms_p95": 7.5104000279679894,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -60,8 +60,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 7.283656154042826,
-      "storage_overhead_ratio": 4.778718785650907,
+      "ingest_ms_per_event": 4.302875572488508,
+      "storage_overhead_ratio": 4.775637856206688,
       "pooled_accuracy_ci95": [
         0.4531,
         0.6875
@@ -76,14 +76,14 @@
       ],
       "recall_at_5": 0.6707917686178556,
       "precision_at_5": 0.25615942028985506,
-      "mrr": 0.7518115942028986,
-      "ndcg_at_5": 0.648713266844184,
+      "mrr": 0.746376811594203,
+      "ndcg_at_5": 0.6463127583941414,
       "evidence_coverage": 0.9130434782608695,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 713.703125,
-      "latency_ms_p50": 7.833200041204691,
-      "latency_ms_p95": 9.586600004695356,
+      "mean_context_tokens": 716.78125,
+      "latency_ms_p50": 4.949199967086315,
+      "latency_ms_p95": 6.887599942274392,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -101,8 +101,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.926989231115351,
-      "storage_overhead_ratio": 4.778718785650907,
+      "ingest_ms_per_event": 3.328241984615856,
+      "storage_overhead_ratio": 4.775637856206688,
       "pooled_accuracy_ci95": [
         0.3906,
         0.6406
@@ -116,15 +116,15 @@
         0.6875
       ],
       "recall_at_5": 0.7579992471296819,
-      "precision_at_5": 0.28731884057971013,
+      "precision_at_5": 0.2851449275362319,
       "mrr": 0.8442028985507247,
       "ndcg_at_5": 0.7426596403563946,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 720.75,
-      "latency_ms_p50": 8.874000050127506,
-      "latency_ms_p95": 33.92920002806932,
+      "mean_context_tokens": 723.03125,
+      "latency_ms_p50": 6.831399980001152,
+      "latency_ms_p95": 11.881600017659366,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -142,8 +142,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.482733076796508,
-      "storage_overhead_ratio": 4.778718785650907,
+      "ingest_ms_per_event": 3.5661908394465125,
+      "storage_overhead_ratio": 4.775637856206688,
       "pooled_accuracy_ci95": [
         0.4531,
         0.6875
@@ -157,15 +157,15 @@
         0.5469
       ],
       "recall_at_5": 0.7579992471296819,
-      "precision_at_5": 0.28731884057971013,
+      "precision_at_5": 0.2851449275362319,
       "mrr": 0.8442028985507247,
       "ndcg_at_5": 0.7426596403563946,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 720.75,
-      "latency_ms_p50": 9.026599931530654,
-      "latency_ms_p95": 12.519799987785518,
+      "mean_context_tokens": 723.03125,
+      "latency_ms_p50": 4.366700071841478,
+      "latency_ms_p95": 6.521699950098991,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -183,8 +183,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.577676922333642,
-      "storage_overhead_ratio": 4.778718785650907,
+      "ingest_ms_per_event": 3.2540877857991983,
+      "storage_overhead_ratio": 4.775637856206688,
       "pooled_accuracy_ci95": [
         0.2969,
         0.5469
@@ -198,15 +198,15 @@
         0.7656
       ],
       "recall_at_5": 0.7579992471296819,
-      "precision_at_5": 0.28731884057971013,
+      "precision_at_5": 0.2851449275362319,
       "mrr": 0.8442028985507247,
       "ndcg_at_5": 0.7426596403563946,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 0.7222222222222222,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 661.375,
-      "latency_ms_p50": 10.067799943499267,
-      "latency_ms_p95": 14.20580002013594,
+      "mean_context_tokens": 663.234375,
+      "latency_ms_p50": 9.435799904167652,
+      "latency_ms_p95": 12.849299935624003,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.25,
         "dev/changelog": 1.0,
@@ -224,8 +224,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 5.631465385130678,
-      "storage_overhead_ratio": 4.778718785650907,
+      "ingest_ms_per_event": 5.047101526563802,
+      "storage_overhead_ratio": 4.775637856206688,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7656
@@ -245,9 +245,9 @@
       "evidence_coverage": 0.6304347826086957,
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.2608695652173913,
-      "mean_context_tokens": 167.890625,
-      "latency_ms_p50": 63.883,
-      "latency_ms_p95": 158.887,
+      "mean_context_tokens": 168.140625,
+      "latency_ms_p50": 41.136,
+      "latency_ms_p95": 105.164,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -265,8 +265,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 22.918126153616377,
-      "storage_overhead_ratio": 23.493978958042845,
+      "ingest_ms_per_event": 15.841099999681513,
+      "storage_overhead_ratio": 23.49866189500781,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -286,9 +286,9 @@
       "evidence_coverage": 0.6521739130434783,
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.34782608695652173,
-      "mean_context_tokens": 165.0,
-      "latency_ms_p50": 52.714,
-      "latency_ms_p95": 177.95,
+      "mean_context_tokens": 164.96875,
+      "latency_ms_p50": 29.976,
+      "latency_ms_p95": 94.683,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -306,8 +306,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 24.34173999981095,
-      "storage_overhead_ratio": 22.909874508809736,
+      "ingest_ms_per_event": 22.175012213241963,
+      "storage_overhead_ratio": 22.92003547351651,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -327,9 +327,9 @@
       "evidence_coverage": 0.717391304347826,
       "unsupported_answer_rate": 0.3888888888888889,
       "false_abstain_rate": 0.15217391304347827,
-      "mean_context_tokens": 199.4375,
-      "latency_ms_p50": 49.497,
-      "latency_ms_p95": 99.975,
+      "mean_context_tokens": 199.6875,
+      "latency_ms_p50": 54.964,
+      "latency_ms_p95": 135.599,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
@@ -347,8 +347,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 21.136782307607625,
-      "storage_overhead_ratio": 23.493978958042845,
+      "ingest_ms_per_event": 27.149222137136313,
+      "storage_overhead_ratio": 23.49866189500781,
       "pooled_accuracy_ci95": [
         0.5156,
         0.7344
@@ -368,9 +368,9 @@
       "evidence_coverage": 0.8260869565217391,
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.043478260869565216,
-      "mean_context_tokens": 228.59375,
-      "latency_ms_p50": 41.758,
-      "latency_ms_p95": 99.705,
+      "mean_context_tokens": 228.84375,
+      "latency_ms_p50": 50.089,
+      "latency_ms_p95": 105.082,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -388,8 +388,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 13.750349999799464,
-      "storage_overhead_ratio": 23.42907846368361,
+      "ingest_ms_per_event": 26.054061831949095,
+      "storage_overhead_ratio": 23.434370070397666,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7812
@@ -409,9 +409,9 @@
       "evidence_coverage": 0.8478260869565217,
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 232.484375,
-      "latency_ms_p50": 48.613,
-      "latency_ms_p95": 102.131,
+      "mean_context_tokens": 232.734375,
+      "latency_ms_p50": 42.86,
+      "latency_ms_p95": 111.398,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -429,8 +429,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 14.39419307728083,
-      "storage_overhead_ratio": 23.42907846368361,
+      "ingest_ms_per_event": 22.195548091958212,
+      "storage_overhead_ratio": 23.434370070397666,
       "pooled_accuracy_ci95": [
         0.5781,
         0.7969
@@ -998,10 +998,10 @@
       ],
       "status": "answered",
       "strategy": "bm25",
-      "answer": "# ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only An **answer-type guard** also applies to plain fact and passage answers: a fact or passage that cannot be of the requested kind never answers (it fixed a confidently wrong \"Project Atlas\" for a region question).",
+      "answer": "# ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only - **Explicit causal links** (`link`, `unlink`, `lineage`, `why`; kinds `causes`, `solves`, `supersedes`, `blocked_by`), **counterfactual replay** (`replay`, on a temporary copy of the database) and **`memoraos sleep`** (consolidation, audit-chain check, optional hypothesis expiry).",
       "cited": [
         "docs/ADR/0001-evolve-modular-monolith.md > ADR-0001: Evolve the v0.1 modular monolith; additive storage changes only",
-        "docs/RETRIEVAL.md > Evidence fusion (`strategy=\"fusion\"`)",
+        "CHANGELOG.md > Added",
         "docs/V02_ARCHITECTURE.md > Storage changes (migration 2, additive)"
       ],
       "correct": true
@@ -1659,5 +1659,5 @@
       "correct": true
     }
   ],
-  "wall_clock_seconds": 48.9
+  "wall_clock_seconds": 47.1
 }

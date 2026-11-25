@@ -13,9 +13,9 @@
   <a href="https://github.com/ParthivPandya/MemoraOS/actions/workflows/ci.yml"><img src="https://github.com/ParthivPandya/MemoraOS/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.10%2B-3776AB.svg?logo=python&logoColor=white" alt="Python 3.10+"></a>
-  <img src="https://img.shields.io/badge/tests-335_passing-brightgreen.svg" alt="335 tests passing">
+  <img src="https://img.shields.io/badge/tests-358_passing-brightgreen.svg" alt="358 tests passing">
   <img src="https://img.shields.io/badge/runs-100%25_local-success.svg" alt="Runs 100% local">
-  <img src="https://img.shields.io/badge/status-v0.4_alpha-orange.svg" alt="Status: v0.4 alpha">
+  <img src="https://img.shields.io/badge/status-v0.5_alpha-orange.svg" alt="Status: v0.5 alpha">
   <a href="https://github.com/ParthivPandya/MemoraOS/stargazers"><img src="https://img.shields.io/github/stars/ParthivPandya/MemoraOS?style=social" alt="GitHub stars"></a>
 </p>
 
@@ -135,7 +135,7 @@ Also available: `explain()`, `history()`, `recall(as_of=...)`, `correct()`, `for
 ```bash
 memoraos keys create --tenant default --role admin     # prints an API key once
 memoraos serve                                         # REST API on http://127.0.0.1:8000 (docs at /docs)
-python -m pytest                                       # 335 tests
+python -m pytest                                       # 358 tests
 memoraos ci run contracts/python_releases_and_security.json   # Memory CI regression contract
 python -m benchmarks.public locomo --help              # public retrieval runs (download the data first, see docs/PUBLIC_BENCHMARKS.md)
 docker compose up --build                              # optional container, see docs/DOCKER.md
@@ -350,6 +350,13 @@ Every `Evidence` carries `span_start`, `span_end` and `quote_sha256`; `mem.verif
 
 `remember_outcome` / `outcome_warnings` (MCP: `memora_outcome`, `memora_warnings`) record failed attempts and warn when a similar action comes up again; `verification="hypothesis"` stores unchecked guesses as flagged, lower-reliability memory; `memoraos hook install claude-code --user me` stores the last exchange of each Claude Code response as hypotheses. Warnings use lexical overlap, the hook has not been run in a real Claude Code session, and none of this is benchmarked. See [docs/AGENT_WORKFLOW.md](docs/AGENT_WORKFLOW.md).
 
+### Vault sync, integrations, causal links, replay, sleep
+
+- `memoraos sync <vault> --user me` keeps a Markdown folder and the store in step in both directions; a note edited on both sides is reported as a conflict and left alone ([docs/VAULT_SYNC.md](docs/VAULT_SYNC.md)).
+- `MemoraOSRetriever` (LangChain, returns nothing when there is no supporting evidence) and a Mem0-shaped `Memory` class ([docs/INTEGRATIONS.md](docs/INTEGRATIONS.md)). There is no CrewAI adapter.
+- `mem.link(a, b, "causes" | "solves" | "supersedes" | "blocked_by")` and `mem.lineage(id)` record and walk **explicit** causal links, never inferred ones; `mem.replay(recall_id, exclude=[...])` re-runs a past recall without chosen memories on a temporary copy; `memoraos sleep` runs consolidation, an audit-chain check and an optional hypothesis expiry ([docs/CAUSAL_AND_REPLAY.md](docs/CAUSAL_AND_REPLAY.md)). No dashboard view exists for replay.
+- All of this is covered by unit tests on synthetic data only. Nothing here is benchmarked, and none of it was run against a real Obsidian vault, real Mem0 or a LangChain agent.
+
 ## Limitations
 
 Read these before relying on MemoraOS.
@@ -366,12 +373,13 @@ Read these before relying on MemoraOS.
 - **Vector search is exact brute force by default**, which was fast enough in the measured runs ([docs/SCALING.md](docs/SCALING.md)). An opt-in IVF index exists but its recall@10 was only 0.52-0.93 with the hashing embedder and it is unmeasured with neural embedders, so it is off.
 - **Encryption at rest is opt-in** and rewrites the whole file on each commit; backups and plain `sources/` copies are not rewritten on delete or encryption. See [docs/SECURITY.md](docs/SECURITY.md) and [docs/PERFORMANCE.md](docs/PERFORMANCE.md).
 - **Not delivered:** the real-LLM extractor is unmeasured (no model was available), and lifecycle controls, change sets, connectors and the Memorilla adapter remain deferred ([status](docs/NEXT_IMPLEMENTATION_STATUS.md)).
+- **New in 0.5, unproven beyond tests.** Vault sync, the LangChain and Mem0-shaped adapters, causal links, replay and `sleep` are tested on synthetic data only; a multi-chunk note edited in a vault loses its pre-edit text; replay copies the whole database per run.
 - **Test data.** Unit and integration tests and the synthetic benchmark generators use controlled inputs by necessity. They are fixtures, not evidence.
 - **CI status.** The workflow in `.github/workflows` runs on ubuntu and windows with Python 3.10, 3.12 and 3.13, plus a security job and a TypeScript job. The run for the commit that added encryption, Docker and the public benchmarks failed on Python 3.10 because one new test compared a float to exactly `0.0`; commit `226975b` fixed that and made CI install the `encryption` extra, and all 8 jobs passed on it. Encryption needs Python 3.11+, so its tests skip on 3.10. A `docker` job builds the image on an ubuntu runner and runs `scripts/docker_smoke.sh` (health, 401 without a key, remember and recall, restart persistence, encrypted file); it passed on commit `e6a792d` together with the other 8 jobs. Check the Actions tab for the current state; nothing here is a live status.
 
 ## Documentation
 
-[Evidence](docs/EVIDENCE.md) · [Public benchmarks](docs/PUBLIC_BENCHMARKS.md) · [Competitive intelligence](docs/COMPETITIVE_INTELLIGENCE.md) · [Scaling](docs/SCALING.md) · [Docker](docs/DOCKER.md) · [Citations](docs/CITATIONS.md) · [Agent workflow](docs/AGENT_WORKFLOW.md) · [MCP setup](docs/MCP.md) · [Memory CI](docs/MEMORY_CI.md) · [Answerability](docs/NEXT_ANSWERABILITY.md) · [Next: audit](docs/NEXT_REPOSITORY_AUDIT.md) · [Next: status](docs/NEXT_IMPLEMENTATION_STATUS.md) · [Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) · [Memory design](docs/MEMORY_DESIGN.md) · [Adaptive routing](docs/ADAPTIVE_ROUTING.md) · [Temporal memory](docs/TEMPORAL_MEMORY.md) · [Extraction](docs/EXTRACTION.md) · [Retrieval](docs/RETRIEVAL.md) · [Latent memory](docs/LATENT_MEMORY.md) · [Benchmark methodology](docs/BENCHMARK_METHODOLOGY.md) · [Research](docs/RESEARCH_AND_COMPETITIVE_ANALYSIS.md) · [Security](docs/SECURITY.md) · [Performance](docs/PERFORMANCE.md) · [Roadmap](docs/ROADMAP.md) · [Implementation status](docs/IMPLEMENTATION_STATUS.md) · [v0.2 architecture](docs/V02_ARCHITECTURE.md) · [Changelog](CHANGELOG.md) · [ADRs](docs/ADR)
+[Evidence](docs/EVIDENCE.md) · [Public benchmarks](docs/PUBLIC_BENCHMARKS.md) · [Competitive intelligence](docs/COMPETITIVE_INTELLIGENCE.md) · [Scaling](docs/SCALING.md) · [Docker](docs/DOCKER.md) · [Citations](docs/CITATIONS.md) · [Agent workflow](docs/AGENT_WORKFLOW.md) · [Vault sync](docs/VAULT_SYNC.md) · [Integrations](docs/INTEGRATIONS.md) · [Causal links, replay, sleep](docs/CAUSAL_AND_REPLAY.md) · [MCP setup](docs/MCP.md) · [Memory CI](docs/MEMORY_CI.md) · [Answerability](docs/NEXT_ANSWERABILITY.md) · [Next: audit](docs/NEXT_REPOSITORY_AUDIT.md) · [Next: status](docs/NEXT_IMPLEMENTATION_STATUS.md) · [Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) · [Memory design](docs/MEMORY_DESIGN.md) · [Adaptive routing](docs/ADAPTIVE_ROUTING.md) · [Temporal memory](docs/TEMPORAL_MEMORY.md) · [Extraction](docs/EXTRACTION.md) · [Retrieval](docs/RETRIEVAL.md) · [Latent memory](docs/LATENT_MEMORY.md) · [Benchmark methodology](docs/BENCHMARK_METHODOLOGY.md) · [Research](docs/RESEARCH_AND_COMPETITIVE_ANALYSIS.md) · [Security](docs/SECURITY.md) · [Performance](docs/PERFORMANCE.md) · [Roadmap](docs/ROADMAP.md) · [Implementation status](docs/IMPLEMENTATION_STATUS.md) · [v0.2 architecture](docs/V02_ARCHITECTURE.md) · [Changelog](CHANGELOG.md) · [ADRs](docs/ADR)
 
 ## Contributing
 
