@@ -54,10 +54,12 @@ claude mcp add memoraos --env MEMORAOS_USER_ID=me -- memoraos --data-dir /absolu
 | `memora_correct` | Replace a memory; history is kept. |
 | `memora_forget` | Permanently delete a memory. |
 | `memora_history` | Value timeline for a subject and predicate. |
+| `memora_outcome` | Record that an action failed or succeeded (with reason and optional evidence reference). |
+| `memora_warnings` | Recorded failures that match a planned action. |
 | `memora_explain` | Show how an earlier recall was answered. |
 
 Retrieved memory is returned as data. A client should still treat it as untrusted text.
 
 ## Not provided
 
-No automatic capture: the agent has to call `memora_remember` itself, or you instruct it to in the project's agent instructions. There are no hooks for Claude Code or Codex, and no LangChain or LlamaIndex adapters.
+No automatic capture: the agent has to call `memora_remember` itself, or you instruct it to in the project's agent instructions. There is a Claude Code Stop hook (`memoraos hook install claude-code`, see [AGENT_WORKFLOW.md](AGENT_WORKFLOW.md), not yet run in a real session) but none for Codex or Cursor, and no LangChain or LlamaIndex adapters.

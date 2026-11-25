@@ -35,6 +35,8 @@ def content_hash(normalized: str) -> str:
 def adjust_reliability(base: float, verification: str) -> float:
     if verification == "verified":
         return min(1.0, base + 0.1)
+    if verification == "hypothesis":
+        return max(0.05, base - 0.2)
     if verification == "disputed":
         return max(0.05, base - 0.3)
     return base

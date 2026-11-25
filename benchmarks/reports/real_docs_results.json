@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real-document benchmark",
   "command": "python -m benchmarks.real_docs",
-  "generated_at": "2026-11-20T08:01:38+00:00",
+  "generated_at": "2026-11-25T04:14:27+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -14,9 +14,9 @@
   },
   "corpus": {
     "files": 26,
-    "sections": 129,
-    "characters": 125200,
-    "sha256": "ced27bbc003e6d41260b50a33e74fec9647aed7fa3874a73d3b034b38061d09f"
+    "sections": 130,
+    "characters": 125641,
+    "sha256": "0800835967584df12f856982df09116d5139a23df252a49feaf6841f1f7d32f6"
   },
   "questions": {
     "answerable": 46,
@@ -40,9 +40,9 @@
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 736.984375,
-      "latency_ms_p50": 6.474800000432879,
-      "latency_ms_p95": 8.159800025168806,
+      "mean_context_tokens": 736.34375,
+      "latency_ms_p50": 8.114199968986213,
+      "latency_ms_p95": 10.32390003092587,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -60,8 +60,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.070875193721564,
-      "storage_overhead_ratio": 4.775685108480478,
+      "ingest_ms_per_event": 7.283656154042826,
+      "storage_overhead_ratio": 4.778718785650907,
       "pooled_accuracy_ci95": [
         0.4531,
         0.6875
@@ -75,15 +75,15 @@
         0.6406
       ],
       "recall_at_5": 0.6707917686178556,
-      "precision_at_5": 0.25724637681159424,
+      "precision_at_5": 0.25615942028985506,
       "mrr": 0.7518115942028986,
       "ndcg_at_5": 0.648713266844184,
       "evidence_coverage": 0.9130434782608695,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 715.96875,
-      "latency_ms_p50": 4.091500013601035,
-      "latency_ms_p95": 6.223699951078743,
+      "mean_context_tokens": 713.703125,
+      "latency_ms_p50": 7.833200041204691,
+      "latency_ms_p95": 9.586600004695356,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -101,8 +101,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.400320155293385,
-      "storage_overhead_ratio": 4.775685108480478,
+      "ingest_ms_per_event": 4.926989231115351,
+      "storage_overhead_ratio": 4.778718785650907,
       "pooled_accuracy_ci95": [
         0.3906,
         0.6406
@@ -122,9 +122,9 @@
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 718.84375,
-      "latency_ms_p50": 5.8794000069610775,
-      "latency_ms_p95": 7.911299995612353,
+      "mean_context_tokens": 720.75,
+      "latency_ms_p50": 8.874000050127506,
+      "latency_ms_p95": 33.92920002806932,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -142,8 +142,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 2.751220930042828,
-      "storage_overhead_ratio": 4.775685108480478,
+      "ingest_ms_per_event": 4.482733076796508,
+      "storage_overhead_ratio": 4.778718785650907,
       "pooled_accuracy_ci95": [
         0.4531,
         0.6875
@@ -163,9 +163,9 @@
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 718.84375,
-      "latency_ms_p50": 5.230400012806058,
-      "latency_ms_p95": 7.138099987059832,
+      "mean_context_tokens": 720.75,
+      "latency_ms_p50": 9.026599931530654,
+      "latency_ms_p95": 12.519799987785518,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -183,8 +183,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.1261682170154454,
-      "storage_overhead_ratio": 4.775685108480478,
+      "ingest_ms_per_event": 4.577676922333642,
+      "storage_overhead_ratio": 4.778718785650907,
       "pooled_accuracy_ci95": [
         0.2969,
         0.5469
@@ -204,9 +204,9 @@
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 0.7222222222222222,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 659.46875,
-      "latency_ms_p50": 6.478499970398843,
-      "latency_ms_p95": 8.60369997099042,
+      "mean_context_tokens": 661.375,
+      "latency_ms_p50": 10.067799943499267,
+      "latency_ms_p95": 14.20580002013594,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.25,
         "dev/changelog": 1.0,
@@ -224,8 +224,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 3.226572868338418,
-      "storage_overhead_ratio": 4.775685108480478,
+      "ingest_ms_per_event": 5.631465385130678,
+      "storage_overhead_ratio": 4.778718785650907,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7656
@@ -246,8 +246,8 @@
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.2608695652173913,
       "mean_context_tokens": 167.890625,
-      "latency_ms_p50": 51.004,
-      "latency_ms_p95": 104.942,
+      "latency_ms_p50": 63.883,
+      "latency_ms_p95": 158.887,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -265,8 +265,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 14.796600775439437,
-      "storage_overhead_ratio": 23.543785726211013,
+      "ingest_ms_per_event": 22.918126153616377,
+      "storage_overhead_ratio": 23.493978958042845,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -287,8 +287,8 @@
       "unsupported_answer_rate": 0.2777777777777778,
       "false_abstain_rate": 0.34782608695652173,
       "mean_context_tokens": 165.0,
-      "latency_ms_p50": 34.548,
-      "latency_ms_p95": 79.631,
+      "latency_ms_p50": 52.714,
+      "latency_ms_p95": 177.95,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.6666666666666666,
         "dev/changelog": 0.5,
@@ -306,8 +306,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 15.701125581683808,
-      "storage_overhead_ratio": 22.95763338447962,
+      "ingest_ms_per_event": 24.34173999981095,
+      "storage_overhead_ratio": 22.909874508809736,
       "pooled_accuracy_ci95": [
         0.4688,
         0.7188
@@ -328,8 +328,8 @@
       "unsupported_answer_rate": 0.3888888888888889,
       "false_abstain_rate": 0.15217391304347827,
       "mean_context_tokens": 199.4375,
-      "latency_ms_p50": 38.624,
-      "latency_ms_p95": 67.44,
+      "latency_ms_p50": 49.497,
+      "latency_ms_p95": 99.975,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
@@ -347,8 +347,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 16.213825581209054,
-      "storage_overhead_ratio": 23.543785726211013,
+      "ingest_ms_per_event": 21.136782307607625,
+      "storage_overhead_ratio": 23.493978958042845,
       "pooled_accuracy_ci95": [
         0.5156,
         0.7344
@@ -369,8 +369,8 @@
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.043478260869565216,
       "mean_context_tokens": 228.59375,
-      "latency_ms_p50": 34.866,
-      "latency_ms_p95": 78.655,
+      "latency_ms_p50": 41.758,
+      "latency_ms_p95": 99.705,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -388,8 +388,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 15.42456434090268,
-      "storage_overhead_ratio": 23.478657688240858,
+      "ingest_ms_per_event": 13.750349999799464,
+      "storage_overhead_ratio": 23.42907846368361,
       "pooled_accuracy_ci95": [
         0.5469,
         0.7812
@@ -410,8 +410,8 @@
       "unsupported_answer_rate": 0.5,
       "false_abstain_rate": 0.021739130434782608,
       "mean_context_tokens": 232.484375,
-      "latency_ms_p50": 31.333,
-      "latency_ms_p95": 77.905,
+      "latency_ms_p50": 48.613,
+      "latency_ms_p95": 102.131,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.5,
         "dev/changelog": 1.0,
@@ -429,8 +429,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 13.87136124025727,
-      "storage_overhead_ratio": 23.478657688240858,
+      "ingest_ms_per_event": 14.39419307728083,
+      "storage_overhead_ratio": 23.42907846368361,
       "pooled_accuracy_ci95": [
         0.5781,
         0.7969
@@ -1659,5 +1659,5 @@
       "correct": true
     }
   ],
-  "wall_clock_seconds": 35.4
+  "wall_clock_seconds": 48.9
 }

@@ -107,6 +107,17 @@ def main(argv: list[str] | None = None) -> int:
     sv.add_argument("--port", type=int, default=8000)
     sv.add_argument("--insecure-no-auth", action="store_true", help="development only: disable authentication")
     sub.add_parser("mcp", help="start the MCP stdio server (set MEMORAOS_USER_ID)")
+    hk = sub.add_parser("hook", help="Claude Code hook: install/uninstall a Stop hook, or capture a hook payload from stdin")
+    hks = hk.add_subparsers(dest="hook_cmd", required=True)
+    hi = hks.add_parser("install", help="add the hook to Claude Code settings")
+    hi.add_argument("target", choices=["claude-code"])
+    hi.add_argument("--user", required=True)
+    hi.add_argument("--project", action="store_true", help="write ./.claude/settings.json instead of ~/.claude/settings.json")
+    hu = hks.add_parser("uninstall", help="remove the hook")
+    hu.add_argument("target", choices=["claude-code"])
+    hu.add_argument("--project", action="store_true")
+    hc = hks.add_parser("capture", help="read a Claude Code hook payload (JSON) on stdin and store the last exchange as hypotheses")
+    hc.add_argument("--user", required=True)
 
     b = sub.add_parser("bench", help="run the benchmark suite")
     b.add_argument("--seed", type=int, default=7)
@@ -166,6 +177,28 @@ def main(argv: list[str] | None = None) -> int:
             print(str(exc), file=sys.stderr)
             return 2
         uvicorn.run(app, host=args.host, port=args.port)
+        return 0
+    if args.cmd == "hook":
+        from . import hooks
+
+        settings = (Path.cwd() / ".claude" if getattr(args, "project", False) else Path.home() / ".claude") / "settings.json"
+        if args.hook_cmd == "install":
+            data_dir = Path(args.data_dir or ".memoraos").resolve()
+            cmd = f'memoraos --data-dir "{data_dir}" hook capture --user {args.user}'
+            print(f"installed in {settings}" if hooks.install_claude_code(settings, cmd) else f"already installed in {settings}")
+            return 0
+        if args.hook_cmd == "uninstall":
+            print(f"removed from {settings}" if hooks.uninstall_claude_code(settings) else f"no memoraos hook in {settings}")
+            return 0
+        try:
+            payload = json.loads(sys.stdin.read() or "{}")
+        except ValueError:
+            return 0
+        eng = _engine(args)
+        try:
+            hooks.capture(eng, payload, args.user)
+        finally:
+            eng.close()
         return 0
     if args.cmd == "mcp":
         from .mcp.server import main as mcp_main

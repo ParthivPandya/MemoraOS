@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 
 ScopeLevel = Literal["user", "agent", "session", "project", "org"]
 Category = Literal["episodic", "semantic", "procedural"]
-Verification = Literal["unverified", "verified", "disputed"]
+Verification = Literal["unverified", "verified", "disputed", "hypothesis"]
 SourceType = Literal[
     "user_statement", "conversation", "document", "structured", "external", "inferred", "consolidation"
 ]

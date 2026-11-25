@@ -31,7 +31,7 @@ Statuses (exactly one per feature): COMPLETED_AND_TESTED, IMPLEMENTED_NOT_FULLY_
 ## Commands
 
 ```bash
-python -m pytest -q                                        # 330 tests
+python -m pytest -q                                        # 335 tests
 python -m ruff check src tests benchmarks scripts examples
 python -m bandit -q -r src -ll -c pyproject.toml
 python -m benchmarks.run                                   # synthetic; digest fca60a1fe780

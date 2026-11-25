@@ -574,8 +574,8 @@ class MemoryOS:
         return self.get(memory_id, user_id=user_id, tenant_id=tenant_id, **scope_kw)
 
     def verify(self, memory_id: str, status: str, *, user_id: str, tenant_id: str = "default", **scope_kw: Any) -> None:
-        if status not in ("unverified", "verified", "disputed"):
-            raise ValueError("status must be unverified, verified or disputed")
+        if status not in ("unverified", "verified", "disputed", "hypothesis"):
+            raise ValueError("status must be unverified, verified, disputed or hypothesis")
         scope = self.scope_for(user_id, tenant_id, **scope_kw)
         row = self._owned(scope, memory_id, write=True)
         src = self.db.one("SELECT source_type, verification FROM sources WHERE id=?", (row["source_id"],))
@@ -662,6 +662,51 @@ class MemoryOS:
                 item["before"], item["after"] = vs.get(d.get("from_version")), vs.get(d.get("to_version"))
             out.append(item)
         return out
+
+    def remember_outcome(
+        self, action: str, outcome: str, *, user_id: str, reason: str | None = None, evidence_ref: str | None = None,
+        tenant_id: str = "default", **kw: Any,
+    ) -> RememberResult:
+        """Record that an attempted action ``failed`` or ``succeeded`` so later recalls can warn about it.
+
+        An ``evidence_ref`` (for example a test run id or log path) marks the record ``verified``; without one it is
+        stored as a ``hypothesis`` (lower reliability, flagged), because nothing checked the claim.
+        """
+        if outcome not in ("failed", "succeeded"):
+            raise ValueError("outcome must be failed or succeeded")
+        if not action or not action.strip():
+            raise ValueError("action must be non-empty")
+        text = f"Attempted: {action.strip()}. Outcome: {outcome}." + (f" Reason: {reason.strip()}." if reason and reason.strip() else "")
+        meta = {"kind": "outcome", "outcome": outcome, "action": action.strip(), "reason": reason, "evidence_ref": evidence_ref}
+        return self.remember(
+            text, user_id=user_id, tenant_id=tenant_id, source_type="conversation", extract=False, metadata=meta,
+            verification="verified" if evidence_ref else "hypothesis", **kw,
+        )
+
+    def outcome_warnings(self, query: str, *, user_id: str, tenant_id: str = "default", limit: int = 5) -> list[dict]:
+        """Recorded failures whose action overlaps the query, unless a later success for the same action exists."""
+        from .ingestion.lexicon import query_stems
+
+        q = query_stems(query)
+        rows = self.db.query(
+            "SELECT id, metadata, created_at FROM memories WHERE tenant_id=? AND user_id=? AND status='active' AND metadata LIKE ? ORDER BY created_at",
+            (tenant_id, user_id, '%"kind": "outcome"%'),
+        )
+        items = []
+        for r in rows:
+            m = json.loads(r["metadata"])
+            toks = query_stems(m.get("action", ""))
+            if toks and len(toks & q) / len(toks) >= 0.5:
+                items.append((r["id"], r["created_at"], m, toks))
+        out = []
+        for i, (mid, ts_, m, toks) in enumerate(items):
+            if m["outcome"] != "failed":
+                continue
+            if any(o[2]["outcome"] == "succeeded" and o[1] > ts_ and len(o[3] & toks) / len(toks) >= 0.5 for o in items[i + 1:]):
+                continue
+            out.append({"memory_id": mid, "action": m["action"], "reason": m.get("reason"), "recorded_at": ts_,
+                        "evidence_ref": m.get("evidence_ref"), "verified": bool(m.get("evidence_ref"))})
+        return out[-limit:][::-1]
 
     def verify_citations(self, evidence: list[Any], *, user_id: str, tenant_id: str = "default") -> dict:
         """Re-check, against the stored data, that every cited quote is still there unchanged.

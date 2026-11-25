@@ -16,7 +16,7 @@ _Last updated for v0.2.1. This file lists what works, what is partial, and what 
 
 ## Test results (v0.2)
 
-`python -m pytest` → **330 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
+`python -m pytest` → **335 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
 
 ## Test results (v0.1)
 

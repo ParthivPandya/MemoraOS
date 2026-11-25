@@ -28,6 +28,16 @@ TOOLS: list[dict[str, Any]] = [
         "inputSchema": {"type": "object", "properties": {"query": {"type": "string"}, "as_of": {"type": "string", "description": "ISO timestamp for time-travel recall"}, "top_k": {"type": "integer"}}, "required": ["query"]},
     },
     {
+        "name": "memora_outcome",
+        "description": "Record that an attempted action failed or succeeded (with the reason), so later work does not repeat a known failure. Pass evidence_ref (test run, log path) only if something actually verified it.",
+        "inputSchema": {"type": "object", "properties": {"action": {"type": "string"}, "outcome": {"type": "string", "enum": ["failed", "succeeded"]}, "reason": {"type": "string"}, "evidence_ref": {"type": "string"}}, "required": ["action", "outcome"]},
+    },
+    {
+        "name": "memora_warnings",
+        "description": "Known failed attempts that match a planned action. Call before retrying or starting similar work.",
+        "inputSchema": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]},
+    },
+    {
         "name": "memora_correct",
         "description": "Replace the content of a memory with a corrected version (history is kept).",
         "inputSchema": {"type": "object", "properties": {"memory_id": {"type": "string"}, "new_content": {"type": "string"}, "reason": {"type": "string"}}, "required": ["memory_id", "new_content"]},
@@ -61,7 +71,11 @@ class McpServer:
             return e.remember(str(args["text"]), effective_at=args.get("effective_at"), **kw).model_dump()
         if name == "memora_recall":
             r = e.recall(str(args["query"]), as_of=args.get("as_of"), top_k=args.get("top_k"), **kw)
-            return {"answer": r.answer, "status": r.status, "strategy": r.strategy, "recall_id": r.recall_id, "evidence": [ev.model_dump() for ev in r.evidence], "contradictions": [c.model_dump() for c in r.contradictions], "flags": r.flags}
+            return {"answer": r.answer, "status": r.status, "strategy": r.strategy, "recall_id": r.recall_id, "evidence": [ev.model_dump() for ev in r.evidence], "contradictions": [c.model_dump() for c in r.contradictions], "flags": r.flags, "warnings": e.outcome_warnings(str(args["query"]), **kw)}
+        if name == "memora_outcome":
+            return e.remember_outcome(str(args["action"]), str(args["outcome"]), reason=args.get("reason"), evidence_ref=args.get("evidence_ref"), **kw).model_dump()
+        if name == "memora_warnings":
+            return {"warnings": e.outcome_warnings(str(args["query"]), **kw)}
         if name == "memora_correct":
             return e.correct(str(args["memory_id"]), str(args["new_content"]), reason=args.get("reason"), **kw).model_dump()
         if name == "memora_forget":

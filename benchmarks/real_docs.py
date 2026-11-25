@@ -37,7 +37,7 @@ EXCLUDE = {"docs/EVIDENCE.md"}
 # documentation it was written against (a document that discusses the questions would contaminate the answers).
 EXCLUDE_PATTERNS = (
     r"docs/NEXT_[A-Z_]+\.md", r"docs/COMPETITIVE_INTELLIGENCE\.md", r"docs/MEMORY_CI\.md", r"docs/ADR/00(?:0[89]|[1-9]\d)-.*\.md",
-    r"docs/DOCKER\.md", r"docs/PUBLIC_BENCHMARKS\.md", r"docs/SCALING\.md", r"docs/CITATIONS\.md",
+    r"docs/DOCKER\.md", r"docs/PUBLIC_BENCHMARKS\.md", r"docs/SCALING\.md", r"docs/CITATIONS\.md", r"docs/AGENT_WORKFLOW\.md",
         r"docs/MCP\.md",
 )
 FILES = ["CHANGELOG.md", "SECURITY.md"]

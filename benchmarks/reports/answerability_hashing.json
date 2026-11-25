@@ -7,8 +7,8 @@
     "heldout",
     "validation"
   ],
-  "generated_at": "2026-11-20T08:01:55+00:00",
-  "corpus_sha256": "ced27bbc003e6d41260b50a33e74fec9647aed7fa3874a73d3b034b38061d09f",
+  "generated_at": "2026-11-25T04:14:53+00:00",
+  "corpus_sha256": "0800835967584df12f856982df09116d5139a23df252a49feaf6841f1f7d32f6",
   "counts": {
     "dev": {
       "answerable": 30,
@@ -774,8 +774,8 @@
         },
         "calibration": {
           "n_answered": 67,
-          "brier": 0.3027028117910448,
-          "ece": 0.2717268656716418,
+          "brier": 0.2989729610447761,
+          "ece": 0.2692402985074627,
           "stated_confidence": "evidence_coverage"
         }
       },
@@ -960,8 +960,8 @@
         },
         "calibration": {
           "n_answered": 28,
-          "brier": 0.35008589464285716,
-          "ece": 0.32521071428571424,
+          "brier": 0.34116089464285715,
+          "ece": 0.31926071428571434,
           "stated_confidence": "evidence_coverage"
         }
       },
@@ -1150,8 +1150,8 @@
         },
         "calibration": {
           "n_answered": 79,
-          "brier": 0.2977803318987342,
-          "ece": 0.25215443037974683,
+          "brier": 0.2946170407594937,
+          "ece": 0.2500455696202532,
           "stated_confidence": "evidence_coverage"
         }
       },
@@ -1336,8 +1336,8 @@
         },
         "calibration": {
           "n_answered": 32,
-          "brier": 0.3399369634375,
-          "ece": 0.30122812499999996,
+          "brier": 0.3321275884375,
+          "ece": 0.29602187500000005,
           "stated_confidence": "evidence_coverage"
         }
       },
@@ -1526,8 +1526,8 @@
         },
         "calibration": {
           "n_answered": 84,
-          "brier": 0.297912455,
-          "ece": 0.26095476190476197,
+          "brier": 0.294937455,
+          "ece": 0.25897142857142863,
           "stated_confidence": "evidence_coverage"
         }
       },
@@ -1712,8 +1712,8 @@
         },
         "calibration": {
           "n_answered": 33,
-          "brier": 0.3447873584848485,
-          "ece": 0.32240303030303025,
+          "brier": 0.3372146312121212,
+          "ece": 0.31735454545454544,
           "stated_confidence": "evidence_coverage"
         }
       },
@@ -1902,8 +1902,8 @@
         },
         "calibration": {
           "n_answered": 79,
-          "brier": 0.2977803318987342,
-          "ece": 0.25215443037974683,
+          "brier": 0.2946170407594937,
+          "ece": 0.2500455696202532,
           "stated_confidence": "evidence_coverage"
         }
       },
@@ -2088,8 +2088,8 @@
         },
         "calibration": {
           "n_answered": 32,
-          "brier": 0.3399369634375,
-          "ece": 0.30122812499999996,
+          "brier": 0.3321275884375,
+          "ece": 0.29602187500000005,
           "stated_confidence": "evidence_coverage"
         }
       },

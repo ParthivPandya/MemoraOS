@@ -24,6 +24,13 @@ Status of each item: see `docs/NEXT_IMPLEMENTATION_STATUS.md`. Nothing here chan
 - `docs/SECURITY.md`, the roadmap and the status docs no longer say encryption at rest is missing.
 - `plan` and `tier` are single-valued attributes, so "the current plan" no longer returns the old and the new plan together (found while writing a Memory CI contract).
 
+## [0.4.0] - 2026-11-25
+
+### Added
+- **Hypothesis tier** (`verification="hypothesis"`): lower reliability, flagged on recall, promoted with `verify`.
+- **Outcome memory**: `remember_outcome` and `outcome_warnings` (lexical overlap), MCP tools `memora_outcome` and `memora_warnings`.
+- **Claude Code Stop hook**: `memoraos hook install|uninstall|capture` stores the last exchange as hypotheses. Not yet run in a real Claude Code session. See `docs/AGENT_WORKFLOW.md`.
+
 ## [0.3.0] - 2026-11-20
 
 ### Added

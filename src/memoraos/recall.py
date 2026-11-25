@@ -378,6 +378,8 @@ class Recaller:
             flags.append(INJECTION_FLAG)
         if row.derived:
             flags.append("derived")
+        if row.verification == "hypothesis":
+            flags.append("hypothesis")
         excerpt = excerpt[: EXCERPT_CHARS * 2]
         quote = excerpt[:-3] if excerpt.endswith("...") else excerpt
         start = row.content.find(quote) if quote else -1
