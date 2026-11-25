@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from .bundle import KEY_ENV as BUNDLE_KEY_ENV
 from .config import Settings
 from .engine import MemoryOS
 from .storage.crypto import ENV_KEY, EncryptionError
@@ -140,12 +141,54 @@ def main(argv: list[str] | None = None) -> int:
     hi.add_argument("target", choices=["claude-code", "cursor", "codex"])
     hi.add_argument("--user", required=True)
     hi.add_argument("--project", action="store_true", help="write the project-level config in the current directory instead of the user-level one")
+    hi.add_argument("--no-inject", action="store_true", help="capture only: do not add memory to the agent's context (claude-code, codex)")
     hu = hks.add_parser("uninstall", help="remove the hook")
     hu.add_argument("target", choices=["claude-code", "cursor", "codex"])
     hu.add_argument("--project", action="store_true")
     hc = hks.add_parser("capture", help="read a hook payload (JSON) on stdin and store the text as hypotheses")
     hc.add_argument("--user", required=True)
     hc.add_argument("--agent", choices=["claude-code", "cursor", "codex"], default="claude-code")
+    hc.add_argument("--inject", action="store_true", help="codex: also print cited memory for the prompt (recalled before the prompt is stored)")
+    hj = hks.add_parser("inject", help="read a hook payload on stdin and print cited memory and failed-attempt warnings for the agent (stores nothing)")
+    hj.add_argument("--user", required=True)
+    hj.add_argument("--agent", choices=["claude-code", "codex"], default="claude-code")
+
+    st = sub.add_parser("setup", help="install the hooks of every detected coding agent against one shared store (default ~/.memoraos)")
+    st.add_argument("--user", required=True)
+    st.add_argument("--agents", nargs="*", choices=["claude-code", "cursor", "codex"], help="default: those whose config folder exists")
+    st.add_argument("--project", action="store_true", help="write project-level configs in the current directory")
+    st.add_argument("--no-inject", action="store_true", help="capture only, no memory injection")
+    st.add_argument("--dry-run", action="store_true")
+
+    px = sub.add_parser("proxy", help="local OpenAI/Anthropic-compatible proxy that adds cited memory to chat requests")
+    px.add_argument("--target", required=True, help="upstream base URL, e.g. https://api.openai.com/v1 or https://api.anthropic.com")
+    px.add_argument("--user", required=True)
+    px.add_argument("--tenant", default="default")
+    px.add_argument("--host", default="127.0.0.1")
+    px.add_argument("--port", type=int, default=8080)
+    px.add_argument("--allow-remote", action="store_true", help="allow a non-loopback --host (the proxy has no authentication)")
+    px.add_argument("--no-inject", action="store_true", help="do not add memory to requests (capture only)")
+    px.add_argument("--no-redact", action="store_true", help="do not redact secrets in the latest user message")
+    px.add_argument("--capture", choices=["none", "user", "both"], default="user", help="what to store as hypotheses (default: the user's messages)")
+
+    ig = sub.add_parser("index-git", help="index a git repository's commits and ADRs as memories, with causal links from explicit text")
+    ig.add_argument("repo", nargs="?", default=".")
+    ig.add_argument("--user", required=True)
+    ig.add_argument("--tenant", default="default")
+    ig.add_argument("--rev", default="HEAD")
+    ig.add_argument("--since", help="git date, e.g. 2026-01-01 or '3 months ago'")
+    ig.add_argument("--max-commits", type=int, default=500)
+    ig.add_argument("--no-adrs", action="store_true")
+    xb = sub.add_parser("export-bundle", help=f"write a portable .mem bundle (optionally HMAC-signed with the key in {BUNDLE_KEY_ENV})")
+    xb.add_argument("file")
+    xb.add_argument("--user", required=True)
+    xb.add_argument("--tenant", default="default")
+    mb = sub.add_parser("import-bundle", help="verify and import a .mem bundle")
+    mb.add_argument("file")
+    mb.add_argument("--user", required=True)
+    mb.add_argument("--tenant", default="default")
+    mb.add_argument("--require-signature", action="store_true", help=f"fail unless the signature verifies with the key in {BUNDLE_KEY_ENV}")
+    mb.add_argument("--dry-run", action="store_true")
 
     b = sub.add_parser("bench", help="run the benchmark suite")
     b.add_argument("--seed", type=int, default=7)
@@ -212,9 +255,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.hook_cmd == "install":
             settings = hooks.config_path(args.target, project=args.project)
             data_dir = Path(args.data_dir or ".memoraos").resolve()
-            suffix = "" if args.target == "claude-code" else f" --agent {args.target}"
-            cmd = f'memoraos --data-dir "{data_dir}" hook capture --user {args.user}{suffix}'
-            print(f"installed in {settings}" if hooks.install(args.target, settings, cmd) else f"already installed in {settings}")
+            plan = hooks.command_plan(args.target, f'memoraos --data-dir "{data_dir}"', args.user, with_inject=not args.no_inject)
+            print(f"installed or updated in {settings}" if hooks.install(args.target, settings, plan) else f"already up to date in {settings}")
             if args.target == "codex":
                 print("Codex runs a new hook only after you review and trust it: open /hooks in the Codex CLI.")
             return 0
@@ -226,17 +268,63 @@ def main(argv: list[str] | None = None) -> int:
             payload = json.loads(sys.stdin.read() or "{}")
         except ValueError:
             return 0
+        injected = ""
         try:
             eng = _engine(args)
             try:
-                hooks.capture(eng, payload, args.user, args.agent)
+                if args.hook_cmd == "inject" or getattr(args, "inject", False):
+                    injected = hooks.inject(eng, payload, args.user, args.agent)
+                if args.hook_cmd == "capture":
+                    hooks.capture(eng, payload, args.user, args.agent)
             finally:
                 eng.close()
         except Exception as exc:  # noqa: BLE001 - a hook must never break the agent; the error goes to stderr
             print(f"memoraos hook: {type(exc).__name__}: {exc}", file=sys.stderr)
-        out = hooks.reply(args.agent, payload)
+        out = injected or (hooks.reply(args.agent, payload) if args.hook_cmd == "capture" else "")
         if out:
             print(out)
+        return 0
+    if args.cmd == "setup":
+        from . import hooks
+
+        data_dir = Path(args.data_dir) if args.data_dir else Path.home() / ".memoraos"
+        try:
+            results = hooks.setup(args.user, data_dir, args.agents, project=args.project, with_inject=not args.no_inject, dry_run=args.dry_run)
+        except (ValueError, OSError) as exc:
+            print(f"memoraos setup: {exc}", file=sys.stderr)
+            return 2
+        resolved = data_dir.expanduser().resolve()
+        _print({"data_dir": str(resolved), "dry_run": args.dry_run, "agents": results})
+        if not results:
+            print("No coding agent folder found (~/.claude, ~/.cursor, ~/.codex). Name one with --agents.", file=sys.stderr)
+        print("\nShare the same store over MCP (add to the agent's MCP config yourself; nothing was written):")
+        _print({"mcpServers": {"memoraos": {"command": "memoraos", "args": ["mcp"], "env": {"MEMORAOS_USER_ID": args.user, "MEMORAOS_DATA_DIR": str(resolved)}}}})
+        print("\nHooks call the 'memoraos' command, so it must be on the PATH the agent uses. Codex asks you to trust new hooks (/hooks).")
+        return 0
+    if args.cmd == "proxy":
+        import ipaddress
+
+        try:
+            import uvicorn
+
+            from .proxy import create_proxy_app
+        except ImportError:
+            print("Install the API extra: pip install 'memoraos[api]'", file=sys.stderr)
+            return 2
+        host = args.host
+        try:
+            loopback = host == "localhost" or ipaddress.ip_address(host).is_loopback
+        except ValueError:
+            loopback = False
+        if not loopback and not args.allow_remote:
+            print(f"memoraos proxy: refusing to listen on {host}: the proxy has no authentication and forwards your API key. Use --allow-remote to override.", file=sys.stderr)
+            return 2
+        eng = _engine(args)
+        app = create_proxy_app(
+            eng, args.target, user_id=args.user, tenant_id=args.tenant, inject=not args.no_inject, capture=args.capture, redact=not args.no_redact,
+        )
+        print(f"memoraos proxy on http://{host}:{args.port} -> {args.target} (inject={not args.no_inject}, capture={args.capture}, redact={not args.no_redact})", file=sys.stderr)
+        uvicorn.run(app, host=host, port=args.port, log_level="warning")
         return 0
     if args.cmd == "mcp":
         from .mcp.server import main as mcp_main
@@ -268,6 +356,29 @@ def main(argv: list[str] | None = None) -> int:
             _print(eng.export(user_id=args.user))
         elif args.cmd == "backup":
             print(eng.backup(args.dest))
+        elif args.cmd in ("index-git", "export-bundle", "import-bundle"):
+            try:
+                if args.cmd == "index-git":
+                    from .gitindex import index_git
+
+                    _print(index_git(
+                        eng, args.repo, user_id=args.user, tenant_id=args.tenant, rev=args.rev, since=args.since, max_commits=args.max_commits,
+                        adrs=not args.no_adrs,
+                    ))
+                elif args.cmd == "export-bundle":
+                    from .bundle import export_bundle
+
+                    _print(export_bundle(eng, args.file, user_id=args.user, tenant_id=args.tenant, key=os.environ.get(BUNDLE_KEY_ENV)))
+                else:
+                    from .bundle import import_bundle
+
+                    _print(import_bundle(
+                        eng, args.file, user_id=args.user, tenant_id=args.tenant, key=os.environ.get(BUNDLE_KEY_ENV),
+                        require_signature=args.require_signature, dry_run=args.dry_run,
+                    ))
+            except (ValueError, OSError, RuntimeError) as exc:
+                print(f"memoraos {args.cmd}: {exc}", file=sys.stderr)
+                return 2
         elif args.cmd in ("sync", "sleep", "link", "lineage", "replay"):
             try:
                 if args.cmd == "sync":

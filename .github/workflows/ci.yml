@@ -49,6 +49,24 @@ jobs:
       - uses: actions/checkout@v4
       - run: bash scripts/docker_smoke.sh
 
+  memory-ci-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Action, first run (writes the baseline)
+        uses: ./
+        with:
+          contract: contracts/python_releases_and_security.json
+          install: "."
+          out: memoraos-ci-baseline.json
+      - name: Action, second run against that baseline
+        uses: ./
+        with:
+          contract: contracts/python_releases_and_security.json
+          install: "."
+          baseline: memoraos-ci-baseline.json
+          out: memoraos-ci-current.json
+
   typescript:
     runs-on: ubuntu-latest
     steps:

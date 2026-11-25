@@ -91,7 +91,7 @@ def test_cursor_and_codex_install_keep_other_hooks_and_are_reversible(tmp_path):
     assert json.loads(cur.read_text(encoding="utf-8"))["hooks"]["beforeSubmitPrompt"] == [{"command": "echo keep"}]
 
     cdx = tmp_path / "codex" / "hooks.json"
-    assert hooks.install("codex", cdx, cmd.replace("cursor", "codex")) and not hooks.install("codex", cdx, cmd)
+    assert hooks.install("codex", cdx, cmd.replace("cursor", "codex")) and not hooks.install("codex", cdx, cmd.replace("cursor", "codex"))
     cfg = json.loads(cdx.read_text(encoding="utf-8"))
     assert set(cfg["hooks"]) == {"UserPromptSubmit", "Stop"}
     assert cfg["hooks"]["Stop"][0]["hooks"][0]["type"] == "command"

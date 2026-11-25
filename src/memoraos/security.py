@@ -77,6 +77,9 @@ def _neutralize(text: str) -> str:
     return text.replace("<", "‹").replace(">", "›")
 
 
+neutralize = _neutralize
+
+
 def render_untrusted_context(evidence: Iterable[Evidence]) -> str:
     parts = [SYSTEM_POLICY]
     for ev in evidence:

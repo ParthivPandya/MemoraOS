@@ -1,7 +1,7 @@
 {
   "benchmark": "MemoraOS real-document benchmark",
   "command": "python -m benchmarks.real_docs",
-  "generated_at": "2026-11-25T06:48:57+00:00",
+  "generated_at": "2026-11-25T07:58:48+00:00",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
@@ -14,9 +14,9 @@
   },
   "corpus": {
     "files": 26,
-    "sections": 134,
-    "characters": 131875,
-    "sha256": "430d72e39985227767c903e3b2f42e49c0ee81afaee164665585944d1143c69b"
+    "sections": 137,
+    "characters": 135844,
+    "sha256": "f7f72a5718130f61b9a5384cf531d6f747b7b878f072b2136aa0140aeeb98aac"
   },
   "questions": {
     "answerable": 46,
@@ -33,16 +33,16 @@
         0.5,
         0.7188
       ],
-      "recall_at_5": 0.7724920007528703,
-      "precision_at_5": 0.2956521739130435,
-      "mrr": 0.8586956521739131,
-      "ndcg_at_5": 0.7678059233213232,
+      "recall_at_5": 0.7684742793438445,
+      "precision_at_5": 0.29311594202898555,
+      "mrr": 0.8442028985507247,
+      "ndcg_at_5": 0.7597906386465195,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 740.53125,
-      "latency_ms_p50": 4.894400015473366,
-      "latency_ms_p95": 8.349500014446676,
+      "mean_context_tokens": 742.921875,
+      "latency_ms_p50": 8.209799998439848,
+      "latency_ms_p95": 11.163500021211803,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -60,8 +60,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 1.0
       },
-      "ingest_ms_per_event": 3.5634723886388784,
-      "storage_overhead_ratio": 4.7558291377631505,
+      "ingest_ms_per_event": 5.732159124327022,
+      "storage_overhead_ratio": 4.751328179386656,
       "pooled_accuracy_ci95": [
         0.5,
         0.7188
@@ -74,16 +74,16 @@
         0.3906,
         0.6406
       ],
-      "recall_at_5": 0.6635453918062614,
+      "recall_at_5": 0.6629373042416521,
       "precision_at_5": 0.25072463768115943,
       "mrr": 0.7445652173913043,
-      "ndcg_at_5": 0.6391755444439268,
+      "ndcg_at_5": 0.6382515124045759,
       "evidence_coverage": 0.9130434782608695,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 720.75,
-      "latency_ms_p50": 3.552700043655932,
-      "latency_ms_p95": 4.686200059950352,
+      "mean_context_tokens": 721.9375,
+      "latency_ms_p50": 4.62399993557483,
+      "latency_ms_p95": 7.16489995829761,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -101,8 +101,8 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 2.7975731341640895,
-      "storage_overhead_ratio": 4.7558291377631505,
+      "ingest_ms_per_event": 3.5450211683641712,
+      "storage_overhead_ratio": 4.751328179386656,
       "pooled_accuracy_ci95": [
         0.3906,
         0.6406
@@ -115,16 +115,16 @@
         0.4844,
         0.7188
       ],
-      "recall_at_5": 0.7543760587238849,
-      "precision_at_5": 0.2851449275362319,
-      "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7419896588236597,
+      "recall_at_5": 0.7503583373148591,
+      "precision_at_5": 0.2807971014492754,
+      "mrr": 0.8405797101449275,
+      "ndcg_at_5": 0.7376608981192214,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 717.484375,
-      "latency_ms_p50": 5.990199977532029,
-      "latency_ms_p95": 8.835599990561604,
+      "mean_context_tokens": 718.734375,
+      "latency_ms_p50": 7.06699991133064,
+      "latency_ms_p95": 9.515200043097138,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -142,8 +142,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 2.7088141798583876,
-      "storage_overhead_ratio": 4.7558291377631505,
+      "ingest_ms_per_event": 3.866049634415085,
+      "storage_overhead_ratio": 4.751328179386656,
       "pooled_accuracy_ci95": [
         0.4844,
         0.7188
@@ -156,16 +156,16 @@
         0.3281,
         0.5781
       ],
-      "recall_at_5": 0.7543760587238849,
-      "precision_at_5": 0.2851449275362319,
-      "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7419896588236597,
+      "recall_at_5": 0.7503583373148591,
+      "precision_at_5": 0.2807971014492754,
+      "mrr": 0.8405797101449275,
+      "ndcg_at_5": 0.7376608981192214,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 1.0,
       "false_abstain_rate": 0.0,
-      "mean_context_tokens": 717.484375,
-      "latency_ms_p50": 4.561099922284484,
-      "latency_ms_p95": 7.360299932770431,
+      "mean_context_tokens": 718.734375,
+      "latency_ms_p50": 4.6206999104470015,
+      "latency_ms_p95": 7.586500025354326,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.0,
         "dev/changelog": 1.0,
@@ -183,8 +183,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 4.505351492474829,
-      "storage_overhead_ratio": 4.7558291377631505,
+      "ingest_ms_per_event": 4.779962773509595,
+      "storage_overhead_ratio": 4.751328179386656,
       "pooled_accuracy_ci95": [
         0.3281,
         0.5781
@@ -197,16 +197,16 @@
         0.5625,
         0.7812
       ],
-      "recall_at_5": 0.7543760587238849,
-      "precision_at_5": 0.2851449275362319,
-      "mrr": 0.8442028985507247,
-      "ndcg_at_5": 0.7419896588236597,
+      "recall_at_5": 0.7503583373148591,
+      "precision_at_5": 0.2807971014492754,
+      "mrr": 0.8405797101449275,
+      "ndcg_at_5": 0.7376608981192214,
       "evidence_coverage": 0.9565217391304348,
       "unsupported_answer_rate": 0.7222222222222222,
       "false_abstain_rate": 0.021739130434782608,
-      "mean_context_tokens": 657.46875,
-      "latency_ms_p50": 6.019599968567491,
-      "latency_ms_p95": 9.487600065767765,
+      "mean_context_tokens": 658.71875,
+      "latency_ms_p50": 4.493399988859892,
+      "latency_ms_p95": 7.404100033454597,
       "accuracy_by_tag": {
         "dev/absent_topic": 0.25,
         "dev/changelog": 1.0,
@@ -224,8 +224,8 @@
         "heldout/security": 1.0,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 2.5783216419157142,
-      "storage_overhead_ratio": 4.7558291377631505,
+      "ingest_ms_per_event": 2.7154408765780014,
+      "storage_overhead_ratio": 4.751328179386656,
       "pooled_accuracy_ci95": [
         0.5625,
         0.7812
@@ -233,23 +233,23 @@
     },
     "memoraos": {
       "n": 64,
-      "accuracy": 0.578125,
+      "accuracy": 0.5625,
       "accuracy_ci95": [
-        0.4531,
-        0.7031
+        0.4375,
+        0.6875
       ],
-      "recall_at_5": 0.5149868247694335,
+      "recall_at_5": 0.5140746934225195,
       "precision_at_5": 0.188768115942029,
       "mrr": 0.5416666666666667,
       "ndcg_at_5": 0.4934942418324143,
       "evidence_coverage": 0.6086956521739131,
-      "unsupported_answer_rate": 0.2777777777777778,
+      "unsupported_answer_rate": 0.3333333333333333,
       "false_abstain_rate": 0.2826086956521739,
-      "mean_context_tokens": 164.109375,
-      "latency_ms_p50": 31.935,
-      "latency_ms_p95": 68.456,
+      "mean_context_tokens": 169.328125,
+      "latency_ms_p50": 40.082,
+      "latency_ms_p95": 92.269,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.6666666666666666,
+        "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
         "dev/decisions": 0.5,
         "dev/latent": 0.5,
@@ -265,32 +265,32 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 11.546578358184657,
-      "storage_overhead_ratio": 23.373736611287658,
+      "ingest_ms_per_event": 14.380977372638881,
+      "storage_overhead_ratio": 23.261642179313377,
       "pooled_accuracy_ci95": [
-        0.4531,
-        0.7031
+        0.4375,
+        0.6875
       ]
     },
     "memoraos_hybrid_only": {
       "n": 64,
-      "accuracy": 0.59375,
+      "accuracy": 0.578125,
       "accuracy_ci95": [
-        0.4688,
+        0.4531,
         0.7188
       ],
-      "recall_at_5": 0.5475955204216073,
+      "recall_at_5": 0.5466833890746934,
       "precision_at_5": 0.1963768115942029,
       "mrr": 0.5706521739130435,
       "ndcg_at_5": 0.5218980156668215,
       "evidence_coverage": 0.6521739130434783,
-      "unsupported_answer_rate": 0.2777777777777778,
+      "unsupported_answer_rate": 0.3333333333333333,
       "false_abstain_rate": 0.34782608695652173,
-      "mean_context_tokens": 165.609375,
-      "latency_ms_p50": 27.506,
-      "latency_ms_p95": 48.747,
+      "mean_context_tokens": 170.828125,
+      "latency_ms_p50": 28.8,
+      "latency_ms_p95": 81.918,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.6666666666666666,
+        "dev/absent_topic": 0.5833333333333334,
         "dev/changelog": 0.5,
         "dev/decisions": 0.5,
         "dev/latent": 0.5,
@@ -306,32 +306,32 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.75
       },
-      "ingest_ms_per_event": 10.890165671407342,
-      "storage_overhead_ratio": 22.817219072923663,
+      "ingest_ms_per_event": 12.471307298494843,
+      "storage_overhead_ratio": 22.72137178030997,
       "pooled_accuracy_ci95": [
-        0.4688,
+        0.4531,
         0.7188
       ]
     },
     "memoraos[anchor=0.4]": {
       "n": 64,
-      "accuracy": 0.609375,
+      "accuracy": 0.59375,
       "accuracy_ci95": [
         0.4844,
-        0.7344
+        0.7188
       ],
-      "recall_at_5": 0.5838274044795784,
-      "precision_at_5": 0.22137681159420292,
+      "recall_at_5": 0.5829152731326644,
+      "precision_at_5": 0.22028985507246376,
       "mrr": 0.6286231884057971,
       "ndcg_at_5": 0.5683543959656459,
       "evidence_coverage": 0.6956521739130435,
-      "unsupported_answer_rate": 0.3888888888888889,
+      "unsupported_answer_rate": 0.4444444444444444,
       "false_abstain_rate": 0.17391304347826086,
-      "mean_context_tokens": 196.125,
-      "latency_ms_p50": 30.698,
-      "latency_ms_p95": 46.571,
+      "mean_context_tokens": 201.375,
+      "latency_ms_p50": 41.387,
+      "latency_ms_p95": 81.333,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.5833333333333334,
+        "dev/absent_topic": 0.5,
         "dev/changelog": 0.5,
         "dev/decisions": 0.6666666666666666,
         "dev/latent": 0.5,
@@ -347,32 +347,32 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 9.971700746864915,
-      "storage_overhead_ratio": 23.373736611287658,
+      "ingest_ms_per_event": 10.248132847099953,
+      "storage_overhead_ratio": 23.261642179313377,
       "pooled_accuracy_ci95": [
         0.4844,
-        0.7344
+        0.7188
       ]
     },
     "memoraos[anchor=0.25]": {
       "n": 64,
-      "accuracy": 0.65625,
+      "accuracy": 0.640625,
       "accuracy_ci95": [
-        0.5312,
-        0.7812
+        0.5156,
+        0.75
       ],
-      "recall_at_5": 0.6438688123470733,
-      "precision_at_5": 0.2528985507246377,
+      "recall_at_5": 0.6429566810001592,
+      "precision_at_5": 0.25181159420289856,
       "mrr": 0.7373188405797101,
-      "ndcg_at_5": 0.642665258665616,
+      "ndcg_at_5": 0.6421541336048746,
       "evidence_coverage": 0.8043478260869565,
-      "unsupported_answer_rate": 0.5,
+      "unsupported_answer_rate": 0.5555555555555556,
       "false_abstain_rate": 0.06521739130434782,
-      "mean_context_tokens": 223.9375,
-      "latency_ms_p50": 26.589,
-      "latency_ms_p95": 69.325,
+      "mean_context_tokens": 228.78125,
+      "latency_ms_p50": 39.922,
+      "latency_ms_p95": 89.302,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.5,
+        "dev/absent_topic": 0.4166666666666667,
         "dev/changelog": 1.0,
         "dev/decisions": 0.6666666666666666,
         "dev/latent": 0.5,
@@ -388,32 +388,32 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 12.326191791069151,
-      "storage_overhead_ratio": 23.311901329247213,
+      "ingest_ms_per_event": 10.979630656363646,
+      "storage_overhead_ratio": 23.171597112812808,
       "pooled_accuracy_ci95": [
-        0.5312,
-        0.7812
+        0.5156,
+        0.75
       ]
     },
     "memoraos[anchor=0.0]": {
       "n": 64,
-      "accuracy": 0.671875,
+      "accuracy": 0.65625,
       "accuracy_ci95": [
-        0.5469,
-        0.7812
+        0.5312,
+        0.7656
       ],
-      "recall_at_5": 0.6656079427818559,
-      "precision_at_5": 0.25724637681159424,
+      "recall_at_5": 0.6646958114349418,
+      "precision_at_5": 0.25615942028985506,
       "mrr": 0.7445652173913043,
-      "ndcg_at_5": 0.6535348238830072,
+      "ndcg_at_5": 0.653023698822266,
       "evidence_coverage": 0.8260869565217391,
-      "unsupported_answer_rate": 0.5,
+      "unsupported_answer_rate": 0.5555555555555556,
       "false_abstain_rate": 0.043478260869565216,
-      "mean_context_tokens": 227.8125,
-      "latency_ms_p50": 33.251,
-      "latency_ms_p95": 97.816,
+      "mean_context_tokens": 232.65625,
+      "latency_ms_p50": 44.588,
+      "latency_ms_p95": 80.815,
       "accuracy_by_tag": {
-        "dev/absent_topic": 0.5,
+        "dev/absent_topic": 0.4166666666666667,
         "dev/changelog": 1.0,
         "dev/decisions": 0.75,
         "dev/latent": 0.5,
@@ -429,11 +429,11 @@
         "heldout/security": 0.75,
         "heldout/temporal": 0.5
       },
-      "ingest_ms_per_event": 10.798451493306558,
-      "storage_overhead_ratio": 23.311901329247213,
+      "ingest_ms_per_event": 16.246536495945804,
+      "storage_overhead_ratio": 23.201612134979666,
       "pooled_accuracy_ci95": [
-        0.5469,
-        0.7812
+        0.5312,
+        0.7656
       ]
     }
   },
@@ -525,12 +525,12 @@
     },
     "memoraos": {
       "dev:answerable": 0.6,
-      "dev:unanswerable": 0.6666666666666666,
+      "dev:unanswerable": 0.5833333333333334,
       "heldout:answerable": 0.375,
       "heldout:unanswerable": 0.8333333333333334,
-      "split:dev": 0.6190476190476191,
+      "split:dev": 0.5952380952380952,
       "split:heldout": 0.5,
-      "topic:absent_topic": 0.7222222222222222,
+      "topic:absent_topic": 0.6666666666666666,
       "topic:changelog": 0.5,
       "topic:decisions": 0.46153846153846156,
       "topic:latent": 0.4,
@@ -542,12 +542,12 @@
     },
     "memoraos_hybrid_only": {
       "dev:answerable": 0.6,
-      "dev:unanswerable": 0.6666666666666666,
+      "dev:unanswerable": 0.5833333333333334,
       "heldout:answerable": 0.4375,
       "heldout:unanswerable": 0.8333333333333334,
-      "split:dev": 0.6190476190476191,
+      "split:dev": 0.5952380952380952,
       "split:heldout": 0.5454545454545454,
-      "topic:absent_topic": 0.7222222222222222,
+      "topic:absent_topic": 0.6666666666666666,
       "topic:changelog": 0.5,
       "topic:decisions": 0.46153846153846156,
       "topic:latent": 0.4,
@@ -559,12 +559,12 @@
     },
     "memoraos[anchor=0.4]": {
       "dev:answerable": 0.7,
-      "dev:unanswerable": 0.5833333333333334,
+      "dev:unanswerable": 0.5,
       "heldout:answerable": 0.4375,
       "heldout:unanswerable": 0.6666666666666666,
-      "split:dev": 0.6666666666666666,
+      "split:dev": 0.6428571428571429,
       "split:heldout": 0.5,
-      "topic:absent_topic": 0.6111111111111112,
+      "topic:absent_topic": 0.5555555555555556,
       "topic:changelog": 0.5,
       "topic:decisions": 0.6153846153846154,
       "topic:latent": 0.4,
@@ -576,12 +576,12 @@
     },
     "memoraos[anchor=0.25]": {
       "dev:answerable": 0.7666666666666667,
-      "dev:unanswerable": 0.5,
+      "dev:unanswerable": 0.4166666666666667,
       "heldout:answerable": 0.625,
       "heldout:unanswerable": 0.5,
-      "split:dev": 0.6904761904761905,
+      "split:dev": 0.6666666666666666,
       "split:heldout": 0.5909090909090909,
-      "topic:absent_topic": 0.5,
+      "topic:absent_topic": 0.4444444444444444,
       "topic:changelog": 1.0,
       "topic:decisions": 0.6153846153846154,
       "topic:latent": 0.6,
@@ -593,12 +593,12 @@
     },
     "memoraos[anchor=0.0]": {
       "dev:answerable": 0.8,
-      "dev:unanswerable": 0.5,
+      "dev:unanswerable": 0.4166666666666667,
       "heldout:answerable": 0.625,
       "heldout:unanswerable": 0.5,
-      "split:dev": 0.7142857142857143,
+      "split:dev": 0.6904761904761905,
       "split:heldout": 0.5909090909090909,
-      "topic:absent_topic": 0.5,
+      "topic:absent_topic": 0.4444444444444444,
       "topic:changelog": 1.0,
       "topic:decisions": 0.6923076923076923,
       "topic:latent": 0.6,
@@ -1452,11 +1452,15 @@
       "tag": "dev/absent_topic",
       "answerable": false,
       "gold": [],
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "answer": "The stored memory does not establish an answer to this question.",
-      "cited": [],
-      "correct": true
+      "status": "answered",
+      "strategy": "hybrid",
+      "answer": "| `memoraos index-git` (v0.7) | 🧪 tests on real temp git repos | Commits and ADRs; links only from explicit revert/Fixes/ADR text; informal check on this repo found one wrong citation in four questions ([GIT_INDEX.md](GIT_INDEX.md)) | | Memory CI GitHub Action (v0.7) | 🧪 | `action.yml`; shell step run locally; first real-runner run is this repo's CI job; not published to the Marketplace ([MEMORY_CI.md](MEMORY_CI.md)) |",
+      "cited": [
+        "docs/IMPLEMENTATION_STATUS.md > v0.3 - v0.7 status",
+        "docs/RETRIEVAL.md > Real-document findings (what the synthetic suite had hidden)",
+        "docs/API.md > Command line additions (v0.7)"
+      ],
+      "correct": false
     },
     {
       "qid": "ru3",
@@ -1558,7 +1562,7 @@
       "cited": [
         "docs/IMPLEMENTATION_STATUS.md > Spec checklist (first-release definition of done)",
         "docs/ADAPTIVE_ROUTING.md > Pipeline",
-        "SECURITY.md > Reporting a vulnerability"
+        "CHANGELOG.md > Added"
       ],
       "correct": false
     },
@@ -1655,5 +1659,5 @@
       "correct": true
     }
   ],
-  "wall_clock_seconds": 28.1
+  "wall_clock_seconds": 36.0
 }

@@ -1,6 +1,6 @@
 # Implementation Status
 
-_Last updated for v0.6.0 (the v0.2 table and later sections are kept as written; the v0.3-v0.6 table below is current). This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
+_Last updated for v0.7.0 (the v0.2 table and later sections are kept as written; the v0.3-v0.7 table below is current). This file lists what works, what is partial, and what is not done. "Done" means implemented **and** covered by passing automated tests._
 
 ## v0.2 status
 
@@ -14,7 +14,7 @@ _Last updated for v0.6.0 (the v0.2 table and later sections are kept as written;
 | Spec after Part 8.1 step 7 | ❌ not implemented | The supplied specification was truncated there |
 | `audit_probe.py` | 22 / 23 | The remaining probe ("You can reach Priya in Pune these days") requires the LLM extractor; it is not claimed as solved |
 
-## v0.3 - v0.6 status
+## v0.3 - v0.7 status
 
 | Area | Status | Notes |
 |---|---|---|
@@ -23,12 +23,17 @@ _Last updated for v0.6.0 (the v0.2 table and later sections are kept as written;
 | Capture hooks (v0.4, v0.6) | 🧪 tested on payloads | Claude Code, Cursor, Codex CLI. None run in a live session; Windsurf not supported |
 | Vault sync, LangChain retriever, Mem0-shaped adapter, causal links, replay, `sleep` (v0.5) | 🧪 tests | Synthetic fixtures only; no real Obsidian vault, Mem0 or LangChain agent run ([VAULT_SYNC.md](VAULT_SYNC.md), [INTEGRATIONS.md](INTEGRATIONS.md), [CAUSAL_AND_REPLAY.md](CAUSAL_AND_REPLAY.md)) |
 | REST / Python client / TypeScript SDK parity (v0.6) | ✅ tests | verify, verify-citations, outcomes, links, lineage, replay in all three |
-| Dashboard "Answer trace" page (v0.6) | ✅ built, 🧪 checked once | Citation check, outcome warnings, lineage, leave-one-out replay. `next build` passes and the page was loaded against a real seeded store; no automated UI test |
-| Not delivered | ❌ | CrewAI/LlamaIndex/AutoGen/PydanticAI adapters, Windsurf hook, portable memory bundle, automatic causal-link extraction, demo GIF, hosted playground |
+| Dashboard "Answer trace" page (v0.6) | ✅ built, 🧪 checked once | Citation check, outcome warnings, lineage, leave-one-out replay. `next build` passes and the page was loaded against a real seeded store; no automated UI test, and an interactive replay checkbox panel and a causal-lineage SVG graph were added in v0.7 (checked once in a browser against a real 3-memory store; no automated UI test) |
+| Memory proxy (v0.7) | 🧪 tests | `memoraos proxy`; OpenAI and Anthropic chat paths, tested against a fake upstream only, never real OpenAI/Anthropic. Injection fires only on answerable questions ([PROXY.md](PROXY.md)) |
+| `memoraos setup` and pre-prompt/pre-tool injection hooks (v0.7) | 🧪 tested on payloads | Claude Code and Codex inject; Cursor capture-only. Not run in a live session ([AGENT_WORKFLOW.md](AGENT_WORKFLOW.md)) |
+| `memoraos index-git` (v0.7) | 🧪 tests on real temp git repos | Commits and ADRs; links only from explicit revert/Fixes/ADR text; informal check on this repo found one wrong citation in four questions ([GIT_INDEX.md](GIT_INDEX.md)) |
+| Portable `.mem` bundle (v0.7) | 🧪 tests | MemoraOS's own format; hash detects damage, HMAC authenticates; no PAM/OpenMemory claim; CLI only ([BUNDLE.md](BUNDLE.md)) |
+| Memory CI GitHub Action (v0.7) | 🧪 | `action.yml`; shell step run locally; first real-runner run is this repo's CI job; not published to the Marketplace ([MEMORY_CI.md](MEMORY_CI.md)) |
+| Not delivered | ❌ | CrewAI/LlamaIndex/AutoGen/PydanticAI adapters, Windsurf and VS Code hooks, Cursor pre-prompt injection (no hook for it), PR/issue fetching in `index-git`, automatic causal-link extraction, browser extension, real-LLM extraction (#1), ANN with neural embedders (#2), LoCoMo/LongMemEval QA (#3), demo GIF, hosted playground |
 
 ## Test results (v0.2)
 
-`python -m pytest` → **363 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
+`python -m pytest` → **396 passed**; `ruff check` clean. The synthetic benchmark digest and the real-document report are regenerated with every release; see `benchmarks/reports/`. The v0.1 text below is retained for history.
 
 ## Test results (v0.1)
 

@@ -25,6 +25,30 @@ mem.outcome_warnings("should I upgrade the requests library?", user_id="u1")
 - MCP tools: `memora_outcome`, `memora_warnings`; `memora_recall` also returns `warnings`. REST: `POST /v1/outcomes`, `GET /v1/outcome-warnings`; both SDKs wrap them.
 - There is no automatic expiry when a library version changes; record a new outcome instead.
 
+## One-command setup and context injection (v0.7)
+
+```bash
+memoraos --data-dir ~/.memoraos setup --user me --dry-run     # show what would be written
+memoraos --data-dir ~/.memoraos setup --user me                # claude-code, cursor, codex: those whose config folder exists
+memoraos setup --user me --agents claude-code codex --project  # project-level configs
+memoraos hook install claude-code --user me --no-inject        # capture only
+```
+
+`setup` installs the hooks below, with an absolute data directory so every tool shares one store, and prints an MCP config snippet. It does **not** edit any MCP config. Re-running replaces a MemoraOS hook whose command changed and leaves other hooks alone.
+
+Besides capture, two hooks add memory to the agent's context (`memoraos hook inject`, `memoraos hook capture --agent codex --inject`):
+
+| Agent | Event | Adds |
+|---|---|---|
+| Claude Code | `UserPromptSubmit` | `additionalContext` with matching evidence and recorded failed attempts |
+| Claude Code | `PreToolUse` (matcher `Bash\|Write\|Edit\|MultiEdit`) | recorded failed attempts that match the Bash command or file path (warnings only) |
+| Codex CLI | `UserPromptSubmit` | evidence and warnings, via the capture command's `--inject` flag |
+| Cursor | none | capture only; no pre-prompt injection hook exists for it |
+
+Claude Code runs hooks in parallel, so capture and injection do not depend on order. Windsurf and VS Code are not supported (use the MCP server). Codex `PreToolUse` is not used because its output contract was not verified.
+
+Injection is conservative: evidence is added only when the recall is answerable from memory, and warnings only when a recorded failed attempt matches, so many prompts get nothing. The hook JSON shapes follow the published documentation and were exercised with hand-written payloads and the CLI, **not in a live Claude Code or Codex session**.
+
 ## Capture hooks (Claude Code, Cursor, Codex CLI)
 
 ```bash

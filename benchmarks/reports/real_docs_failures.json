@@ -1,5 +1,5 @@
 {
-  "corpus_sha256": "430d72e39985227767c903e3b2f42e49c0ee81afaee164665585944d1143c69b",
+  "corpus_sha256": "f7f72a5718130f61b9a5384cf531d6f747b7b878f072b2136aa0140aeeb98aac",
   "anchor": null,
   "rows": [
     {
@@ -501,10 +501,11 @@
       "question": "Who founded the company behind MemoraOS?",
       "tag": "dev/absent_topic",
       "answerable": false,
-      "status": "insufficient_evidence",
-      "strategy": "vector",
-      "correct": true,
-      "cause": null
+      "status": "answered",
+      "strategy": "hybrid",
+      "correct": false,
+      "cause": "FALSE_ACCEPTANCE",
+      "detail": "docs/IMPLEMENTATION_STATUS.md > v0.3 - v0.7 status"
     },
     {
       "qid": "ru3",
@@ -663,14 +664,14 @@
   ],
   "summary": {
     "questions": 64,
-    "wrong": 27,
+    "wrong": 28,
     "answerable": 46,
     "answerable_missed": 22,
     "by_cause": {
       "ANSWER_GENERATION_FAILURE": 9,
       "OVERSTRICT_ABSTENTION": 12,
       "RETRIEVAL_MISS": 1,
-      "FALSE_ACCEPTANCE": 5
+      "FALSE_ACCEPTANCE": 6
     },
     "overstrict_guards": {
       "term coverage below the support threshold": 10,
@@ -680,7 +681,7 @@
       "dev": {
         "ANSWER_GENERATION_FAILURE": 4,
         "OVERSTRICT_ABSTENTION": 8,
-        "FALSE_ACCEPTANCE": 4
+        "FALSE_ACCEPTANCE": 5
       },
       "heldout": {
         "ANSWER_GENERATION_FAILURE": 5,

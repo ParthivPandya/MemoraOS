@@ -1,5 +1,7 @@
 import { Badge, Empty, ErrorBox, Header, statusTone } from "@/components/ui";
 import { USER_ID, api } from "@/lib/api";
+import LineageGraph from "@/components/LineageGraph";
+import ReplayLab from "@/components/ReplayLab";
 
 export const dynamic = "force-dynamic";
 
@@ -90,14 +92,25 @@ export default async function Trace({ searchParams }: { searchParams: Promise<{ 
           {lineages.length === 0 ? <Empty>Nothing to trace.</Empty> : lineages.every((l) => l.ok && l.data.edges.length === 0) ? (
             <Empty>No causal links recorded for these memories. Links are added manually (memoraos link, POST /v1/links); none are inferred.</Empty>
           ) : (
-            <table><thead><tr><th>Memory</th><th>Depth</th><th>Excerpt</th></tr></thead><tbody>
-              {lineages.flatMap((l, i) => (l.ok ? l.data.nodes.map((n) => (
-                <tr key={ids[i] + n.memory_id}><td className="mono">{n.memory_id}</td><td>{n.depth}</td><td>{n.excerpt}</td></tr>
-              )) : []))}
+            <table><thead><tr><th>Memory</th><th>Role</th><th>Excerpt</th></tr></thead><tbody>
+              {[...new Map(lineages.flatMap((l) => (l.ok ? l.data.nodes : [])).map((n) => [n.memory_id, n])).values()].map((n) => (
+                <tr key={n.memory_id}><td className="mono">{n.memory_id}</td><td>{ids.includes(n.memory_id) ? "cited" : "linked"}</td><td>{n.excerpt}</td></tr>
+              ))}
             </tbody></table>
           )}
           {lineages.some((l) => l.ok && l.data.edges.length > 0) && (
-            <p className="mono">{[...new Set(lineages.flatMap((l) => (l.ok ? l.data.edges.map((e) => `${e.src} -${e.kind}-> ${e.dst}`) : [])))].join("   ")}</p>
+            <LineageGraph
+              nodes={[...new Map(lineages.flatMap((l) => (l.ok ? l.data.nodes : [])).map((n) => [n.memory_id, n])).values()]}
+              edges={[...new Map(lineages.flatMap((l) => (l.ok ? l.data.edges : [])).map((e) => [`${e.src}|${e.kind}|${e.dst}`, e])).values()]}
+              cited={ids}
+            />
+          )}
+
+          {data.evidence.length > 0 && (
+            <>
+              <h3>Interactive replay</h3>
+              <ReplayLab recallId={data.recall_id} items={[...new Map(data.evidence.map((e) => [e.memory_id, { memory_id: e.memory_id, excerpt: e.excerpt }])).values()]} />
+            </>
           )}
 
           <h3>Leave-one-out replay</h3>

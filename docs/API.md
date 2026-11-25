@@ -76,6 +76,10 @@ Status codes: 401 bad/missing key, 403 role/user restriction, 404 not found (als
 - TypeScript: `sdk/typescript` (`import { MemoraClient } from "@memoraos/sdk"`), methods `remember`, `recall`, `correct`, `forget`, `history`, `explain`, `consolidate`, `feedback`, `export`, `stats`, `verify`, `verifyCitations`, `rememberOutcome`, `outcomeWarnings`, `link`, `lineage`, `replay`. Both clients are covered by tests against fake/in-process servers, not by a long-running deployment.
 - Not wrapped by either client: `/v1/conversations`, `/v1/memories/json`, `/v1/snapshot`, `/v1/changes`, `/v1/graph` and the dashboard data routes.
 
+## Command line additions (v0.7)
+
+Not part of the REST API or the SDKs: `memoraos proxy` ([PROXY.md](PROXY.md)), `memoraos setup` and `memoraos hook inject` ([AGENT_WORKFLOW.md](AGENT_WORKFLOW.md)), `memoraos index-git` ([GIT_INDEX.md](GIT_INDEX.md)) and `memoraos export-bundle` / `import-bundle` ([BUNDLE.md](BUNDLE.md); Python: `memoraos.bundle`).
+
 ## MCP (`memoraos mcp`, set `MEMORAOS_USER_ID`)
 
 JSON-RPC 2.0 over stdio. Tools: `memora_remember`, `memora_recall`, `memora_outcome`, `memora_warnings`, `memora_correct`, `memora_forget`, `memora_history`, `memora_link`, `memora_lineage`, `memora_replay`, `memora_explain` (see [MCP.md](MCP.md)). The server acts as exactly one configured user; a `user_id` argument supplied by the model is ignored. Example client config:

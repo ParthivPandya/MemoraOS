@@ -70,6 +70,22 @@ Memory CI: suite 'python-releases-and-security-docs' (strict, hashing-v1)
   PASS  other-user-sees-nothing: What is the latest version of Python 3.14?
 ```
 
+## GitHub Action
+
+The repository root has a composite action (`action.yml`) that installs MemoraOS, runs `memoraos ci run`, writes the report to the job summary and fails the step on a failed assertion or regression.
+
+```yaml
+- uses: actions/checkout@v4
+- uses: ParthivPandya/MemoraOS@v0.7.0
+  with:
+    contract: contracts/my_memory.json
+    baseline: ci/baseline.json        # optional: fail on regression against a previous run
+```
+
+Inputs: `contract` (required), `baseline`, `out` (default `memoraos-ci-result.json`), `python-version` (default 3.12), `install` (what to `pip install`; default `memoraos`, use `.` to test the checked-out source), `extra-args`. Output: `result-file`.
+
+What was verified: the shell step was run locally (PASS 7/7 on the shipped contract, then "no regression" against the baseline), and this repository's CI has a `memory-ci-action` job that uses the action from the checkout. Publishing it to the GitHub Marketplace is a manual step that has not been done.
+
 ## Does it catch regressions?
 
 Yes, for the cases tested: `tests/unit/test_memory_ci.py` disables evidence fusion on a three-hop contract and checks that the run is reported as a regression and as worsened abstention, and that a contract with a failing expectation exits `1`. This verifies the mechanism, not that any particular contract covers your application: Memory CI finds only the behaviour you wrote down.

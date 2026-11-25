@@ -39,6 +39,7 @@ EXCLUDE_PATTERNS = (
     r"docs/NEXT_[A-Z_]+\.md", r"docs/COMPETITIVE_INTELLIGENCE\.md", r"docs/MEMORY_CI\.md", r"docs/ADR/00(?:0[89]|[1-9]\d)-.*\.md",
     r"docs/DOCKER\.md", r"docs/PUBLIC_BENCHMARKS\.md", r"docs/SCALING\.md", r"docs/CITATIONS\.md", r"docs/AGENT_WORKFLOW\.md",
         r"docs/MCP\.md", r"docs/VAULT_SYNC\.md", r"docs/INTEGRATIONS\.md", r"docs/CAUSAL_AND_REPLAY\.md",
+        r"docs/PROXY\.md", r"docs/GIT_INDEX\.md", r"docs/BUNDLE\.md",
 )
 FILES = ["CHANGELOG.md", "SECURITY.md"]
 SCENARIO = "real_docs_qa"

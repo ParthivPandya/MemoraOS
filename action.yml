@@ -1,0 +1,72 @@
+name: "MemoraOS Memory CI"
+description: "Run a MemoraOS memory contract (what memory must answer, refuse and isolate) and fail the job on a failed expectation or a regression against a baseline."
+author: "Parthiv Pandya"
+branding:
+  icon: "check-circle"
+  color: "blue"
+
+inputs:
+  contract:
+    description: "Path to the contract file (JSON, or YAML when PyYAML is installed)."
+    required: true
+  baseline:
+    description: "Optional result file from an earlier run (the `out` of a previous run) to diff against; a regression fails the job."
+    required: false
+    default: ""
+  out:
+    description: "Where to write this run's result JSON (usable as the next baseline)."
+    required: false
+    default: "memoraos-ci-result.json"
+  python-version:
+    description: "Python version to run with (3.10 or newer)."
+    required: false
+    default: "3.12"
+  install:
+    description: "pip requirement to install MemoraOS from, e.g. `memoraos==0.7.0`, or `.` to test a checkout."
+    required: false
+    default: "memoraos"
+  extra-args:
+    description: "Extra arguments for `memoraos ci run`, e.g. `--set answerability=balanced`."
+    required: false
+    default: ""
+
+outputs:
+  result-file:
+    description: "Path of the result JSON written by this run."
+    value: ${{ inputs.out }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install MemoraOS
+      shell: bash
+      env:
+        INSTALL: ${{ inputs.install }}
+      run: python -m pip install --quiet "$INSTALL"
+    - name: Run Memory CI
+      shell: bash
+      env:
+        CONTRACT: ${{ inputs.contract }}
+        BASELINE: ${{ inputs.baseline }}
+        OUT: ${{ inputs.out }}
+        EXTRA_ARGS: ${{ inputs.extra-args }}
+      run: |
+        args=("$CONTRACT")
+        [ -n "$BASELINE" ] && args+=(--baseline "$BASELINE")
+        [ -n "$OUT" ] && args+=(--out "$OUT")
+        report="${RUNNER_TEMP:-/tmp}/memoraos-ci-report.txt"
+        status=0
+        # shellcheck disable=SC2086
+        memoraos ci run "${args[@]}" $EXTRA_ARGS > "$report" || status=$?
+        cat "$report"
+        {
+          echo "### MemoraOS Memory CI"
+          echo
+          echo '```'
+          cat "$report"
+          echo '```'
+        } >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+        exit "$status"

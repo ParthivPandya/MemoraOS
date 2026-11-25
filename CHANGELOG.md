@@ -24,6 +24,20 @@ Status of each item: see `docs/NEXT_IMPLEMENTATION_STATUS.md`. Nothing here chan
 - `docs/SECURITY.md`, the roadmap and the status docs no longer say encryption at rest is missing.
 - `plan` and `tier` are single-valued attributes, so "the current plan" no longer returns the old and the new plan together (found while writing a Memory CI contract).
 
+## [0.7.0]
+
+### Added
+- **`memoraos proxy`**: a local OpenAI/Anthropic-compatible proxy that redacts secrets in the latest user message, adds matching recorded failures and cited evidence to it, and stores the user's text as hypotheses. Refuses a non-loopback host without `--allow-remote`. Tested against a fake upstream only; injection fires only on questions memory can answer. `docs/PROXY.md`.
+- **`memoraos setup`** and **injection hooks**: one command installs capture and context-injection hooks (`hook inject`; Claude Code `UserPromptSubmit` and `PreToolUse`, Codex `UserPromptSubmit`) with a shared data directory; Cursor stays capture-only. Tested on payloads, not in a live session. `docs/AGENT_WORKFLOW.md`.
+- **`memoraos index-git`**: commits and ADRs become cited memories dated by author date; causal links only from explicit `This reverts commit`, `Fixes:` and ADR supersede text. An informal check on this repository got 2 of 4 questions right with the right commit, 1 wrong commit and 1 correct refusal. `docs/GIT_INDEX.md`.
+- **Portable bundles**: `memoraos export-bundle` / `import-bundle` (own `memoraos-bundle` format; SHA-256 detects damage, optional HMAC from `MEMORAOS_BUNDLE_KEY` authenticates; `verified` is downgraded unless the signature verifies; idempotent import). No PAM or OpenMemory compatibility is claimed. `docs/BUNDLE.md`.
+- **Memory CI GitHub Action** (`action.yml`): runs `memoraos ci run`, writes the report to the job summary and fails on a failed assertion or regression. This repository's CI exercises it; not published to the Marketplace.
+- **Dashboard**: interactive counterfactual replay (tick cited memories to remove them and re-run the question on a temporary copy) and a causal-lineage graph on the Answer trace page, plus `POST /api/replay` in the dashboard. Checked once in a browser on a real 3-memory store.
+- Tests: 396 (was 363).
+
+### Not done
+- Cursor pre-prompt injection (Cursor has no such hook), Windsurf and VS Code hooks, PR/issue fetching in `index-git`, the browser extension, bundle REST/SDK wrappers, real-LLM extraction (#1), ANN with neural embedders (#2), LoCoMo/LongMemEval QA (#3), a demo GIF and a hosted playground. Marketplace and MCP-registry submissions are manual steps not yet done.
+
 ## [0.6.0]
 
 ### Added
